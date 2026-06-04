@@ -3,231 +3,669 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MTS SMM - Media Tech Support</title>
-    <!-- Google Fonts & Tailwind CSS (CDN for faster styling) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome 6 (free icons) -->
+    <title>MTS SMM - Media Tech Support | Social Media Growth Platform</title>
+    <meta name="description" content="Grow your social media presence with confidence. Affordable SMM services for TikTok, Instagram, YouTube, Facebook, and more.">
+    <meta name="theme-color" content="#6366f1">
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Chart.js for dashboard charts -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        body { transition: background 0.3s, color 0.2s; }
-        .glass-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border-radius: 2rem; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
-        .dark .glass-card { background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.1); }
-        .sidebar { transition: transform 0.3s ease; z-index: 1000; }
-        .sidebar-open { transform: translateX(0); }
-        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); transition: all 0.2s; }
-        .btn-primary:hover { transform: scale(1.02); opacity: 0.9; }
-        .toast-notify { position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: #1f2937; color: white; padding: 12px 20px; border-radius: 40px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); font-weight: 500; }
-        .platform-icon-card { transition: all 0.2s; cursor: pointer; background: rgba(0,0,0,0.3); border-radius: 1.5rem; padding: 0.75rem; text-align: center; }
-        .platform-icon-card:hover { transform: translateY(-5px); background: rgba(99,102,241,0.2); }
-        .dark .platform-icon-card { background: rgba(255,255,255,0.05); }
-        .order-btn { background: #10b981; }
-        .clear-btn { background: #6b7280; }
-        .quick-qty-btn { background: #374151; padding: 6px 14px; border-radius: 40px; font-size: 0.8rem; font-weight: 500; }
-        .dark .quick-qty-btn { background: #1f2937; }
-        input, select, textarea { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); border-radius: 1rem; padding: 0.6rem 1rem; color: inherit; outline: none; transition: 0.2s; }
-        .dark input, .dark select, .dark textarea { background: #1f2a3e; border-color: #334155; }
-        .price-box { background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 1.5rem; padding: 1rem; margin: 1rem 0; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
-        .avatar { width: 40px; height: 40px; border-radius: 100%; background: #8b5cf6; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .admin-stat-card { background: linear-gradient(145deg, #2d2f3e, #1e1f2c); border-radius: 1.5rem; padding: 1rem; }
-        hr { border-color: rgba(255,255,255,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        :root {
+            --bg-light: #f8fafc;
+            --bg-dark: #0f172a;
+            --card-light: #ffffff;
+            --card-dark: #1e293b;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-light: #1e293b;
+            --text-dark: #e2e8f0;
+            --border-light: #e2e8f0;
+            --border-dark: #334155;
+        }
+        body {
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.3s, color 0.3s;
+        }
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        body.dark .glass-card {
+            background: rgba(15,23,42,0.8);
+            border-color: rgba(255,255,255,0.05);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline:hover { background: var(--primary); color: white; }
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 100%;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+        }
+        body.dark .sidebar {
+            background: rgba(15,23,42,0.98);
+        }
+        .sidebar.open { transform: translateX(0); }
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        .overlay.active { display: block; }
+        /* Tabs */
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Platform Cards */
+        .platform-card {
+            background: rgba(99,102,241,0.1);
+            border-radius: 1rem;
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .platform-card:hover { transform: translateY(-5px); background: rgba(99,102,241,0.2); }
+        /* Service Card */
+        .service-card {
+            background: var(--card-light);
+            border-radius: 1rem;
+            padding: 1rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        body.dark .service-card { background: var(--card-dark); }
+        .service-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2); }
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1100;
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s;
+        }
+        .toast.show { transform: translateX(0); }
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            display: none;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 450px;
+            width: 90%;
+        }
+        body.dark .modal-content { background: #1e293b; }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border-light);
+            background: white;
+            transition: all 0.2s;
+        }
+        body.dark input, body.dark select, body.dark textarea {
+            background: #0f172a;
+            border-color: var(--border-dark);
+            color: white;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.2); }
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(99,102,241,0.3);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { width: 280px; }
+            .btn-primary, .btn-outline { padding: 0.5rem 1rem; font-size: 0.875rem; }
+        }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 transition-all">
-
-<!-- ==================== TOAST CONTAINER ==================== -->
-<div id="toastMsg" class="toast-notify hidden"></div>
-
-<!-- ==================== SIDE MENU (OFFCANVAS) ==================== -->
-<div id="sideMenu" class="sidebar fixed top-0 left-0 h-full w-72 bg-white dark:bg-gray-900 shadow-2xl transform -translate-x-full transition-transform duration-300 z-50">
-    <div class="p-5 flex flex-col h-full">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Menu</h2>
-            <button id="closeMenuBtn" class="text-3xl">&times;</button>
-        </div>
-        <div class="flex flex-col space-y-4 text-lg">
-            <a href="#" data-nav="home" class="menu-link hover:text-indigo-500 flex items-center gap-3"><i class="fas fa-home"></i> Home</a>
-            <a href="#" data-nav="services" class="menu-link hover:text-indigo-500 flex items-center gap-3"><i class="fas fa-cogs"></i> Services</a>
-            <a href="#" data-nav="affiliate" class="menu-link hover:text-indigo-500 flex items-center gap-3"><i class="fas fa-handshake"></i> Affiliate Program</a>
-            <a href="#" data-nav="privacy" class="menu-link hover:text-indigo-500 flex items-center gap-3"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
-            <a href="#" data-nav="contact" class="menu-link hover:text-indigo-500 flex items-center gap-3"><i class="fas fa-headset"></i> Contact Support</a>
-            <div id="adminMenuLink" class="hidden"><a href="#" data-nav="admin" class="menu-link hover:text-indigo-500 flex items-center gap-3"><i class="fas fa-user-shield"></i> Admin Panel</a></div>
-            <hr>
-            <a href="#" id="logoutSideBtn" class="text-red-500 flex items-center gap-3"><i class="fas fa-sign-out-alt"></i> Logout</a>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <div id="toast" class="toast"></div>
+    
+    <!-- SIDEBAR -->
+    <div id="sidebar" class="sidebar">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Menu</h2>
+                <button id="closeSidebar" class="text-3xl">&times;</button>
+            </div>
+            <nav class="space-y-3">
+                <a href="#" data-page="home" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-home w-5"></i> Home</a>
+                <a href="#" data-page="services" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-cogs w-5"></i> Services</a>
+                <a href="#" data-page="order" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-shopping-cart w-5"></i> Order</a>
+                <a href="#" data-page="affiliate" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-handshake w-5"></i> Affiliate Program</a>
+                <a href="#" data-page="privacy" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-shield-alt w-5"></i> Privacy Policy</a>
+                <a href="#" data-page="contact" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-headset w-5"></i> Contact Support</a>
+                <div id="adminSidebarLink" style="display:none;">
+                    <a href="#" data-page="admin" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-user-shield w-5"></i> Admin Panel</a>
+                </div>
+                <hr class="border-gray-200 dark:border-gray-700 my-4">
+                <div id="userSidebarLinks" style="display:none;">
+                    <a href="#" data-page="dashboard" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-tachometer-alt w-5"></i> Dashboard</a>
+                    <a href="#" id="sidebarLogout" class="flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-500/10 transition"><i class="fas fa-sign-out-alt w-5"></i> Logout</a>
+                </div>
+            </nav>
         </div>
     </div>
-</div>
 
-<!-- MAIN WRAPPER -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-    <!-- HEADER -->
-    <header class="flex justify-between items-center py-4 border-b border-gray-200 dark:border-gray-800">
-        <div class="flex items-center gap-3">
-            <button id="menuBtn" class="text-2xl focus:outline-none"><i class="fas fa-bars"></i></button>
-            <div>
-                <h1 class="text-2xl font-black text-indigo-600 dark:text-indigo-400">MTS</h1>
-                <p class="text-xs -mt-1">media tech support</p>
-            </div>
-        </div>
-        <div id="authButtons" class="flex gap-3 items-center">
-            <!-- Guest or logged in will be replaced dynamically -->
-        </div>
-    </header>
-
-    <!-- MAIN TABS: HOME(default), SERVICES, ORDER, AFFILIATE, PRIVACY, CONTACT, ADMIN, DASHBOARD -->
-    <main class="mt-8">
-        <div id="home" class="tab-content active">
-            <!-- Hero Section -->
-            <section class="text-center py-12">
-                <h2 class="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">Grow Your Social Media Presence With Confidence</h2>
-                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mt-4">MTS SMM provides affordable, high-quality, and reliable social media marketing services for creators, businesses, agencies, and brands worldwide.</p>
-                <div class="flex gap-4 justify-center mt-6">
-                    <button id="heroGetStarted" class="btn-primary px-6 py-3 rounded-full text-white font-semibold">Get Started</button>
-                    <button id="heroBrowseServices" class="border border-indigo-500 px-6 py-3 rounded-full font-semibold">Browse Services</button>
+    <!-- MAIN CONTAINER -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <!-- HEADER -->
+        <header class="flex justify-between items-center py-4 border-b border-gray-200 dark:border-gray-800 sticky top-0 bg-inherit z-50 backdrop-blur-sm">
+            <div class="flex items-center gap-3">
+                <button id="menuToggle" class="text-2xl"><i class="fas fa-bars"></i></button>
+                <div>
+                    <h1 class="text-2xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">MTS</h1>
+                    <p class="text-xs -mt-1 opacity-75">media tech support</p>
                 </div>
-            </section>
-            <!-- Why Choose Us Cards -->
-            <div class="grid md:grid-cols-4 gap-6 my-12">
-                <div class="glass-card p-6 text-center"> <i class="fas fa-shield-alt text-4xl text-indigo-400"></i> <h3 class="text-xl font-bold mt-3">We Sell Trust</h3> <p class="text-sm">Trusted by clients worldwide with transparent pricing and reliable service delivery.</p> </div>
-                <div class="glass-card p-6 text-center"> <i class="fas fa-tags text-4xl text-indigo-400"></i> <h3 class="text-xl font-bold mt-3">Affordable & Guaranteed</h3> <p class="text-sm">Competitive pricing with stable delivery and customer satisfaction.</p> </div>
-                <div class="glass-card p-6 text-center"> <i class="fas fa-globe text-4xl text-indigo-400"></i> <h3 class="text-xl font-bold mt-3">Global High-Tech Platform</h3> <p class="text-sm">Support for TikTok, Instagram, YouTube, Telegram, WhatsApp & more.</p> </div>
-                <div class="glass-card p-6 text-center"> <i class="fas fa-headset text-4xl text-indigo-400"></i> <h3 class="text-xl font-bold mt-3">Professional Support</h3> <p class="text-sm">Fast customer assistance and dedicated account support.</p> </div>
             </div>
-            <!-- Supported Platforms Icons -->
-            <h3 class="text-2xl font-bold mt-8 mb-4">Supported Platforms</h3>
-            <div id="platformIconsGrid" class="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-12 gap-3"></div>
-            <!-- Services Preview Categories -->
-            <h3 class="text-2xl font-bold mt-12 mb-4">Popular Services</h3>
-            <div class="flex flex-wrap gap-3" id="serviceCategoriesPreview"></div>
-            <!-- How It Works -->
-            <div class="grid md:grid-cols-4 gap-5 my-16 text-center">
-                <div><i class="fas fa-mobile-alt text-3xl text-indigo-400"></i><p class="font-bold mt-2">Select Platform</p></div>
-                <div><i class="fas fa-chart-line text-3xl text-indigo-400"></i><p class="font-bold mt-2">Choose Service</p></div>
-                <div><i class="fas fa-shopping-cart text-3xl text-indigo-400"></i><p class="font-bold mt-2">Place Order</p></div>
-                <div><i class="fas fa-rocket text-3xl text-indigo-400"></i><p class="font-bold mt-2">Receive Delivery</p></div>
+            <div id="headerAuth" class="flex items-center gap-3"></div>
+        </header>
+
+        <!-- MAIN CONTENT PAGES -->
+        <main class="mt-8">
+            <!-- HOME PAGE -->
+            <div id="homePage" class="tab-content active">
+                <!-- Hero -->
+                <div class="text-center py-12">
+                    <h2 class="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">Grow Your Social Media Presence With Confidence</h2>
+                    <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mt-4">MTS SMM provides affordable, high-quality, and reliable social media marketing services for creators, businesses, agencies, and brands worldwide.</p>
+                    <div class="flex gap-4 justify-center mt-6">
+                        <button id="homeGetStarted" class="btn-primary">Get Started</button>
+                        <button id="homeBrowseServices" class="btn-outline">Browse Services</button>
+                    </div>
+                </div>
+                <!-- Why Choose Us -->
+                <div class="grid md:grid-cols-4 gap-6 my-12">
+                    <div class="glass-card p-6 text-center"><i class="fas fa-shield-alt text-4xl text-indigo-400"></i><h3 class="text-xl font-bold mt-3">We Sell Trust</h3><p class="text-sm">Trusted by clients worldwide with transparent pricing and reliable service delivery.</p></div>
+                    <div class="glass-card p-6 text-center"><i class="fas fa-tags text-4xl text-indigo-400"></i><h3 class="text-xl font-bold mt-3">Affordable & Guaranteed</h3><p class="text-sm">Competitive pricing with stable delivery and customer satisfaction.</p></div>
+                    <div class="glass-card p-6 text-center"><i class="fas fa-globe text-4xl text-indigo-400"></i><h3 class="text-xl font-bold mt-3">Global High-Tech Platform</h3><p class="text-sm">Support for TikTok, Instagram, YouTube, Telegram, WhatsApp & more.</p></div>
+                    <div class="glass-card p-6 text-center"><i class="fas fa-headset text-4xl text-indigo-400"></i><h3 class="text-xl font-bold mt-3">Professional Support</h3><p class="text-sm">Fast customer assistance and dedicated account support.</p></div>
+                </div>
+                <!-- Supported Platforms -->
+                <h3 class="text-2xl font-bold mt-8 mb-4">Supported Platforms</h3>
+                <div id="platformsGrid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-3"></div>
+                <!-- Services Preview -->
+                <h3 class="text-2xl font-bold mt-12 mb-4">Popular Categories</h3>
+                <div id="categoriesPreview" class="flex flex-wrap gap-3"></div>
+                <!-- How It Works -->
+                <div class="grid md:grid-cols-4 gap-8 my-16 text-center">
+                    <div><i class="fas fa-mobile-alt text-4xl text-indigo-400"></i><p class="font-bold mt-2">Select Platform</p><p class="text-sm">Choose your social media platform</p></div>
+                    <div><i class="fas fa-chart-line text-4xl text-indigo-400"></i><p class="font-bold mt-2">Choose Service</p><p class="text-sm">Pick the service you need</p></div>
+                    <div><i class="fas fa-shopping-cart text-4xl text-indigo-400"></i><p class="font-bold mt-2">Place Order</p><p class="text-sm">Enter details and checkout</p></div>
+                    <div><i class="fas fa-rocket text-4xl text-indigo-400"></i><p class="font-bold mt-2">Receive Delivery</p><p class="text-sm">Get instant or scheduled delivery</p></div>
+                </div>
             </div>
-        </div>
 
-        <!-- Services Page (placeholder dynamic) -->
-        <div id="services" class="tab-content">
-            <div class="glass-card p-6"><h2 class="text-2xl font-bold">All Services</h2><div id="servicesList" class="grid md:grid-cols-2 gap-4 mt-4"></div></div>
-        </div>
-
-        <!-- ORDER PAGE (full layout from prompt) -->
-        <div id="order" class="tab-content">
-            <div class="container mx-auto">
-                <div id="walletBox" class="bg-indigo-900/30 p-3 rounded-xl mb-4 text-right font-bold">💰 Wallet Balance: $0.00</div>
+            <!-- SERVICES PAGE -->
+            <div id="servicesPage" class="tab-content">
                 <div class="glass-card p-6">
-                    <div class="form-section space-y-4">
-                        <div class="grid md:grid-cols-2 gap-4"><div><label>Platform</label><select id="platformSelect" class="w-full"></select></div><div><label>Service</label><select id="serviceSelect" class="w-full"></select></div></div>
-                        <div class="grid md:grid-cols-2 gap-4"><div><label>Quantity</label><input type="number" id="quantityInput" placeholder="Quantity" class="w-full"><div id="quickQtyBtns" class="flex flex-wrap gap-2 mt-2"></div></div><div><label>Total Amount</label><input type="text" id="totalAmountInput" readonly class="w-full bg-gray-700"></div></div>
-                        <div><label>Post / Profile Link</label><input type="text" id="orderLink" placeholder="https://instagram.com/..." class="w-full"></div>
-                        <div><label>Email Address</label><input type="email" id="orderEmail" placeholder="Email for updates" class="w-full"></div>
-                        <div><label>Target Country</label><select id="targetCountry" class="w-full"><option>USA</option><option>UK</option><option>Canada</option><option>Pakistan</option></select></div>
-                        <div><label>Comments</label><textarea id="orderComments" rows="2" class="w-full"></textarea></div>
-                        <div class="price-box text-center text-xl font-bold" id="priceSummary">Price: $0.00</div>
-                        <div class="flex gap-4"><button id="placeOrderBtn" class="order-btn px-6 py-2 rounded-full text-white">Place Order</button><button id="clearOrderBtn" class="clear-btn px-6 py-2 rounded-full">Clear</button></div>
+                    <h2 class="text-2xl font-bold mb-4">All Services</h2>
+                    <div class="mb-4 flex gap-2 flex-wrap" id="platformFilterServices"></div>
+                    <div id="servicesList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- ORDER PAGE (Complete with search & filters) -->
+            <div id="orderPage" class="tab-content">
+                <div class="container">
+                    <div id="orderWalletBox" class="glass-card p-4 mb-4 text-right font-bold text-lg">💰 Wallet Balance: $0.00</div>
+                    <div class="glass-card p-6">
+                        <!-- Platform Filter -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold mb-2">Quick Platform Filter</h3>
+                            <div id="orderPlatformFilters" class="flex flex-wrap gap-2"></div>
+                        </div>
+                        <!-- Search Bar -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold mb-2">Search Services</h3>
+                            <input type="text" id="serviceSearchInput" placeholder="Search by name, platform, or price..." class="w-full">
+                            <div id="searchResults" class="mt-2 space-y-2"></div>
+                        </div>
+                        <!-- Order Form -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div><label class="block mb-1 font-semibold">Platform *</label><select id="orderPlatform" class="w-full"></select></div>
+                            <div><label class="block mb-1 font-semibold">Service *</label><select id="orderService" class="w-full"></select></div>
+                            <div><label class="block mb-1 font-semibold">Quantity *</label><input type="number" id="orderQuantity" placeholder="Enter quantity" class="w-full"><div id="quickQtyContainer" class="flex flex-wrap gap-2 mt-2"></div></div>
+                            <div><label class="block mb-1 font-semibold">Total Amount</label><input type="text" id="orderAmount" readonly class="w-full bg-gray-100 dark:bg-gray-800"></div>
+                            <div><label class="block mb-1 font-semibold">Post/Profile Link *</label><input type="text" id="orderLink" placeholder="https://..." class="w-full"></div>
+                            <div><label class="block mb-1 font-semibold">Email Address *</label><input type="email" id="orderEmail" class="w-full"></div>
+                            <div><label class="block mb-1 font-semibold">Target Country</label><select id="orderCountry" class="w-full"><option>USA</option><option>UK</option><option>Canada</option><option>Australia</option><option>Pakistan</option></select></div>
+                            <div><label class="block mb-1 font-semibold">Comments</label><textarea id="orderComments" rows="2" class="w-full"></textarea></div>
+                        </div>
+                        <div class="price-box mt-6 p-4 bg-indigo-500/10 rounded-xl text-center">
+                            <div class="text-sm">PRICE SUMMARY</div>
+                            <div class="text-2xl font-bold" id="priceSummaryDisplay">$0.00</div>
+                        </div>
+                        <div class="flex gap-4 mt-6">
+                            <button id="placeOrderBtn" class="btn-primary flex-1">Place Order</button>
+                            <button id="clearOrderBtn" class="btn-outline">Clear Form</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Affiliate Program Page (with employee application logic) -->
-        <div id="affiliate" class="tab-content">
-            <div class="glass-card p-6 space-y-6">
-                <h2 class="text-3xl font-bold">Affiliate Partner Program</h2>
-                <div class="flex flex-wrap gap-4"><button id="affiliateStandardBtn" class="btn-primary px-4 py-2 rounded-full">Our Affiliate Program</button><button id="salaryBasedBtn" class="bg-emerald-600 px-4 py-2 rounded-full">Salary Based (Employee)</button></div>
-                <div id="affiliateContentArea"></div>
-                <div id="employeeDashboardArea" class="hidden"></div>
-                <div class="mt-6 border-t pt-4"><h3 class="font-bold">Terms & Conditions</h3><p class="text-sm">Eligibility: 18+, real info. No spam. Commission 20%, min payout $50.</p><label><input type="checkbox" id="agreeTerms"> I agree to Affiliate Terms & Conditions</label></div>
+            <!-- AFFILIATE PAGE -->
+            <div id="affiliatePage" class="tab-content">
+                <div class="glass-card p-6 space-y-6">
+                    <h2 class="text-3xl font-bold">Affiliate Partner Program</h2>
+                    <p class="text-gray-600 dark:text-gray-300">Join us and earn commission by referring clients. Admin controls all programs.</p>
+                    <div class="flex gap-4 flex-wrap">
+                        <button id="showAffiliateProgram" class="btn-primary">Our Affiliate Program</button>
+                        <button id="showSalaryProgram" class="btn-outline">Salary Based (Employee)</button>
+                    </div>
+                    <div id="affiliateDynamicContent"></div>
+                    <div id="employeeDashboardContent" class="hidden"></div>
+                    <hr>
+                    <div>
+                        <h3 class="font-bold text-xl mb-3">Affiliate Terms & Conditions</h3>
+                        <div class="text-sm space-y-2">
+                            <p><strong>Eligibility:</strong> Must be 18+, real information required.</p>
+                            <p><strong>Allowed Activities:</strong> Social Media, WhatsApp, Email, Website promotion.</p>
+                            <p><strong>Prohibited:</strong> No Spam, No Cold Calling, No False Claims.</p>
+                            <p><strong>Commission Rules:</strong> Paid after successful order completion. Commission rate: <span id="affiliateRateDisplay">20%</span></p>
+                            <p><strong>Minimum Payout:</strong> $<span id="minPayoutDisplay">50</span></p>
+                        </div>
+                        <label class="flex items-center gap-2 mt-4"><input type="checkbox" id="affiliateTermsCheckbox"> I agree to Affiliate Terms & Conditions</label>
+                    </div>
+                </div>
             </div>
+
+            <!-- PRIVACY POLICY -->
+            <div id="privacyPage" class="tab-content glass-card p-6">
+                <h2 class="text-2xl font-bold mb-4">Privacy Policy</h2>
+                <div class="space-y-3">
+                    <p><strong>Information Collection:</strong> We collect personal information (name, email, payment details) to process orders and provide services.</p>
+                    <p><strong>Data Usage:</strong> Your data is used solely for order fulfillment, account management, and support.</p>
+                    <p><strong>Cookies:</strong> We use cookies to improve user experience and analyze site traffic.</p>
+                    <p><strong>Third Parties:</strong> We do not sell your data. Payment processing is handled by secure providers.</p>
+                    <p><strong>Your Rights:</strong> You may request data deletion or correction by contacting support.</p>
+                    <p><strong>Contact:</strong> zone43157@gmail.com</p>
+                </div>
+            </div>
+
+            <!-- CONTACT SUPPORT -->
+            <div id="contactPage" class="tab-content glass-card p-6">
+                <h2 class="text-2xl font-bold mb-4">Contact Support</h2>
+                <form id="supportTicketForm" class="space-y-4">
+                    <input type="text" id="supportName" placeholder="Your Name" required>
+                    <input type="email" id="supportEmail" placeholder="Email Address" required>
+                    <input type="text" id="supportSubject" placeholder="Subject" required>
+                    <textarea id="supportMessage" rows="4" placeholder="Message" required></textarea>
+                    <button type="submit" class="btn-primary">Submit Ticket</button>
+                </form>
+                <div class="flex gap-6 mt-8 justify-center">
+                    <a href="https://wa.me/923218595421" target="_blank" class="flex items-center gap-2 text-green-500"><i class="fab fa-whatsapp text-3xl"></i> WhatsApp</a>
+                    <a href="https://t.me/dl" target="_blank" class="flex items-center gap-2 text-blue-400"><i class="fab fa-telegram text-3xl"></i> Telegram</a>
+                    <a href="mailto:zone43157@gmail.com" class="flex items-center gap-2 text-red-400"><i class="fas fa-envelope text-3xl"></i> Email</a>
+                </div>
+            </div>
+
+            <!-- USER DASHBOARD -->
+            <div id="dashboardPage" class="tab-content glass-card p-6">
+                <h2 class="text-2xl font-bold mb-6">User Dashboard</h2>
+                <div id="dashboardContent"></div>
+            </div>
+
+            <!-- ADMIN PANEL -->
+            <div id="adminPage" class="tab-content">
+                <div class="glass-card p-6">
+                    <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
+                    <div id="adminStatsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"></div>
+                    <h3 class="text-xl font-bold mb-4">Admin Settings</h3>
+                    <div class="space-y-3">
+                        <div><label>Commission Rate (%)</label><input type="number" id="adminCommissionRate" class="w-full"></div>
+                        <div><label>Minimum Payout ($)</label><input type="number" id="adminMinPayout" class="w-full"></div>
+                        <div><label>Support Email</label><input type="email" id="adminSupportEmail" class="w-full"></div>
+                        <div><label>Maintenance Mode</label><select id="adminMaintenanceMode" class="w-full"><option value="false">Off</option><option value="true">On</option></select></div>
+                        <button id="saveAdminSettings" class="btn-primary">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL for Auth -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4"><h3 id="modalTitle" class="text-xl font-bold">Login</h3><button id="closeModal" class="text-2xl">&times;</button></div>
+            <form id="authForm">
+                <input type="email" id="authEmail" placeholder="Email" required class="mb-3">
+                <input type="password" id="authPassword" placeholder="Password" required class="mb-3">
+                <div class="flex gap-2 mb-3"><button type="submit" id="authSubmitBtn" class="btn-primary flex-1">Login</button><button type="button" id="switchAuthMode" class="btn-outline">Sign Up</button></div>
+                <button type="button" id="forgotPasswordBtn" class="text-sm text-indigo-400">Forgot Password?</button>
+            </form>
         </div>
+    </div>
 
-        <div id="privacy" class="tab-content glass-card p-6"><h2 class="text-2xl font-bold">Privacy Policy (GDPR style)</h2><p>We collect personal data only for order processing. We use cookies. You have right to access and delete your data. Contact support for inquiries.</p></div>
-        <div id="contact" class="tab-content glass-card p-6"><h2 class="text-2xl font-bold">Support</h2><form id="supportForm"><input type="text" placeholder="Name" class="w-full mb-3"><input type="email" placeholder="Email" class="w-full mb-3"><input type="text" placeholder="Subject" class="w-full mb-3"><textarea placeholder="Message" class="w-full mb-3"></textarea><button class="btn-primary px-6 py-2 rounded-full">Send Ticket</button></form><div class="flex gap-6 mt-6"><a href="https://wa.me/923218595421" target="_blank"><i class="fab fa-whatsapp text-3xl text-green-500"></i> WhatsApp</a><a href="https://t.me/dl" target="_blank"><i class="fab fa-telegram text-3xl text-blue-400"></i> Telegram</a><a href="mailto:zone43157@gmail.com"><i class="fas fa-envelope text-3xl"></i> Email</a></div></div>
-        <div id="admin" class="tab-content"><div class="glass-card p-6"><h2 class="text-2xl font-bold mb-4">Admin Dashboard</h2><div id="adminStats" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div><hr class="my-4"><div id="adminSettingsArea"><h3>Site Settings</h3><button id="updateSettingsBtn" class="btn-primary mt-2">Refresh Settings</button></div></div></div>
-        <div id="dashboard" class="tab-content glass-card p-6"><h2 class="text-2xl">User Dashboard</h2><div id="userDashboardContent">Loading...</div></div>
-    </main>
-</div>
-
-<script>
-    // SUPABASE INIT
-    const SUPABASE_URL = "https://nualxapdjjekeujfznex.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_BawJWtJ6fgZ1l6S7-d7VzQ_3kn2lpTX";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    let currentUser = null;
-    let userRole = 'user';
-    let currentWallet = 0;
-    
-    // Helper functions
-    function showToast(msg, type='info'){ let t=document.getElementById('toastMsg'); t.innerText=msg; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),3000); }
-    async function fetchWallet(){ if(currentUser){ let {data}=await supabase.from('wallets').select('balance').eq('user_id',currentUser.id).single(); if(data) currentWallet=data.balance; document.querySelectorAll('#walletBox').forEach(el=>el.innerText=`💰 Wallet Balance: $${currentWallet.toFixed(2)}`); } }
-    
-    // Load platforms/services for order form
-    async function loadOrderPlatforms(){ let {data:plat}=await supabase.from('platforms').select('*'); let select=document.getElementById('platformSelect'); select.innerHTML='<option value="">Select Platform</option>'; plat.forEach(p=>{let opt=document.createElement('option');opt.value=p.id;opt.innerText=p.name;select.appendChild(opt);}); }
-    async function loadServicesByPlatform(platformId){ let {data:serv}=await supabase.from('services').select('*').eq('platform_id',platformId).eq('status','active'); let sSelect=document.getElementById('serviceSelect'); sSelect.innerHTML='<option value="">Select Service</option>'; serv.forEach(s=>{let opt=document.createElement('option');opt.value=s.id;opt.setAttribute('data-rate',s.rate_per_1k);opt.innerText=`${s.name} ($${s.rate_per_1k}/1k)`; sSelect.appendChild(opt);});}
-    document.getElementById('platformSelect')?.addEventListener('change',(e)=>{if(e.target.value) loadServicesByPlatform(e.target.value);});
-    function updateOrderTotal(){ let qty=parseInt(document.getElementById('quantityInput').value)||0; let selected=document.getElementById('serviceSelect').selectedOptions[0]; if(selected&&qty){ let rate=parseFloat(selected.getAttribute('data-rate')); let total= (rate/1000)*qty; document.getElementById('totalAmountInput').value=total.toFixed(2); document.getElementById('priceSummary').innerText=`Price: $${total.toFixed(2)}`; }else{document.getElementById('priceSummary').innerText='Price: $0.00';} }
-    document.getElementById('quantityInput')?.addEventListener('input',updateOrderTotal);
-    document.getElementById('serviceSelect')?.addEventListener('change',updateOrderTotal);
-    document.getElementById('clearOrderBtn')?.addEventListener('click',()=>{document.getElementById('quantityInput').value='';document.getElementById('orderLink').value='';updateOrderTotal();});
-    document.getElementById('placeOrderBtn')?.addEventListener('click',async()=>{ if(!currentUser){showToast('Please login first');return;} let serviceId=document.getElementById('serviceSelect').value; let qty=document.getElementById('quantityInput').value; let link=document.getElementById('orderLink').value; let email=document.getElementById('orderEmail').value||currentUser.email; if(!serviceId||!qty||!link){showToast('Fill all required fields');return;} let {data:service}=await supabase.from('services').select('*,platforms(name)').eq('id',serviceId).single(); let total=(service.rate_per_1k/1000)*qty; if(currentWallet<total){showToast('Insufficient balance');return;} let orderPayload={user_id:currentUser.id,service_id:serviceId,platform_name:service.platforms?.name||'platform',service_name:service.name,quantity:qty,price:service.rate_per_1k,total_amount:total,link:link,email:email,status:'pending'}; let {error}=await supabase.from('orders').insert(orderPayload); if(!error){showToast('Order placed successfully');fetchWallet();}else showToast('Order failed');});
-    
-    // Load homepage platform icons and categories
-    async function loadHomeData(){ let {data:plat}=await supabase.from('platforms').select('name,icon'); let grid=document.getElementById('platformIconsGrid'); if(grid) grid.innerHTML=plat.slice(0,15).map(p=>`<div class="platform-icon-card"><i class="fab fa-${p.name.toLowerCase().replace(' ','-')} text-2xl"></i><div class="text-xs">${p.name}</div></div>`).join(''); let cats=['Followers','Likes','Views','Subscribers','Watch Time']; let catDiv=document.getElementById('serviceCategoriesPreview'); if(catDiv) catDiv.innerHTML=cats.map(c=>`<span class="bg-indigo-500/20 px-4 py-2 rounded-full text-sm">${c}</span>`).join('');}
-    
-    // AUTH SECTION RENDER
-    async function renderAuthHeader(){ let authDiv=document.getElementById('authButtons'); if(!currentUser){ authDiv.innerHTML=`<button id="loginBtn" class="px-4 py-2 rounded-full border border-indigo-500">Login</button><button id="signupBtn" class="btn-primary px-4 py-2 rounded-full text-white">Sign Up</button>`; document.getElementById('loginBtn')?.addEventListener('click',()=>openAuthModal('login')); document.getElementById('signupBtn')?.addEventListener('click',()=>openAuthModal('signup')); } else { let {data:profile}=await supabase.from('profiles').select('username,avatar_url').eq('id',currentUser.id).single(); authDiv.innerHTML=`<div class="flex items-center gap-3"><div class="avatar">${(profile?.username?.charAt(0)||'U')}</div><span class="font-semibold hidden sm:inline">${profile?.username||currentUser.email}</span><span class="text-sm font-bold bg-green-800 px-2 rounded-full">$${currentWallet.toFixed(2)}</span><i id="dropdownIcon" class="fas fa-chevron-down cursor-pointer"></i></div>`; let dropdown=document.createElement('div'); dropdown.id="userDropdown" ; dropdown.className="absolute right-4 top-20 bg-gray-800 rounded-xl p-2 hidden"; dropdown.innerHTML='<div class="p-2 hover:bg-gray-700 cursor-pointer" data-nav="dashboard">Dashboard</div><div class="p-2 hover:bg-gray-700 cursor-pointer" id="logoutBtn">Logout</div>'; document.body.appendChild(dropdown); document.getElementById('dropdownIcon')?.addEventListener('click',()=>dropdown.classList.toggle('hidden')); document.getElementById('logoutBtn')?.addEventListener('click',async()=>{await supabase.auth.signOut(); location.reload();}); }}
-    function openAuthModal(type){ let email=prompt("Email:"); let pass=prompt("Password:"); if(type==='signup') supabase.auth.signUp({email,password}).then(()=>showToast('Check email for verification')); else supabase.auth.signInWithPassword({email,password}).then(res=>{if(res.error) showToast(res.error.message); else location.reload();});}
-    
-    // Affiliate logic
-    let affiliateProgramVisible=false;
-    document.getElementById('affiliateStandardBtn')?.addEventListener('click',()=>{document.getElementById('affiliateContentArea').innerHTML=`<div><h3>Join Affiliate</h3><p>Commission 20%</p><button id="applyAffiliateBtn" class="btn-primary mt-2">Apply Now</button></div>`; document.getElementById('applyAffiliateBtn')?.addEventListener('click',async()=>{ if(!document.getElementById('agreeTerms').checked){showToast('Accept terms');return;} await supabase.from('affiliates').insert({user_id:currentUser.id,referral_code:Math.random().toString(36).substring(2,10),commission_rate:20,status:'pending'}); showToast('Application submitted'); }); });
-    document.getElementById('salaryBasedBtn')?.addEventListener('click',()=>{ if(!currentUser){showToast('Login first');return;} document.getElementById('affiliateContentArea').innerHTML=`<form id="empAppForm"><input placeholder="Full Name" id="empName" class="w-full mb-2"><input placeholder="Username" id="empUser" class="w-full mb-2"><input placeholder="Email" id="empEmail" class="w-full mb-2"><input placeholder="Phone/WhatsApp" id="empPhone" class="w-full mb-2"><textarea placeholder="Experience details" id="empExp" class="w-full mb-2"></textarea><input placeholder="Portfolio URL" id="empPort" class="w-full mb-2"><button type="submit" class="btn-primary">Submit Application</button></form>`; document.getElementById('empAppForm').addEventListener('submit',async(e)=>{e.preventDefault(); await supabase.from('employee_applications').insert({user_id:currentUser.id,full_name:document.getElementById('empName').value,email:document.getElementById('empEmail').value,phone:document.getElementById('empPhone').value,experience:document.getElementById('empExp').value,portfolio_url:document.getElementById('empPort').value}); showToast('Application sent'); }); });
-    
-    // Dashboard for user
-    async function renderDashboard(){ if(!currentUser) return; let orders=await supabase.from('orders').select('*').eq('user_id',currentUser.id).limit(5); let affiliate=await supabase.from('affiliates').select('*').eq('user_id',currentUser.id).single(); document.getElementById('userDashboardContent').innerHTML=`<div>Wallet: $${currentWallet}</div><div>Recent Orders: ${orders.data?.length||0}</div><div>Affiliate Link: ${affiliate.data?.referral_code?`${window.location.origin}?ref=${affiliate.data.referral_code}`:'Not yet'}</div><button id="logoutDashboardBtn" class="bg-red-600 p-2 rounded mt-4">Logout</button>`; }
-    
-    // Admin Dashboard stats
-    async function loadAdminStats(){ if(userRole!=='admin') return; let stats={}; let tables=['users','orders','services','affiliates']; for(let t of tables){ let {count}=await supabase.from(t).select('*',{count:'exact',head:true}); stats[t]=count; } let html=Object.entries(stats).map(([k,v])=>`<div class="admin-stat-card"><h4>${k}</h4><p class="text-2xl">${v}</p></div>`).join(''); document.getElementById('adminStats').innerHTML=html; }
-    
-    // Main init & routing
-    async function init(){
-        // Theme toggle? included dark mode via localStorage simple
-        if(localStorage.getItem('dark')==='true') document.body.classList.add('dark');
+    <script>
+        // SUPABASE INIT
+        const supabaseUrl = "https://nualxapdjjekeujfznex.supabase.co";
+        const supabaseKey = "sb_publishable_BawJWtJ6fgZ1l6S7-d7VzQ_3kn2lpTX";
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+        
+        let currentUser = null;
+        let userRole = 'user';
+        let userProfile = null;
+        let userWallet = 0;
+        let currentPage = 'home';
+        
+        // Helper functions
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.background = isError ? '#ef4444' : '#10b981';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        async function loadUserData() {
+            if (!currentUser) return;
+            const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', currentUser.id).single();
+            if (profile) { userProfile = profile; userRole = profile.role || 'user'; }
+            const { data: wallet } = await supabaseClient.from('wallets').select('balance').eq('user_id', currentUser.id).single();
+            if (wallet) userWallet = wallet.balance;
+            const walletElements = document.querySelectorAll('#orderWalletBox, #dashboardWallet');
+            walletElements.forEach(el => { if(el) el.innerHTML = `💰 Wallet Balance: $${userWallet.toFixed(2)}`; });
+            if (userRole === 'admin') document.getElementById('adminSidebarLink').style.display = 'block';
+        }
+        
+        async function renderHeader() {
+            const headerDiv = document.getElementById('headerAuth');
+            if (!currentUser) {
+                headerDiv.innerHTML = `<button id="showLoginModal" class="btn-outline">Login</button><button id="showSignupModal" class="btn-primary">Sign Up</button>`;
+                document.getElementById('showLoginModal')?.addEventListener('click', () => openAuthModal('login'));
+                document.getElementById('showSignupModal')?.addEventListener('click', () => openAuthModal('signup'));
+                document.getElementById('userSidebarLinks').style.display = 'none';
+            } else {
+                headerDiv.innerHTML = `<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">${(userProfile?.username || currentUser.email)[0].toUpperCase()}</div><span class="hidden sm:inline">${userProfile?.username || currentUser.email.split('@')[0]}</span><span class="text-sm font-bold bg-green-600 px-3 py-1 rounded-full">$${userWallet.toFixed(2)}</span><i id="userDropdownIcon" class="fas fa-chevron-down cursor-pointer"></i></div>`;
+                document.getElementById('userSidebarLinks').style.display = 'block';
+                // Dropdown menu
+                const dropdown = document.createElement('div');
+                dropdown.id = "userDropdown";
+                dropdown.className = "absolute right-4 top-20 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-2 hidden z-50";
+                dropdown.innerHTML = `<div data-page="dashboard" class="dropdown-item p-2 hover:bg-indigo-500/10 rounded-lg cursor-pointer">Dashboard</div><div id="dropdownLogout" class="p-2 hover:bg-red-500/10 rounded-lg cursor-pointer text-red-500">Logout</div>`;
+                document.body.appendChild(dropdown);
+                document.getElementById('userDropdownIcon')?.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('hidden'); });
+                document.getElementById('dropdownLogout')?.addEventListener('click', () => logout());
+                document.querySelectorAll('.dropdown-item').forEach(el => el.addEventListener('click', () => { switchPage(el.getAttribute('data-page')); dropdown.classList.add('hidden'); }));
+                window.addEventListener('click', () => dropdown.classList.add('hidden'));
+            }
+        }
+        
+        async function logout() { await supabaseClient.auth.signOut(); location.reload(); }
+        
+        let authMode = 'login';
+        function openAuthModal(mode) {
+            authMode = mode;
+            document.getElementById('modalTitle').innerText = mode === 'login' ? 'Login' : 'Sign Up';
+            document.getElementById('authSubmitBtn').innerText = mode === 'login' ? 'Login' : 'Sign Up';
+            document.getElementById('switchAuthMode').innerText = mode === 'login' ? 'Create Account' : 'Already have an account? Login';
+            document.getElementById('authModal').classList.add('active');
+        }
+        
+        document.getElementById('authForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            if (authMode === 'login') {
+                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) showToast(error.message, true);
+                else { document.getElementById('authModal').classList.remove('active'); location.reload(); }
+            } else {
+                const { error } = await supabaseClient.auth.signUp({ email, password });
+                if (error) showToast(error.message, true);
+                else { showToast('Verification email sent!'); document.getElementById('authModal').classList.remove('active'); }
+            }
+        });
+        document.getElementById('switchAuthMode')?.addEventListener('click', () => { authMode = authMode === 'login' ? 'signup' : 'login'; openAuthModal(authMode); });
+        document.getElementById('forgotPasswordBtn')?.addEventListener('click', async () => { const email = prompt('Enter your email for reset link'); if(email) { await supabaseClient.auth.resetPasswordForEmail(email); showToast('Reset email sent!'); } });
+        document.getElementById('closeModal')?.addEventListener('click', () => document.getElementById('authModal').classList.remove('active'));
+        
+        // Load platforms and services
+        async function loadPlatformsAndServices() {
+            const { data: platforms } = await supabaseClient.from('platforms').select('*').order('sort_order');
+            const platformSelect = document.getElementById('orderPlatform');
+            if (platformSelect) {
+                platformSelect.innerHTML = '<option value="">Select Platform</option>';
+                platforms.forEach(p => { platformSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`; });
+            }
+            // Platform filter icons
+            const filterDiv = document.getElementById('orderPlatformFilters');
+            if (filterDiv) {
+                filterDiv.innerHTML = '<button data-platform="all" class="platform-filter-btn px-3 py-1 rounded-full bg-indigo-500/20">All</button>';
+                platforms.forEach(p => { filterDiv.innerHTML += `<button data-platform="${p.id}" class="platform-filter-btn px-3 py-1 rounded-full hover:bg-indigo-500/20">${p.name}</button>`; });
+                document.querySelectorAll('.platform-filter-btn').forEach(btn => btn.addEventListener('click', async (e) => {
+                    const platformId = e.target.getAttribute('data-platform');
+                    await loadServicesForOrder(platformId === 'all' ? null : platformId);
+                }));
+            }
+            // Home platforms grid
+            const homeGrid = document.getElementById('platformsGrid');
+            if (homeGrid) homeGrid.innerHTML = platforms.slice(0, 16).map(p => `<div class="platform-card"><i class="fab fa-${p.name.toLowerCase().replace(' ', '-')} text-2xl"></i><div class="text-xs mt-1">${p.name}</div></div>`).join('');
+            
+            const { data: categories } = await supabaseClient.from('categories').select('name').limit(10);
+            const catPreview = document.getElementById('categoriesPreview');
+            if (catPreview) catPreview.innerHTML = categories.map(c => `<span class="bg-indigo-500/20 px-4 py-2 rounded-full text-sm">${c.name}</span>`).join('');
+        }
+        
+        async function loadServicesForOrder(platformId = null) {
+            let query = supabaseClient.from('services').select('*, platforms(name)').eq('status', 'active');
+            if (platformId) query = query.eq('platform_id', platformId);
+            const { data } = await query.limit(50);
+            const serviceSelect = document.getElementById('orderService');
+            if (serviceSelect && data) {
+                serviceSelect.innerHTML = '<option value="">Select Service</option>';
+                data.forEach(s => { serviceSelect.innerHTML += `<option value="${s.id}" data-rate="${s.rate_per_1k}" data-min="${s.min_quantity}" data-max="${s.max_quantity}">${s.name} ($${s.rate_per_1k}/1k)</option>`; });
+            }
+        }
+        
+        document.getElementById('orderPlatform')?.addEventListener('change', (e) => loadServicesForOrder(e.target.value));
+        
+        function calculateOrderTotal() {
+            const qty = parseInt(document.getElementById('orderQuantity')?.value) || 0;
+            const selected = document.getElementById('orderService')?.selectedOptions[0];
+            if (selected && qty > 0) {
+                const rate = parseFloat(selected.getAttribute('data-rate'));
+                const total = (rate / 1000) * qty;
+                document.getElementById('orderAmount').value = total.toFixed(2);
+                document.getElementById('priceSummaryDisplay').innerText = `$${total.toFixed(2)}`;
+            } else {
+                document.getElementById('orderAmount').value = '0.00';
+                document.getElementById('priceSummaryDisplay').innerText = '$0.00';
+            }
+        }
+        document.getElementById('orderQuantity')?.addEventListener('input', calculateOrderTotal);
+        document.getElementById('orderService')?.addEventListener('change', calculateOrderTotal);
+        
+        // Quick quantity buttons
+        const quickQtys = [500, 1000, 2000, 5000, 10000];
+        const qtyContainer = document.getElementById('quickQtyContainer');
+        if (qtyContainer) quickQtys.forEach(q => { const btn = document.createElement('button'); btn.textContent = q >= 1000 ? `${q/1000}K` : q; btn.className = 'quick-qty-btn px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-sm'; btn.onclick = () => { document.getElementById('orderQuantity').value = q; calculateOrderTotal(); }; qtyContainer.appendChild(btn); });
+        
+        document.getElementById('placeOrderBtn')?.addEventListener('click', async () => {
+            if (!currentUser) { showToast('Please login first', true); return; }
+            const serviceId = document.getElementById('orderService').value;
+            const quantity = parseInt(document.getElementById('orderQuantity').value);
+            const link = document.getElementById('orderLink').value;
+            const email = document.getElementById('orderEmail').value;
+            if (!serviceId || !quantity || !link) { showToast('Fill required fields', true); return; }
+            const { data: service } = await supabaseClient.from('services').select('*, platforms(name)').eq('id', serviceId).single();
+            const total = (service.rate_per_1k / 1000) * quantity;
+            if (userWallet < total) { showToast('Insufficient wallet balance', true); return; }
+            const { error } = await supabaseClient.from('orders').insert({
+                user_id: currentUser.id, service_id: serviceId, platform_name: service.platforms.name, service_name: service.name,
+                quantity, price: service.rate_per_1k, total_amount: total, link, email, target_country: document.getElementById('orderCountry').value,
+                instructions: document.getElementById('orderComments').value, status: 'pending'
+            });
+            if (error) showToast('Order failed: ' + error.message, true);
+            else { showToast('Order placed successfully!'); await loadUserData(); renderHeader(); calculateOrderTotal(); }
+        });
+        document.getElementById('clearOrderBtn')?.addEventListener('click', () => { document.getElementById('orderQuantity').value = ''; document.getElementById('orderLink').value = ''; calculateOrderTotal(); });
+        
+        // Affiliate logic
+        document.getElementById('showAffiliateProgram')?.addEventListener('click', () => {
+            document.getElementById('affiliateDynamicContent').innerHTML = `<div class="p-4 border rounded-xl"><h3 class="font-bold">Register as Affiliate</h3><p>Earn ${document.getElementById('affiliateRateDisplay')?.innerText || '20%'} commission on every referral!</p><button id="registerAffiliateBtn" class="btn-primary mt-3">Apply Now</button></div>`;
+            document.getElementById('registerAffiliateBtn')?.addEventListener('click', async () => {
+                if (!document.getElementById('affiliateTermsCheckbox').checked) { showToast('Accept terms first', true); return; }
+                const { error } = await supabaseClient.from('affiliates').insert({ user_id: currentUser.id, referral_code: Math.random().toString(36).substring(2, 10), commission_rate: 20, status: 'pending' });
+                if (error) showToast(error.message, true); else showToast('Application submitted! Wait for admin approval.');
+            });
+        });
+        document.getElementById('showSalaryProgram')?.addEventListener('click', () => {
+            document.getElementById('affiliateDynamicContent').innerHTML = `<div class="p-4 border rounded-xl"><h3 class="font-bold">Employee Application</h3><form id="employeeAppForm" class="space-y-3"><input placeholder="Full Name" id="empName" required><input placeholder="Username" id="empUsername" required><input placeholder="Email" id="empEmail" required><input placeholder="Phone/WhatsApp" id="empPhone" required><textarea placeholder="Experience Details" id="empExp" rows="3"></textarea><input placeholder="Portfolio URL" id="empPort"><button type="submit" class="btn-primary">Submit Application</button></form></div>`;
+            document.getElementById('employeeAppForm')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const { error } = await supabaseClient.from('employee_applications').insert({ user_id: currentUser.id, full_name: document.getElementById('empName').value, email: document.getElementById('empEmail').value, phone: document.getElementById('empPhone').value, experience: document.getElementById('empExp').value, portfolio_url: document.getElementById('empPort').value });
+                if (error) showToast(error.message, true); else showToast('Application sent to admin!');
+            });
+        });
+        
+        // Dashboard rendering
+        async function renderDashboard() {
+            if (!currentUser) return;
+            const { data: orders } = await supabaseClient.from('orders').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false }).limit(10);
+            const { data: affiliate } = await supabaseClient.from('affiliates').select('*').eq('user_id', currentUser.id).single();
+            document.getElementById('dashboardContent').innerHTML = `
+                <div class="grid md:grid-cols-3 gap-4 mb-6">
+                    <div class="glass-card p-4 text-center"><i class="fas fa-wallet text-3xl text-indigo-400"></i><h3 class="text-xl mt-2">Wallet</h3><p class="text-2xl font-bold">$${userWallet}</p></div>
+                    <div class="glass-card p-4 text-center"><i class="fas fa-shopping-cart text-3xl text-indigo-400"></i><h3 class="text-xl mt-2">Total Orders</h3><p class="text-2xl font-bold">${orders?.length || 0}</p></div>
+                    <div class="glass-card p-4 text-center"><i class="fas fa-handshake text-3xl text-indigo-400"></i><h3 class="text-xl mt-2">Affiliate Link</h3><p class="text-sm break-all">${affiliate?.referral_code ? `${window.location.origin}?ref=${affiliate.referral_code}` : 'Not an affiliate'}</p></div>
+                </div>
+                <h3 class="font-bold text-xl mb-3">Recent Orders</h3>
+                <div class="space-y-2">${orders?.map(o => `<div class="glass-card p-3 flex justify-between"><span>${o.service_name} x${o.quantity}</span><span>$${o.total_amount}</span><span class="text-${o.status === 'completed' ? 'green' : 'yellow'}-500">${o.status}</span></div>`).join('') || '<p>No orders yet</p>'}</div>
+            `;
+        }
+        
+        // Admin functions
+        async function loadAdminStats() {
+            const { count: users } = await supabaseClient.from('profiles').select('*', { count: 'exact', head: true });
+            const { count: orders } = await supabaseClient.from('orders').select('*', { count: 'exact', head: true });
+            const { count: services } = await supabaseClient.from('services').select('*', { count: 'exact', head: true });
+            const { count: affiliates } = await supabaseClient.from('affiliates').select('*', { count: 'exact', head: true });
+            document.getElementById('adminStatsGrid').innerHTML = `<div class="glass-card p-4"><h3>Users</h3><p class="text-2xl">${users || 0}</p></div><div class="glass-card p-4"><h3>Orders</h3><p class="text-2xl">${orders || 0}</p></div><div class="glass-card p-4"><h3>Services</h3><p class="text-2xl">${services || 0}</p></div><div class="glass-card p-4"><h3>Affiliates</h3><p class="text-2xl">${affiliates || 0}</p></div>`;
+        }
+        
+        // Page switching
+        function switchPage(page) {
+            currentPage = page;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`${page}Page`).classList.add('active');
+            document.getElementById('sidebar')?.classList.remove('open');
+            document.getElementById('overlay')?.classList.remove('active');
+            if (page === 'dashboard') renderDashboard();
+            if (page === 'admin' && userRole === 'admin') loadAdminStats();
+            if (page === 'order') loadUserData();
+        }
+        
+        // Event listeners
+        document.getElementById('menuToggle')?.addEventListener('click', () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('active'); });
+        document.getElementById('closeSidebar')?.addEventListener('click', () => { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('active'); });
+        document.querySelectorAll('.sidebar-link').forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); switchPage(link.getAttribute('data-page')); }));
+        document.getElementById('homeGetStarted')?.addEventListener('click', () => switchPage('order'));
+        document.getElementById('homeBrowseServices')?.addEventListener('click', () => switchPage('services'));
+        document.getElementById('sidebarLogout')?.addEventListener('click', logout);
+        
+        // Support ticket
+        document.getElementById('supportTicketForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) { showToast('Login to submit ticket', true); return; }
+            const { error } = await supabaseClient.from('support_tickets').insert({ user_id: currentUser.id, subject: document.getElementById('supportSubject').value, message: document.getElementById('supportMessage').value });
+            if (error) showToast(error.message, true); else showToast('Ticket submitted!');
+        });
+        
         // Auth listener
-        supabase.auth.onAuthStateChange(async (event, session) => { if(session?.user){ currentUser=session.user; let {data:prof}=await supabase.from('profiles').select('role').eq('id',currentUser.id).single(); userRole=prof?.role||'user'; await fetchWallet(); renderAuthHeader(); if(userRole==='admin') document.getElementById('adminMenuLink')?.classList.remove('hidden'); if(document.getElementById('dashboard')) renderDashboard(); loadAdminStats(); } else { currentUser=null; renderAuthHeader(); } });
-        // initial session fetch
-        let {data:{session}} = await supabase.auth.getSession(); if(session?.user) currentUser=session.user; await fetchWallet(); renderAuthHeader(); if(currentUser){ let prof=await supabase.from('profiles').select('role').eq('id',currentUser.id).single(); userRole=prof.data?.role||'user'; if(userRole==='admin') document.getElementById('adminMenuLink')?.classList.remove('hidden'); }
-        // Load platforms for order, home data
-        await loadOrderPlatforms();
-        await loadHomeData();
-        // Navigation
-        const allLinks=document.querySelectorAll('.menu-link, [data-nav]');
-        const tabs=['home','services','order','affiliate','privacy','contact','admin','dashboard'];
-        function showTab(tabId){ tabs.forEach(t=>{let el=document.getElementById(t); if(el) el.classList.remove('active');}); let active=document.getElementById(tabId); if(active) active.classList.add('active'); if(tabId==='dashboard') renderDashboard(); if(tabId==='admin' && userRole==='admin') loadAdminStats(); if(tabId==='order') fetchWallet(); }
-        allLinks.forEach(link=>{ link.addEventListener('click',(e)=>{ let nav=link.getAttribute('data-nav'); if(nav && tabs.includes(nav)){ showTab(nav); document.getElementById('sideMenu')?.classList.remove('sidebar-open'); } if(nav==='logout') supabase.auth.signOut().then(()=>location.reload()); }); });
-        document.getElementById('heroGetStarted')?.addEventListener('click',()=>showTab('order'));
-        document.getElementById('heroBrowseServices')?.addEventListener('click',()=>showTab('services'));
-        document.getElementById('menuBtn')?.addEventListener('click',()=>document.getElementById('sideMenu')?.classList.add('sidebar-open'));
-        document.getElementById('closeMenuBtn')?.addEventListener('click',()=>document.getElementById('sideMenu')?.classList.remove('sidebar-open'));
-        // Load initial services list if needed
-        let {data:serviceList}=await supabase.from('services').select('*,platforms(name)').limit(12);
-        if(document.getElementById('servicesList')) document.getElementById('servicesList').innerHTML=serviceList.map(s=>`<div class="glass-card p-3"><b>${s.name}</b> - ${s.platforms?.name} - $${s.rate_per_1k}/1k</div>`).join('');
-        // quick quantity
-        let btns=[500,1000,2000,5000,10000]; let container=document.getElementById('quickQtyBtns'); if(container) btns.forEach(q=>{let btn=document.createElement('button');btn.innerText=q;btn.className='quick-qty-btn';btn.onclick=()=>{document.getElementById('quantityInput').value=q; updateOrderTotal();}; container.appendChild(btn);});
-        if(currentUser && userRole==='admin') showTab('home');
-        else showTab('home');
-    }
-    init();
-</script>
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
+            if (session?.user) { currentUser = session.user; await loadUserData(); renderHeader(); if (userRole === 'admin') document.getElementById('adminSidebarLink').style.display = 'block'; }
+            else { currentUser = null; renderHeader(); }
+        });
+        
+        // Initial load
+        (async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session?.user) { currentUser = session.user; await loadUserData(); }
+            await loadPlatformsAndServices();
+            await loadServicesForOrder();
+            renderHeader();
+            switchPage('home');
+        })();
+    </script>
 </body>
 </html>

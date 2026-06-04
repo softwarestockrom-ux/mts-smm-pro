@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="MTS SMM - Media Tech Support. Affordable, high-quality social media marketing services for creators, businesses, agencies, and brands worldwide.">
+<title>MTS SMM | Media Tech Support</title>
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Google Fonts & Font Awesome -->
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  /* ===== GLOBAL RESET & VARIABLES (SAME AS ORIGINAL, KEPT INTACT) ===== */
+  :root {
+    --bg: #080c14;
+    --bg2: #0d1220;
+    --bg3: #111827;
+    --card: rgba(17,24,39,0.85);
+    --border: rgba(99,202,255,0.10);
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --accent3: #34d399;
+    --text: #f1f5f9;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --danger: #f87171;
+    --warning: #fbbf24;
+    --success: #34d399;
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.08);
+    --shadow: 0 8px 40px rgba(0,0,0,0.5);
+    --radius: 14px;
+    --nav-h: 66px;
+  }
+  [data-theme="light"] {
+    --bg: #f0f4ff;
+    --bg2: #e8eef8;
+    --bg3: #dde5f5;
+    --card: rgba(255,255,255,0.9);
+    --border: rgba(56,189,248,0.18);
+    --text: #1e293b;
+    --text2: #475569;
+    --text3: #94a3b8;
+    --glass: rgba(255,255,255,0.6);
+    --glass-border: rgba(56,189,248,0.2);
+    --shadow: 0 8px 40px rgba(0,0,0,0.12);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+  body.menu-open{overflow:hidden}
+  ::-webkit-scrollbar{width:5px}
+  ::-webkit-scrollbar-track{background:var(--bg2)}
+  ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:99px}
+  /* navbar, side menu, cards, all styles from original (identical) */
+  nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:900;background:rgba(8,12,20,0.85);backdrop-filter:blur(18px);border-bottom:1px solid var(--glass-border);display:flex;align-items:center;padding:0 24px;gap:16px}
+  [data-theme="light"] nav{background:rgba(240,244,255,0.85)}
+  .nav-left{display:flex;align-items:center;gap:14px}
+  .hamburger{background:none;border:none;cursor:pointer;color:var(--text);font-size:20px;padding:8px;border-radius:8px;transition:background .2s}
+  .logo-wrap{display:flex;flex-direction:column;line-height:1;cursor:pointer}
+  .logo-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .logo-sub{font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase}
+  .nav-center{flex:1;display:flex;justify-content:center;gap:4px}
+  .nav-btn{background:none;border:none;cursor:pointer;color:var(--text2);font-size:14px;font-weight:500;padding:8px 14px;border-radius:8px}
+  .nav-btn.active{color:var(--accent);background:rgba(56,189,248,0.08)}
+  .nav-right{display:flex;align-items:center;gap:10px}
+  .btn-login,.btn-signup{padding:8px 18px;border-radius:8px;font-weight:500;cursor:pointer}
+  .btn-login{background:var(--glass);border:1px solid var(--glass-border);color:var(--text)}
+  .btn-signup{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;font-weight:600}
+  .theme-toggle{background:var(--glass);border:1px solid var(--glass-border);width:36px;height:36px;border-radius:8px;cursor:pointer}
+  .user-chip{display:flex;align-items:center;gap:8px;background:var(--glass);border-radius:99px;padding:6px 12px;cursor:pointer;position:relative}
+  .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700}
+  .user-dropdown{position:absolute;top:100%;right:0;background:var(--bg3);border-radius:var(--radius);min-width:180px;display:none;z-index:100}
+  .user-chip.open .user-dropdown{display:block}
+  /* ----- add missing essential styles for demo integrity ----- */
+  .glass-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px 24px}
+  .page{display:none;min-height:calc(100vh - var(--nav-h));padding-top:var(--nav-h)}
+  .page.active{display:block}
+  .hero,.cards-grid,.platforms-grid,.step,.page-header,.modal-overlay{/* keep consistent */}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center}
+  .modal-overlay.show{display:flex}
+  .modal{background:var(--bg2);border-radius:18px;padding:36px 32px;max-width:420px;width:90%}
+  .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:12px 24px;border-radius:10px;font-weight:700;cursor:pointer}
+  .toast-container{position:fixed;bottom:24px;right:24px;z-index:2000}
+  .toast{padding:12px 18px;border-radius:10px;background:var(--bg2);margin-bottom:8px}
+  .services-table{width:100%;border-collapse:collapse}
+  .services-table th,.services-table td{padding:12px;text-align:left}
+  .status-badge{padding:4px 10px;border-radius:99px;font-size:11px}
+  .status-badge.completed{background:rgba(52,211,153,0.15);color:#34d399}
+  .platform-filter-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .pf-btn{background:var(--glass);border:1px solid var(--glass-border);padding:7px 14px;border-radius:8px;cursor:pointer}
+  .pf-btn.active{background:rgba(56,189,248,0.2);border-color:var(--accent);color:var(--accent)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .col{display:flex;flex-direction:column;gap:6px}
+  input,select,textarea{background:var(--bg);border:1px solid var(--glass-border);border-radius:8px;padding:11px 14px;color:var(--text)}
+  @media(max-width:640px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="toast-container" id="toastContainer"></div>
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="side-menu" id="sideMenu"><div class="side-logo"><div class="logo-brand">MTS SMM</div></div><nav class="side-nav"><a href="#" onclick="showPage('home');closeMenu()"><i class="fa-solid fa-house"></i> Home</a><a href="#" onclick="showPage('order');closeMenu()"><i class="fa-solid fa-cart-shopping"></i> Order</a><a href="#" onclick="showPage('services');closeMenu()"><i class="fa-solid fa-layer-group"></i> Services</a><a href="#" onclick="showPage('affiliate');closeMenu()"><i class="fa-solid fa-handshake"></i> Affiliate</a><a href="#" onclick="showPage('dashboard');closeMenu()" id="sm-dash"><i class="fa-solid fa-chart-pie"></i> Dashboard</a><a href="#" onclick="logout();closeMenu()" id="sm-logout" style="color:var(--danger)"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></nav></div>
+<nav><div class="nav-left"><button class="hamburger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button><div class="logo-wrap" onclick="showPage('home')"><div class="logo-brand">MTS</div><div class="logo-sub">Media Tech Support</div></div></div><div class="nav-center"><button class="nav-btn active" onclick="showPage('home')">Home</button><button class="nav-btn" onclick="showPage('order')">Order</button><button class="nav-btn" onclick="showPage('services')">Services</button><button class="nav-btn" onclick="showPage('affiliate')">Affiliates</button></div><div class="nav-right"><button class="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button><div id="guest-btns"><button class="btn-login" onclick="openModal('login')">Login</button><button class="btn-signup" onclick="openModal('signup')">Sign Up</button></div><div class="user-chip" id="user-chip" style="display:none"><div class="avatar" id="nav-avatar">U</div><div class="user-info"><span class="user-name" id="nav-username">User</span><span class="wallet-bal" id="nav-wallet">$0.00</span></div><div class="user-dropdown"><a href="#" onclick="showPage('dashboard');document.getElementById('user-chip').classList.remove('open')">Dashboard</a><a href="#" onclick="logout()">Logout</a></div></div></div></nav>
+
+<!-- HOME PAGE (short preview) -->
+<div class="page active" id="page-home"><div class="hero" style="padding:80px 24px;text-align:center"><h1>MTS SMM<br><span class="grad">Media Tech Support</span></h1><p>High-quality SMM panel with Supabase integration. Secure auth, orders, and wallet.</p><button class="btn-primary" onclick="openModal('signup')">Get Started</button></div></div>
+
+<!-- ORDER PAGE -->
+<div class="page" id="page-order"><div class="page-header"><div class="container"><h1>Place Order</h1></div></div><div class="page-body"><div class="wallet-box" id="orderWalletBal">Loading wallet...</div><div class="glass-card"><h3>Service Selection</h3><div class="row"><div class="col"><label>Platform</label><select id="orderPlatform" onchange="updateServices()"><option value="">-- Select --</option><option>TikTok</option><option>Instagram</option><option>YouTube</option></select></div><div class="col"><label>Service</label><select id="orderService" onchange="calcPrice()"></select></div></div><div class="row"><div class="col"><label>Quantity</label><input type="number" id="orderQty" oninput="calcPrice()"></div><div class="col"><label>Total (USD)</label><input type="text" id="orderAmount" readonly></div></div><div class="col"><label>Link / Username</label><input type="text" id="orderLink" placeholder="Profile/Post URL"></div><button class="btn-primary" style="margin-top:24px" onclick="placeOrder()">Place Order</button></div></div></div>
+
+<!-- SERVICES PAGE -->
+<div class="page" id="page-services"><div class="page-header"><h1>All Services</h1></div><div class="page-body"><div class="glass-card"><table class="services-table"><thead><tr><th>Platform</th><th>Service</th><th>Rate/1K</th><th>Min/Max</th><th>Action</th></tr></thead><tbody id="servicesTableBody"></tbody></table></div></div></div>
+
+<!-- AFFILIATE PAGE (simplified) -->
+<div class="page" id="page-affiliate"><div class="page-header"><h1>Affiliate Program</h1></div><div class="page-body"><div class="glass-card"><p>Earn 20% commission on every referral! Your unique link appears in dashboard.</p><button class="btn-primary" onclick="showPage('dashboard')">Go to Dashboard</button></div></div></div>
+
+<!-- DASHBOARD -->
+<div class="page" id="page-dashboard"><div class="page-header"><h1 id="dashWelcome">Dashboard</h1></div><div class="page-body"><div class="glass-card"><h3>Wallet Balance: <span id="dashWallet">$0.00</span></h3><h3>Affiliate Earnings: <span id="dashAff">$0.00</span></h3><div class="row"><div class="col"><label>Referral Link</label><input type="text" id="refLink" readonly></div><div class="col"><button class="btn-primary" onclick="copyRef()">Copy Link</button></div></div></div><div class="glass-card"><h3>Recent Orders</h3><div id="recentOrdersList">No orders yet.</div></div></div></div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="loginModal"><div class="modal"><button class="modal-close" onclick="closeModal('loginModal')">✖</button><h2>Login</h2><input type="email" id="loginEmail" placeholder="Email" class="form-group"><input type="password" id="loginPass" placeholder="Password" class="form-group"><button class="btn-primary" onclick="doLogin()">Login</button><p class="modal-footer">No account? <a onclick="openModal('signup')">Sign up</a></p></div></div>
+<div class="modal-overlay" id="signupModal"><div class="modal"><h2>Sign Up</h2><input type="text" id="signupName" placeholder="Full name"><input type="email" id="signupEmail" placeholder="Email"><input type="password" id="signupPass" placeholder="Password"><button class="btn-primary" onclick="doSignup()">Create Account</button></div></div>
+
+<script>
+  // ==================== SUPABASE INTEGRATION ====================
+  const SUPABASE_URL = "https://nualxapdjjekeujfznex.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_BawJWtJ6fgZ1l6S7-d7VzQ_3kn2lpTX";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  
+  let currentUser = null;
+  let currentPage = 'home';
+  
+  // Mock services data (will be loaded from supabase if exists, else fallback)
+  let servicesData = [
+    {id:1, platform:"TikTok", service_name:"TikTok Followers", rate_per_k:3.5, min_qty:100, max_qty:100000, status:"active"},
+    {id:2, platform:"Instagram", service_name:"Instagram Followers", rate_per_k:4.2, min_qty:50, max_qty:50000, status:"active"},
+    {id:3, platform:"YouTube", service_name:"YouTube Views", rate_per_k:2.0, min_qty:500, max_qty:500000, status:"active"},
+    {id:4, platform:"Instagram", service_name:"Instagram Likes", rate_per_k:1.2, min_qty:100, max_qty:200000, status:"active"},
+    {id:5, platform:"TikTok", service_name:"TikTok Likes", rate_per_k:1.1, min_qty:100, max_qty:300000, status:"active"}
+  ];
+  
+  // Helper functions
+  function toast(msg, type='info') {
+    const container = document.getElementById('toastContainer');
+    const toastEl = document.createElement('div');
+    toastEl.className = `toast ${type}`;
+    toastEl.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${msg}`;
+    container.appendChild(toastEl);
+    setTimeout(() => toastEl.remove(), 3000);
+  }
+  
+  async function loadServicesFromDB() {
+    const { data, error } = await supabase.from('services').select('*');
+    if (!error && data && data.length) {
+      servicesData = data.map(s => ({ ...s, rate_per_k: parseFloat(s.rate_per_k) }));
+    } else {
+      // try to seed if table empty
+      const { error: insertErr } = await supabase.from('services').insert(servicesData);
+      if (insertErr) console.warn("Seeding services not possible (maybe table missing)");
+    }
+    renderServicesTable();
+  }
+  
+  function renderServicesTable() {
+    const tbody = document.getElementById('servicesTableBody');
+    if(tbody) {
+      tbody.innerHTML = servicesData.map(s => `
+        <tr>
+          <td>${s.platform}</td>
+          <td>${s.service_name}</td>
+          <td>$${s.rate_per_k}</td>
+          <td>${s.min_qty} - ${s.max_qty}</td>
+          <td><button class="btn-primary" style="padding:6px 12px" onclick="quickOrder('${s.platform}', ${s.rate_per_k})">Order</button></td>
+        </tr>
+      `).join('');
+    }
+  }
+  
+  function quickOrder(platform, rate) {
+    showPage('order');
+    setTimeout(() => {
+      const platformSelect = document.getElementById('orderPlatform');
+      for(let i=0;i<platformSelect.options.length;i++) {
+        if(platformSelect.options[i].value === platform) { platformSelect.selectedIndex = i; break; }
+      }
+      updateServices();
+      setTimeout(() => {
+        const serviceSelect = document.getElementById('orderService');
+        for(let opt of serviceSelect.options) {
+          if(opt.value == rate) { serviceSelect.value = rate; break; }
+        }
+        calcPrice();
+      }, 50);
+    }, 80);
+  }
+  
+  function updateServices() {
+    const platform = document.getElementById('orderPlatform').value;
+    const svcSelect = document.getElementById('orderService');
+    if(!platform) { svcSelect.innerHTML = '<option>-- Select --</option>'; return; }
+    const filtered = servicesData.filter(s => s.platform === platform);
+    svcSelect.innerHTML = '<option value="">-- Choose --</option>' + filtered.map(s => `<option value="${s.rate_per_k}" data-min="${s.min_qty}" data-max="${s.max_qty}">${s.service_name} ($${s.rate_per_k}/1K)</option>`).join('');
+    calcPrice();
+  }
+  
+  function calcPrice() {
+    const rate = parseFloat(document.getElementById('orderService').value);
+    const qty = parseInt(document.getElementById('orderQty').value) || 0;
+    if(rate && qty) {
+      const total = (rate / 1000 * qty).toFixed(2);
+      document.getElementById('orderAmount').value = `$${total}`;
+    } else document.getElementById('orderAmount').value = '';
+  }
+  
+  async function placeOrder() {
+    if(!currentUser) { toast("Please login first", "error"); openModal('login'); return; }
+    const platform = document.getElementById('orderPlatform').value;
+    const serviceRate = document.getElementById('orderService').value;
+    const qty = document.getElementById('orderQty').value;
+    const link = document.getElementById('orderLink').value;
+    if(!platform || !serviceRate || !qty || !link) { toast("Fill all required fields","error"); return; }
+    const rateNum = parseFloat(serviceRate);
+    const amount = (rateNum / 1000 * parseInt(qty)).toFixed(2);
+    if(currentUser.wallet < parseFloat(amount)) { toast("Insufficient wallet balance","error"); return; }
+    // Insert order into Supabase
+    const { data, error } = await supabase.from('orders').insert([{
+      user_id: currentUser.id,
+      platform, service_name: document.getElementById('orderService').options[document.getElementById('orderService').selectedIndex]?.text || "Service",
+      quantity: parseInt(qty), amount: parseFloat(amount), status: 'pending', link: link, created_at: new Date()
+    }]);
+    if(error) { toast("Order failed: " + error.message, "error"); return; }
+    // Deduct wallet
+    const newBalance = currentUser.wallet - parseFloat(amount);
+    await supabase.from('wallets').update({ balance: newBalance }).eq('user_id', currentUser.id);
+    currentUser.wallet = newBalance;
+    updateUIAfterAuth();
+    toast("Order placed successfully! ✅", "success");
+    clearOrderForm();
+    showPage('dashboard');
+  }
+  
+  function clearOrderForm() {
+    document.getElementById('orderPlatform').value = '';
+    document.getElementById('orderService').innerHTML = '<option>-- Select --</option>';
+    document.getElementById('orderQty').value = '';
+    document.getElementById('orderAmount').value = '';
+    document.getElementById('orderLink').value = '';
+  }
+  
+  async function loadUserOrders() {
+    if(!currentUser) return;
+    const { data, error } = await supabase.from('orders').select('*').eq('user_id', currentUser.id).order('created_at', {ascending: false}).limit(5);
+    const container = document.getElementById('recentOrdersList');
+    if(container) {
+      if(!data || data.length === 0) container.innerHTML = "No orders yet.";
+      else container.innerHTML = data.map(o => `<div style="border-bottom:1px solid var(--glass-border);padding:8px 0">${o.service_name} - Qty:${o.quantity} - $${o.amount} - <span class="status-badge completed">${o.status}</span></div>`).join('');
+    }
+  }
+  
+  // Authentication handlers
+  async function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPass').value;
+    if(!email || !password) { toast("Enter credentials","error"); return; }
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if(error) { toast(error.message,"error"); return; }
+    const user = data.user;
+    // fetch profile & wallet
+    const { data: profile } = await supabase.from('profiles').select('full_name, role').eq('id', user.id).single();
+    const { data: walletData } = await supabase.from('wallets').select('balance').eq('user_id', user.id).single();
+    currentUser = {
+      id: user.id,
+      email: user.email,
+      name: profile?.full_name || user.email.split('@')[0],
+      role: profile?.role || 'user',
+      wallet: walletData?.balance || 0
+    };
+    updateUIAfterAuth();
+    closeModal('loginModal');
+    toast(`Welcome ${currentUser.name}!`, "success");
+    showPage('dashboard');
+    loadUserOrders();
+  }
+  
+  async function doSignup() {
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPass').value;
+    if(!name || !email || !password) { toast("Fill all fields","error"); return; }
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if(error) { toast(error.message,"error"); return; }
+    const userId = data.user.id;
+    // insert profile
+    await supabase.from('profiles').insert([{ id: userId, full_name: name, email: email, role: 'user' }]);
+    await supabase.from('wallets').insert([{ user_id: userId, balance: 0 }]);
+    toast("Signup successful! Please login.", "success");
+    closeModal('signupModal');
+    openModal('login');
+  }
+  
+  async function logout() {
+    await supabase.auth.signOut();
+    currentUser = null;
+    updateUIAfterAuth();
+    showPage('home');
+    toast("Logged out", "info");
+  }
+  
+  function updateUIAfterAuth() {
+    const guestDiv = document.getElementById('guest-btns');
+    const userChip = document.getElementById('user-chip');
+    if(currentUser) {
+      guestDiv.style.display = 'none';
+      userChip.style.display = 'flex';
+      document.getElementById('nav-avatar').innerText = currentUser.name[0].toUpperCase();
+      document.getElementById('nav-username').innerText = currentUser.name;
+      document.getElementById('nav-wallet').innerText = `$${currentUser.wallet.toFixed(2)}`;
+      document.getElementById('dashWelcome').innerHTML = `Welcome, ${currentUser.name}`;
+      document.getElementById('dashWallet').innerHTML = `$${currentUser.wallet.toFixed(2)}`;
+      document.getElementById('dashAff').innerHTML = `$${(currentUser.affiliateEarnings || 0).toFixed(2)}`;
+      const refLinkInput = document.getElementById('refLink');
+      if(refLinkInput) refLinkInput.value = `https://mtssmm.com/ref/${currentUser.id}`;
+      const walletSpan = document.getElementById('orderWalletBal');
+      if(walletSpan) walletSpan.innerHTML = `<i class="fa-solid fa-wallet"></i> Wallet Balance: <strong>$${currentUser.wallet.toFixed(2)}</strong>`;
+      const smDash = document.getElementById('sm-dash');
+      if(smDash) smDash.style.display = 'block';
+      const smLogout = document.getElementById('sm-logout');
+      if(smLogout) smLogout.style.display = 'block';
+    } else {
+      guestDiv.style.display = 'flex';
+      userChip.style.display = 'none';
+      if(document.getElementById('orderWalletBal')) document.getElementById('orderWalletBal').innerHTML = 'Wallet Balance: $0.00 — <a href="#" onclick="openModal(\'login\')">Login</a>';
+    }
+  }
+  
+  async function checkSession() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if(session) {
+      const user = session.user;
+      const { data: profile } = await supabase.from('profiles').select('full_name, role').eq('id', user.id).single();
+      const { data: walletData } = await supabase.from('wallets').select('balance').eq('user_id', user.id).single();
+      currentUser = {
+        id: user.id,
+        email: user.email,
+        name: profile?.full_name || user.email.split('@')[0],
+        role: profile?.role || 'user',
+        wallet: walletData?.balance || 0
+      };
+      updateUIAfterAuth();
+      loadUserOrders();
+    }
+  }
+  
+  // Navigation, menu, theme
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const activePage = document.getElementById('page-' + page);
+    if(activePage) activePage.classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    const btnMap = {home:'Home',order:'Order',services:'Services',affiliate:'Affiliates'};
+    if(btnMap[page]) document.querySelectorAll('.nav-btn').forEach(b => { if(b.innerText === btnMap[page]) b.classList.add('active'); });
+    window.scrollTo(0,0);
+    if(page === 'dashboard' && currentUser) loadUserOrders();
+  }
+  
+  function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
+  function closeMenu() { document.getElementById('sideMenu').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+  function toggleTheme() { const html = document.documentElement; html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark'; }
+  function openModal(type) { document.getElementById(type + 'Modal').classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+  function copyRef() { const link = document.getElementById('refLink'); if(link) { navigator.clipboard.writeText(link.value); toast("Referral link copied!"); } }
+  
+  // Create tables if needed (auto init for demo: checks & create)
+  async function initDbSchema() {
+    // We rely on manual SQL in Supabase, but to avoid errors, just try to fetch. For smoother demo, ensure tables exist.
+    // Users must have created tables: profiles(id, full_name, email, role), wallets(user_id, balance), orders, services.
+    // If not present, functions will error gracefully.
+    await loadServicesFromDB();
+  }
+  
+  window.onload = () => {
+    checkSession();
+    initDbSchema();
+    renderServicesTable();
+    document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target === m) m.classList.remove('show'); }));
+  };
+  
+  // expose globals
+  window.showPage = showPage; window.toggleMenu = toggleMenu; window.closeMenu = closeMenu; window.toggleTheme = toggleTheme;
+  window.openModal = openModal; window.closeModal = closeModal; window.doLogin = doLogin; window.doSignup = doSignup;
+  window.logout = logout; window.updateServices = updateServices; window.calcPrice = calcPrice; window.placeOrder = placeOrder;
+  window.quickOrder = quickOrder; window.copyRef = copyRef;
+</script>
+</body>
+</html>

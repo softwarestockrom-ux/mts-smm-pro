@@ -104,7 +104,7 @@
   .page{display:none;min-height:calc(100vh - var(--nav-h));padding-top:var(--nav-h)}
   .page.active{display:block}
 
-  /* ---- HERO (condensed for space, keep original styling) ---- */
+  /* ---- HERO ---- */
   .hero{min-height:calc(100vh - var(--nav-h));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:60px 24px}
   .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(56,189,248,0.12),transparent 70%),radial-gradient(ellipse 50% 50% at 80% 70%,rgba(129,140,248,0.08),transparent 60%);z-index:0}
   .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--glass-border) 1px,transparent 1px),linear-gradient(90deg,var(--glass-border) 1px,transparent 1px);background-size:60px 60px;z-index:0;opacity:.4}
@@ -124,217 +124,1724 @@
   .hero-stat{text-align:center}
   .hero-stat .num{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
   .hero-stat .label{font-size:13px;color:var(--text3);margin-top:2px}
-  
-  /* ---- IMPORT ADDITIONAL STYLES (keep compact but all needed) ---- */
+
+  /* ---- SECTIONS ---- */
   section{padding:80px 24px}
   .section-label{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
   .section-title{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;margin-bottom:16px}
   .section-desc{color:var(--text2);font-size:16px;max-width:560px;line-height:1.7}
   .container{max-width:1160px;margin:0 auto}
   .text-center{text-align:center}
+  .text-center .section-desc{margin:0 auto}
+
+  /* ---- FEATURE CARDS ---- */
   .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:48px}
-  .feat-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px 24px;transition:all .3s}
-  .feat-card:hover{transform:translateY(-4px);border-color:rgba(56,189,248,0.2)}
+  .feat-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px 24px;transition:all .3s;position:relative;overflow:hidden}
+  .feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:0;transition:opacity .3s}
+  .feat-card:hover{transform:translateY(-4px);border-color:rgba(56,189,248,0.2);box-shadow:0 16px 40px rgba(0,0,0,0.3)}
+  .feat-card:hover::before{opacity:1}
   .card-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(129,140,248,0.15));display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:20px}
+  .card-icon.green{background:linear-gradient(135deg,rgba(52,211,153,0.15),rgba(56,189,248,0.10))}
+  .card-icon.purple{background:linear-gradient(135deg,rgba(129,140,248,0.15),rgba(56,189,248,0.10))}
+  .card-icon.orange{background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(248,113,113,0.10))}
+  .feat-card h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px}
+  .feat-card p{font-size:14px;color:var(--text2);line-height:1.6}
+
+  /* ---- PLATFORMS ---- */
   .platforms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:14px;margin-top:48px}
-  .plat-card{background:var(--card);border:1px solid var(--glass-border);border-radius:12px;padding:20px 12px;text-align:center}
+  .plat-card{background:var(--card);border:1px solid var(--glass-border);border-radius:12px;padding:20px 12px;text-align:center;cursor:pointer;transition:all .2s}
+  .plat-card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 8px 24px rgba(56,189,248,0.15)}
+  .plat-icon{font-size:28px;margin-bottom:8px}
+  .plat-name{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.5px}
+
+  /* ---- SERVICES PREVIEW ---- */
   .cats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:40px}
-  .cat-pill{background:var(--card);border:1px solid var(--glass-border);border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:10px}
-  .steps-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-top:48px}
-  .step{text-align:center;padding:32px 20px;background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius)}
-  .step-num{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-weight:800;font-size:22px}
+  .cat-pill{background:var(--card);border:1px solid var(--glass-border);border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s}
+  .cat-pill:hover{border-color:var(--accent);background:rgba(56,189,248,0.06)}
+  .cat-pill i{color:var(--accent);font-size:16px;width:20px}
+  .cat-pill span{font-size:14px;font-weight:500}
+
+  /* ---- HOW IT WORKS ---- */
+  .steps-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-top:48px;position:relative}
+  .step{text-align:center;padding:32px 20px;background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);position:relative}
+  .step-num{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+  .step h3{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:8px}
+  .step p{font-size:14px;color:var(--text2);line-height:1.5}
+
+  /* ---- GLASS CARD ---- */
   .glass-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:28px 24px;margin-bottom:20px}
-  .wallet-box{background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(129,140,248,0.08));border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:16px 22px;margin-bottom:20px}
+  .glass-card h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+
+  /* ---- ORDER PAGE ---- */
+  #page-order{background:var(--bg)}
+  .wallet-box{background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(129,140,248,0.08));border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:16px 22px;margin-bottom:20px;display:flex;align-items:center;gap:12px;font-weight:600;font-size:15px}
+  .wallet-box i{color:var(--accent);font-size:20px}
   .platform-filter-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-  .pf-btn{background:var(--glass);border:1px solid var(--glass-border);color:var(--text2);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px}
-  .pf-btn.active{background:rgba(56,189,248,0.1);border-color:var(--accent);color:var(--accent)}
+  .pf-btn{background:var(--glass);border:1px solid var(--glass-border);color:var(--text2);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;display:flex;align-items:center;gap:6px}
+  .pf-btn:hover,.pf-btn.active{background:rgba(56,189,248,0.1);border-color:var(--accent);color:var(--accent)}
+  .search-container{margin-top:14px}
+  .search-input-group{display:flex;flex-direction:column;gap:6px}
+  .search-input-group label{font-size:13px;color:var(--text2)}
+  .search-input-group input{background:var(--bg);border:1px solid var(--glass-border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;outline:none;transition:border .2s;width:100%}
+  .search-input-group input:focus{border-color:var(--accent)}
   .search-results{margin-top:12px;display:flex;flex-direction:column;gap:8px}
-  .sr-item{background:var(--bg);border:1px solid var(--glass-border);border-radius:8px;padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between}
-  .price-box{background:linear-gradient(135deg,rgba(56,189,248,0.08),rgba(129,140,248,0.06));border:1px solid rgba(56,189,248,0.2);border-radius:10px;padding:18px 22px;margin:20px 0;display:flex;justify-content:space-between}
-  .btn-order{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;padding:13px 32px;border-radius:9px;cursor:pointer;font-weight:700}
-  .services-table{width:100%;border-collapse:collapse}
-  .services-table th{text-align:left;padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--glass-border)}
-  .services-table td{padding:13px 16px;border-bottom:1px solid var(--glass-border)}
+  .sr-item{background:var(--bg);border:1px solid var(--glass-border);border-radius:8px;padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .2s}
+  .sr-item:hover{border-color:var(--accent)}
+  .sr-item .sr-name{font-size:14px;font-weight:500}
+  .sr-item .sr-rate{font-size:13px;color:var(--accent3);font-weight:600}
+  .form-section{margin-bottom:24px}
+  .form-section h3{font-size:16px;font-weight:700;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--glass-border)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px}
+  @media(max-width:640px){.row{grid-template-columns:1fr}}
+  .col{display:flex;flex-direction:column;gap:6px}
+  label{font-size:13px;color:var(--text2);font-weight:500}
+  label.required::after{content:' *';color:var(--danger)}
+  select,input[type=text],input[type=email],input[type=number],input[type=tel],input[type=url],textarea{background:var(--bg);border:1px solid var(--glass-border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s;width:100%}
+  select:focus,input:focus,textarea:focus{border-color:var(--accent)}
+  textarea{resize:vertical;min-height:90px}
+  .quick-qty-btn{background:var(--glass);border:1px solid var(--glass-border);color:var(--text2);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
+  .quick-qty-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .qty-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .price-box{background:linear-gradient(135deg,rgba(56,189,248,0.08),rgba(129,140,248,0.06));border:1px solid rgba(56,189,248,0.2);border-radius:10px;padding:18px 22px;margin:20px 0;display:flex;justify-content:space-between;align-items:center}
+  .price-box .pb-label{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+  .price-box .pb-amount{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent)}
+  .btn-group{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+  .btn-order{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;padding:13px 32px;border-radius:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;transition:all .2s;flex:1;min-width:140px}
+  .btn-order:hover{opacity:.85;transform:translateY(-1px)}
+  .btn-clear{background:var(--glass);border:1px solid var(--glass-border);color:var(--text2);padding:13px 24px;border-radius:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;transition:all .2s}
+  .btn-clear:hover{border-color:var(--danger);color:var(--danger)}
+  .details-text{font-size:12px;color:var(--text3);margin-top:4px}
+
+  /* ---- SERVICES PAGE ---- */
+  #page-services .search-bar{margin-bottom:20px}
+  .services-table{width:100%;border-collapse:collapse;margin-top:20px}
+  .services-table th{text-align:left;padding:12px 16px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);background:var(--bg2);border-bottom:1px solid var(--glass-border)}
+  .services-table td{padding:13px 16px;font-size:14px;border-bottom:1px solid var(--glass-border);vertical-align:middle}
+  .services-table tr:hover td{background:var(--glass)}
+  .svc-badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700}
+  .svc-badge.active{background:rgba(52,211,153,0.15);color:var(--accent3)}
+  .btn-order-sm{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;padding:7px 14px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
+  .btn-order-sm:hover{opacity:.8}
+
+  /* ---- AFFILIATE PAGE ---- */
+  .aff-tabs{display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap}
+  .aff-tab{padding:10px 22px;border-radius:9px;border:1px solid var(--glass-border);background:var(--glass);color:var(--text2);cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}
+  .aff-tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+  .aff-content{display:none}
+  .aff-content.active{display:block}
+  .how-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:28px}
+  .how-step{background:var(--card);border:1px solid var(--glass-border);border-radius:12px;padding:24px 18px;text-align:center}
+  .how-step .hs-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+  .how-step h4{font-size:14px;font-weight:700;margin-bottom:6px}
+  .how-step p{font-size:13px;color:var(--text2)}
+  .commission-box{background:linear-gradient(135deg,rgba(52,211,153,0.1),rgba(56,189,248,0.06));border:1px solid rgba(52,211,153,0.2);border-radius:12px;padding:24px;margin-bottom:20px}
+  .commission-box .rate{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--accent3)}
+  .commission-box .label{font-size:14px;color:var(--text2);margin-top:4px}
+
+  /* ---- EMPLOYEE PORTAL ---- */
+  .emp-tabs{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+  .emp-tab{padding:9px 18px;border-radius:8px;border:1px solid var(--glass-border);background:var(--glass);color:var(--text2);cursor:pointer;font-size:13.5px;font-weight:600;transition:all .2s}
+  .emp-tab.active{background:var(--accent2);border-color:var(--accent2);color:#fff}
+  .emp-section{display:none}
+  .emp-section.active{display:block}
+  .checkbox-wrap{display:flex;align-items:flex-start;gap:12px;padding:16px;background:var(--glass);border:1px solid var(--glass-border);border-radius:9px;margin-bottom:16px}
+  .checkbox-wrap input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;margin-top:2px}
+  .checkbox-wrap label{font-size:13.5px;color:var(--text2);cursor:pointer}
+
+  /* ---- DASHBOARD ---- */
   .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
-  .dash-stat{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px}
-  .status-badge{padding:4px 10px;border-radius:99px;font-size:11px}
+  .dash-stat{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px;transition:all .2s}
+  .dash-stat:hover{border-color:var(--accent)}
+  .dash-stat .ds-label{font-size:12px;color:var(--text3);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+  .dash-stat .ds-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:4px}
+  .dash-stat .ds-change{font-size:13px;color:var(--accent3)}
+  .dash-stat .ds-icon{float:right;font-size:28px;opacity:.3;margin-top:-8px}
+  .orders-table{width:100%;border-collapse:collapse}
+  .orders-table th{text-align:left;padding:12px 16px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);background:var(--bg2);border-bottom:1px solid var(--glass-border)}
+  .orders-table td{padding:13px 16px;font-size:14px;border-bottom:1px solid var(--glass-border)}
+  .orders-table tr:hover td{background:var(--glass)}
+  .status-badge{padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700}
   .status-badge.completed{background:rgba(52,211,153,0.15);color:var(--accent3)}
-  .admin-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
-  .admin-tab{padding:8px 16px;border-radius:8px;background:var(--glass);color:var(--text2);cursor:pointer}
+  .status-badge.pending{background:rgba(251,191,36,0.15);color:var(--warning)}
+  .status-badge.processing{background:rgba(56,189,248,0.15);color:var(--accent)}
+
+  /* ---- ADMIN PANEL ---- */
+  .admin-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;background:var(--bg2);border-radius:12px;padding:8px}
+  .admin-tab{padding:8px 16px;border-radius:8px;border:none;background:none;color:var(--text2);cursor:pointer;font-size:13.5px;font-weight:600;transition:all .2s;font-family:'DM Sans',sans-serif}
   .admin-tab.active{background:var(--accent);color:#fff}
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center}
+  .admin-section{display:none}
+  .admin-section.active{display:block}
+  .admin-table{width:100%;border-collapse:collapse}
+  .admin-table th{text-align:left;padding:12px 16px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);background:var(--bg2);border-bottom:1px solid var(--glass-border)}
+  .admin-table td{padding:12px 16px;font-size:14px;border-bottom:1px solid var(--glass-border)}
+  .admin-table tr:hover td{background:var(--glass)}
+  .act-btns{display:flex;gap:8px}
+  .btn-sm-edit{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.2);color:var(--accent);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s}
+  .btn-sm-delete{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);color:var(--danger);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s}
+  .btn-sm-edit:hover{background:var(--accent);color:#fff}
+  .btn-sm-delete:hover{background:var(--danger);color:#fff}
+  .toggle-switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+  .ts-track{width:40px;height:22px;border-radius:11px;background:var(--bg3);border:1px solid var(--glass-border);position:relative;transition:background .2s}
+  .ts-track.on{background:var(--accent3)}
+  .ts-thumb{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s}
+  .ts-track.on .ts-thumb{left:21px}
+
+  /* ---- AUTH MODAL ---- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
   .modal-overlay.show{display:flex}
-  .modal{background:var(--bg2);border:1px solid var(--glass-border);border-radius:18px;width:100%;max-width:420px;padding:36px 32px}
+  .modal{background:var(--bg2);border:1px solid var(--glass-border);border-radius:18px;width:100%;max-width:420px;padding:36px 32px;position:relative;animation:slideUp .3s ease}
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .modal-close{position:absolute;top:16px;right:16px;background:var(--glass);border:1px solid var(--glass-border);color:var(--text2);width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+  .modal-close:hover{color:var(--danger);border-color:var(--danger)}
+  .modal h2{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:6px}
+  .modal p.sub{font-size:14px;color:var(--text2);margin-bottom:28px}
+  .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+  .form-group label{font-size:13px;font-weight:600;color:var(--text2)}
+  .form-group input{background:var(--bg);border:1px solid var(--glass-border);border-radius:9px;padding:12px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s;width:100%}
+  .form-group input:focus{border-color:var(--accent)}
+  .modal .btn-primary{width:100%;justify-content:center;margin-top:4px}
+  .modal-footer{text-align:center;margin-top:20px;font-size:13.5px;color:var(--text2)}
+  .modal-footer a{color:var(--accent);cursor:pointer;font-weight:600}
+  .remember-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .remember-row label{font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px;cursor:pointer}
+  .remember-row a{font-size:13px;color:var(--accent);cursor:pointer}
+
+  /* ---- PRIVACY POLICY ---- */
+  .policy-section{margin-bottom:36px}
+  .policy-section h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--accent)}
+  .policy-section p,.policy-section li{font-size:15px;color:var(--text2);line-height:1.8;margin-bottom:8px}
+  .policy-section ul{padding-left:20px}
+
+  /* ---- CONTACT PAGE ---- */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:40px}
+  @media(max-width:768px){.contact-grid{grid-template-columns:1fr}}
+  .contact-channels{display:flex;flex-direction:column;gap:14px}
+  .channel-btn{display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--card);border:1px solid var(--glass-border);border-radius:12px;text-decoration:none;color:var(--text);transition:all .2s}
+  .channel-btn:hover{transform:translateX(4px);border-color:var(--accent)}
+  .ch-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+  .ch-icon.wa{background:rgba(37,211,102,0.15);color:#25D366}
+  .ch-icon.tg{background:rgba(0,136,204,0.15);color:#0088cc}
+  .ch-icon.em{background:rgba(56,189,248,0.15);color:var(--accent)}
+  .ch-text .ct{font-size:14px;font-weight:700}
+  .ch-text .cs{font-size:12px;color:var(--text3);margin-top:2px}
+
+  /* ---- TOAST ---- */
   .toast-container{position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:10px}
-  .toast{background:var(--bg2);border:1px solid var(--glass-border);border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:12px}
+  .toast{background:var(--bg2);border:1px solid var(--glass-border);border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:12px;font-size:14px;font-weight:500;box-shadow:var(--shadow);animation:toastIn .3s ease;min-width:260px}
+  @keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+  .toast.success{border-left:3px solid var(--accent3)}
+  .toast.error{border-left:3px solid var(--danger)}
+  .toast.info{border-left:3px solid var(--accent)}
+  .toast i{font-size:18px}
+  .toast.success i{color:var(--accent3)}
+  .toast.error i{color:var(--danger)}
+  .toast.info i{color:var(--accent)}
+
+  /* ---- FOOTER ---- */
   footer{background:var(--bg2);border-top:1px solid var(--glass-border);padding:48px 24px 24px}
   .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:1160px;margin:0 auto}
-  @media(max-width:900px){.nav-center{display:none}}
+  @media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.footer-grid{grid-template-columns:1fr}}
+  .footer-brand .logo-brand{font-size:20px}
+  .footer-brand p{font-size:14px;color:var(--text3);margin-top:12px;line-height:1.7;max-width:280px}
+  .footer-col h4{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:16px;letter-spacing:.5px}
+  .footer-col a{display:block;color:var(--text3);font-size:14px;text-decoration:none;margin-bottom:10px;transition:color .2s;cursor:pointer}
+  .footer-col a:hover{color:var(--accent)}
+  .footer-bottom{max-width:1160px;margin:32px auto 0;padding-top:20px;border-top:1px solid var(--glass-border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .footer-bottom p{font-size:13px;color:var(--text3)}
+
+  /* ---- PAGE HEADER ---- */
+  .page-header{background:linear-gradient(135deg,rgba(56,189,248,0.08),rgba(129,140,248,0.06));border-bottom:1px solid var(--glass-border);padding:48px 24px 40px}
+  .page-header h1{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-1px;margin-bottom:10px}
+  .page-header p{font-size:16px;color:var(--text2)}
+  .page-body{padding:40px 24px;max-width:1160px;margin:0 auto}
+
+  /* ---- DB SCHEMA CALLOUT ---- */
+  .schema-info{background:rgba(56,189,248,0.05);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+  .schema-info h4{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .schema-info p{font-size:13.5px;color:var(--text2);line-height:1.7}
+  code{background:var(--bg3);padding:2px 7px;border-radius:5px;font-size:12.5px;font-family:monospace;color:var(--accent)}
+
+  /* ---- RESPONSIVE NAVBAR ---- */
+  @media(max-width:900px){
+    .nav-center{display:none}
+  }
+  @media(max-width:600px){
+    .user-name,.wallet-bal{display:none}
+    .user-chip{padding:6px}
+  }
 </style>
 </head>
 <body>
+
+<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
+
+<!-- OVERLAY -->
 <div class="overlay" id="overlay" onclick="closeMenu()"></div>
-<div class="side-menu" id="sideMenu"><div class="side-logo"><div class="logo-brand">MTS SMM</div><div class="logo-sub">Media Tech Support</div></div>
-<nav class="side-nav"><a href="#" onclick="showPage('home');closeMenu()" id="sm-home"><i class="fa-solid fa-house"></i> Home</a><a href="#" onclick="showPage('order');closeMenu()" id="sm-order"><i class="fa-solid fa-cart-shopping"></i> Order</a><a href="#" onclick="showPage('services');closeMenu()" id="sm-services"><i class="fa-solid fa-layer-group"></i> Services</a><a href="#" onclick="showPage('affiliate');closeMenu()" id="sm-affiliate"><i class="fa-solid fa-handshake"></i> Affiliate</a><hr class="side-divider"><a href="#" onclick="showPage('privacy');closeMenu()" id="sm-privacy"><i class="fa-solid fa-shield-halved"></i> Privacy</a><a href="#" onclick="showPage('contact');closeMenu()" id="sm-contact"><i class="fa-solid fa-headset"></i> Contact</a><div id="sm-admin-link" style="display:none"><hr class="side-divider"><a href="#" onclick="showPage('admin');closeMenu()" id="sm-admin"><i class="fa-solid fa-gauge"></i> Admin Panel</a></div><div id="sm-dash-link" style="display:none"><hr class="side-divider"><a href="#" onclick="showPage('dashboard');closeMenu()" id="sm-dash"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></div><div id="sm-logout-link" style="display:none"><a href="#" onclick="logout();closeMenu()" style="color:var(--danger)"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></div></nav></div>
 
-<nav><div class="nav-left"><button class="hamburger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button><div class="logo-wrap" onclick="showPage('home')"><div class="logo-brand">MTS</div><div class="logo-sub">Media Tech Support</div></div></div><div class="nav-center"><button class="nav-btn active" onclick="showPage('home')">Home</button><button class="nav-btn" onclick="showPage('order')">Order</button><button class="nav-btn" onclick="showPage('services')">Services</button><button class="nav-btn" onclick="showPage('affiliate')">Affiliates</button></div><div class="nav-right"><button class="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button><div id="guest-btns"><button class="btn-login" onclick="openModal('login')">Login</button><button class="btn-signup" onclick="openModal('signup')">Sign Up</button></div><div class="user-chip" id="user-chip" style="display:none" onclick="this.classList.toggle('open')"><div class="avatar" id="nav-avatar">U</div><div class="user-info"><span class="user-name" id="nav-username">User</span><span class="wallet-bal" id="nav-wallet">$0.00</span></div><i class="fa-solid fa-chevron-down" style="font-size:11px"></i><div class="user-dropdown"><a href="#" onclick="showPage('dashboard')"><i class="fa-solid fa-chart-pie"></i> Dashboard</a><a href="#" onclick="showPage('order')"><i class="fa-solid fa-cart-shopping"></i> New Order</a><a href="#" id="admin-nav-link" style="display:none" onclick="showPage('admin')"><i class="fa-solid fa-gauge"></i> Admin Panel</a><a href="#" class="logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></div></div></div></nav>
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <div class="side-logo">
+    <div class="logo-brand">MTS SMM</div>
+    <div class="logo-sub">Media Tech Support</div>
+  </div>
+  <nav class="side-nav">
+    <a href="#" onclick="showPage('home');closeMenu()" class="active" id="sm-home"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="#" onclick="showPage('order');closeMenu()" id="sm-order"><i class="fa-solid fa-cart-shopping"></i> Order</a>
+    <a href="#" onclick="showPage('services');closeMenu()" id="sm-services"><i class="fa-solid fa-layer-group"></i> Services</a>
+    <a href="#" onclick="showPage('affiliate');closeMenu()" id="sm-affiliate"><i class="fa-solid fa-handshake"></i> Affiliate Program</a>
+    <hr class="side-divider">
+    <a href="#" onclick="showPage('privacy');closeMenu()" id="sm-privacy"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a>
+    <a href="#" onclick="showPage('contact');closeMenu()" id="sm-contact"><i class="fa-solid fa-headset"></i> Contact Support</a>
+    <div id="sm-admin-link" style="display:none">
+      <hr class="side-divider">
+      <a href="#" onclick="showPage('admin');closeMenu()" id="sm-admin"><i class="fa-solid fa-gauge"></i> Admin Panel <span class="side-badge">ADMIN</span></a>
+    </div>
+    <div id="sm-dash-link" style="display:none">
+      <hr class="side-divider">
+      <a href="#" onclick="showPage('dashboard');closeMenu()" id="sm-dash"><i class="fa-solid fa-chart-pie"></i> My Dashboard</a>
+    </div>
+    <div id="sm-logout-link" style="display:none">
+      <a href="#" onclick="logout();closeMenu()" style="color:var(--danger)"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </nav>
+</div>
 
-<!-- HOME PAGE (keep full original structure but condensed for brevity, essential sections remain) -->
-<div class="page active" id="page-home"><div class="hero"><div class="hero-bg"></div><div class="hero-grid"></div><div class="hero-content"><div class="hero-badge"><span></span> #1 SMM Panel Platform</div><h1>Grow Your <span class="grad">Social Media</span> Presence With Confidence</h1><p>MTS SMM provides affordable, high-quality, and reliable social media marketing services for creators, businesses, agencies, and brands worldwide.</p><div class="hero-btns"><button class="btn-primary" onclick="openModal('signup')"><i class="fa-solid fa-rocket"></i> Get Started</button><button class="btn-ghost" onclick="showPage('services')">Browse Services</button></div><div class="hero-stats"><div class="hero-stat"><div class="num">50K+</div><div class="label">Happy Clients</div></div><div class="hero-stat"><div class="num">1M+</div><div class="label">Orders</div></div><div class="hero-stat"><div class="num">99.9%</div><div class="label">Uptime</div></div></div></div></div><section style="background:var(--bg2)"><div class="container text-center"><div class="section-label">Why Choose MTS SMM</div><div class="section-title">Built on Trust, Powered by Tech</div><div class="cards-grid"><div class="feat-card"><div class="card-icon"><i class="fa-solid fa-shield-heart"></i></div><h3>We Sell Trust</h3><p>Worldwide trusted services</p></div><div class="feat-card"><div class="card-icon green"><i class="fa-solid fa-tags"></i></div><h3>Affordable & Guaranteed</h3><p>Competitive pricing</p></div><div class="feat-card"><div class="card-icon purple"><i class="fa-solid fa-globe"></i></div><h3>Global High-Tech</h3><p>All major platforms</p></div></div></div></section></div>
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-left">
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+    <div class="logo-wrap" onclick="showPage('home')" style="cursor:pointer">
+      <div class="logo-brand">MTS</div>
+      <div class="logo-sub">Media Tech Support</div>
+    </div>
+  </div>
+  <div class="nav-center">
+    <button class="nav-btn active" onclick="showPage('home')" id="nb-home">Home</button>
+    <button class="nav-btn" onclick="showPage('order')" id="nb-order">Order</button>
+    <button class="nav-btn" onclick="showPage('services')" id="nb-services">Services</button>
+    <button class="nav-btn" onclick="showPage('affiliate')" id="nb-affiliate">Affiliates</button>
+    <button class="nav-btn" onclick="showPage('privacy')" id="nb-privacy">Policies</button>
+  </div>
+  <div class="nav-right">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme"><i class="fa-solid fa-circle-half-stroke"></i></button>
+    <!-- Guest buttons -->
+    <div id="guest-btns">
+      <button class="btn-login" onclick="openModal('login')">Login</button>
+      <button class="btn-signup" onclick="openModal('signup')">Sign Up</button>
+    </div>
+    <!-- Logged in chip -->
+    <div class="user-chip" id="user-chip" style="display:none" onclick="this.classList.toggle('open')">
+      <div class="avatar" id="nav-avatar">U</div>
+      <div class="user-info">
+        <span class="user-name" id="nav-username">User</span>
+        <span class="wallet-bal" id="nav-wallet">$0.00</span>
+      </div>
+      <i class="fa-solid fa-chevron-down" style="font-size:11px;color:var(--text3);margin-left:4px"></i>
+      <div class="user-dropdown">
+        <a href="#" onclick="showPage('dashboard');document.getElementById('user-chip').classList.remove('open')"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+        <a href="#" onclick="showPage('order');document.getElementById('user-chip').classList.remove('open')"><i class="fa-solid fa-cart-shopping"></i> New Order</a>
+        <a href="#" onclick="showPage('affiliate');document.getElementById('user-chip').classList.remove('open')"><i class="fa-solid fa-handshake"></i> Affiliate</a>
+        <a href="#" id="admin-nav-link" style="display:none" onclick="showPage('admin');document.getElementById('user-chip').classList.remove('open')"><i class="fa-solid fa-gauge"></i> Admin Panel</a>
+        <a href="#" class="logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
 
-<!-- ORDER PAGE (simplified but functional) -->
-<div class="page" id="page-order"><div class="page-header"><div class="container"><div class="section-label">New Order</div><h1>Place Your Order</h1></div></div><div class="page-body"><div class="wallet-box" id="orderWalletBal">Wallet Balance: $0.00 — <a href="#" onclick="openModal('login')">Login</a></div><div class="glass-card"><h3>Platform Filter</h3><div id="platformFilterBtns" class="platform-filter-btns"><button class="pf-btn active" onclick="filterPlatform('all',this)">All</button><button class="pf-btn" onclick="filterPlatform('TikTok',this)">TikTok</button><button class="pf-btn" onclick="filterPlatform('Instagram',this)">Instagram</button><button class="pf-btn" onclick="filterPlatform('YouTube',this)">YouTube</button></div></div><div class="glass-card"><div class="row"><div class="col"><label>Platform</label><select id="orderPlatform" onchange="updateServices()"><option value="">Select</option><option>TikTok</option><option>Instagram</option><option>YouTube</option></select></div><div class="col"><label>Service</label><select id="orderService" onchange="calcPrice()"><option>--</option></select></div></div><div class="row"><div class="col"><label>Quantity</label><input type="number" id="orderQty" oninput="calcPrice()"></div><div class="col"><label>Amount</label><input type="text" id="orderAmount" readonly></div></div><div class="col"><label>Link</label><input type="text" id="orderLink" placeholder="Profile/Post URL"></div><div class="price-box"><div>Total</div><div class="pb-amount" id="priceSummary">$0.00</div></div><button class="btn-order" onclick="placeOrder()">Place Order</button><button class="btn-clear" onclick="clearOrderForm()">Clear</button></div></div></div>
+<!-- ===================== HOME PAGE ===================== -->
+<div class="page active" id="page-home">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span></span> #1 SMM Panel Platform</div>
+      <h1>Grow Your <span class="grad">Social Media</span> Presence With Confidence</h1>
+      <p>MTS SMM provides affordable, high-quality, and reliable social media marketing services for creators, businesses, agencies, and brands worldwide.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="openModal('signup')"><i class="fa-solid fa-rocket"></i> Get Started</button>
+        <button class="btn-ghost" onclick="showPage('services')">Browse Services</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">50K+</div><div class="label">Happy Clients</div></div>
+        <div class="hero-stat"><div class="num">1M+</div><div class="label">Orders Delivered</div></div>
+        <div class="hero-stat"><div class="num">99.9%</div><div class="label">Uptime</div></div>
+        <div class="hero-stat"><div class="num">24/7</div><div class="label">Support</div></div>
+      </div>
+    </div>
+  </div>
 
-<!-- SERVICES PAGE -->
-<div class="page" id="page-services"><div class="page-header"><div class="container"><h1>All Services</h1></div></div><div class="page-body"><div class="glass-card"><input type="text" id="svcSearch" placeholder="Search..." oninput="filterServices()"><table class="services-table"><thead><tr><th>Platform</th><th>Service</th><th>Rate/1K</th><th>Action</th></tr></thead><tbody id="svcTableBody"></tbody></table></div></div></div>
+  <!-- WHY CHOOSE US -->
+  <section style="background:var(--bg2)">
+    <div class="container">
+      <div class="text-center">
+        <div class="section-label">Why Choose MTS SMM</div>
+        <div class="section-title">Built on Trust, Powered by Technology</div>
+        <div class="section-desc">We deliver real results with transparent pricing and a platform designed for growth.</div>
+      </div>
+      <div class="cards-grid">
+        <div class="feat-card">
+          <div class="card-icon"><i class="fa-solid fa-shield-heart" style="color:var(--accent)"></i></div>
+          <h3>We Sell Trust</h3>
+          <p>Trusted by clients worldwide with transparent pricing and reliable service delivery.</p>
+        </div>
+        <div class="feat-card">
+          <div class="card-icon green"><i class="fa-solid fa-tags" style="color:var(--accent3)"></i></div>
+          <h3>Affordable & Guaranteed Services</h3>
+          <p>Competitive pricing with stable delivery and customer satisfaction guaranteed on every order.</p>
+        </div>
+        <div class="feat-card">
+          <div class="card-icon purple"><i class="fa-solid fa-globe" style="color:var(--accent2)"></i></div>
+          <h3>Global High-Tech Platform</h3>
+          <p>Support for TikTok, Instagram, Facebook, YouTube, X, Pinterest, Telegram, WhatsApp, and more.</p>
+        </div>
+        <div class="feat-card">
+          <div class="card-icon orange"><i class="fa-solid fa-headset" style="color:var(--warning)"></i></div>
+          <h3>Professional Support</h3>
+          <p>Fast customer assistance and dedicated account support for every client, round the clock.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- AFFILIATE, DASHBOARD, ADMIN, PRIVACY, CONTACT placeholders (minimal but functional to preserve experience) -->
-<div class="page" id="page-affiliate"><div class="page-header"><h1>Affiliate Program</h1></div><div class="page-body"><div class="glass-card"><p>Earn 20% commission. <button class="btn-primary" onclick="toast('Affiliate signup demo','info')">Join Now</button></p></div></div></div>
-<div class="page" id="page-dashboard"><div class="page-header"><h1 id="dashWelcome">Dashboard</h1></div><div class="page-body"><div class="glass-card"><div class="dash-stat"><div class="ds-label">Balance</div><div id="dashWallet">$0.00</div></div></div></div></div>
-<div class="page" id="page-admin"><div class="page-header"><h1>Admin</h1></div><div class="page-body"><div class="glass-card"><p>Admin controls</p></div></div></div>
-<div class="page" id="page-privacy"><div class="page-header"><h1>Privacy Policy</h1></div><div class="page-body"><div class="glass-card"><p>GDPR compliant. Data protected with Supabase RLS.</p></div></div></div>
-<div class="page" id="page-contact"><div class="page-header"><h1>Contact Support</h1></div><div class="page-body"><div class="glass-card"><p>WhatsApp: +923218595421 | Email: zone43157@gmail.com</p></div></div></div>
+  <!-- SUPPORTED PLATFORMS -->
+  <section>
+    <div class="container">
+      <div class="text-center" style="margin-bottom:0">
+        <div class="section-label">Supported Platforms</div>
+        <div class="section-title">We Boost Growth Across Every Major Platform</div>
+        <div class="section-desc">From social media giants to emerging platforms — we cover them all.</div>
+      </div>
+      <div class="platforms-grid">
+        <div class="plat-card"><div class="plat-icon">🎵</div><div class="plat-name">TikTok</div></div>
+        <div class="plat-card"><div class="plat-icon">📷</div><div class="plat-name">Instagram</div></div>
+        <div class="plat-card"><div class="plat-icon">👍</div><div class="plat-name">Facebook</div></div>
+        <div class="plat-card"><div class="plat-icon">▶️</div><div class="plat-name">YouTube</div></div>
+        <div class="plat-card"><div class="plat-icon">𝕏</div><div class="plat-name">X / Twitter</div></div>
+        <div class="plat-card"><div class="plat-icon">📌</div><div class="plat-name">Pinterest</div></div>
+        <div class="plat-card"><div class="plat-icon">✈️</div><div class="plat-name">Telegram</div></div>
+        <div class="plat-card"><div class="plat-icon">💬</div><div class="plat-name">WhatsApp</div></div>
+        <div class="plat-card"><div class="plat-icon">👻</div><div class="plat-name">Snapchat</div></div>
+        <div class="plat-card"><div class="plat-icon">💼</div><div class="plat-name">LinkedIn</div></div>
+        <div class="plat-card"><div class="plat-icon">🎮</div><div class="plat-name">Discord</div></div>
+        <div class="plat-card"><div class="plat-icon">🎵</div><div class="plat-name">Spotify</div></div>
+        <div class="plat-card"><div class="plat-icon">🟣</div><div class="plat-name">Twitch</div></div>
+      </div>
+    </div>
+  </section>
 
-<footer><div class="footer-grid"><div class="footer-brand"><div class="logo-brand">MTS SMM</div><p>Media Tech Support</p></div></div><div class="footer-bottom"><p>© 2025 MTS SMM</p></div></footer>
+  <!-- SERVICES PREVIEW -->
+  <section style="background:var(--bg2)">
+    <div class="container">
+      <div class="text-center" style="margin-bottom:0">
+        <div class="section-label">Our Services</div>
+        <div class="section-title">Everything You Need to Go Viral</div>
+        <div class="section-desc">Choose from a full range of social media growth services.</div>
+      </div>
+      <div class="cats-grid">
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-user-plus"></i><span>Followers</span></div>
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-heart"></i><span>Likes</span></div>
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-eye"></i><span>Views</span></div>
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-comment"></i><span>Comments</span></div>
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-share-nodes"></i><span>Shares</span></div>
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-clock"></i><span>Watch Time</span></div>
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-bell"></i><span>Subscribers</span></div>
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-users"></i><span>Channel Members</span></div>
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-poll"></i><span>Poll Votes</span></div>
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-dollar-sign"></i><span>Monetization</span></div>
+        <div class="cat-pill" onclick="showPage('services')"><i class="fa-solid fa-crown"></i><span>Premium Subscriptions</span></div>
+      </div>
+      <div style="text-align:center;margin-top:36px">
+        <button class="btn-primary" onclick="showPage('services')"><i class="fa-solid fa-grid"></i> View All Services</button>
+      </div>
+    </div>
+  </section>
 
-<!-- MODALS -->
-<div class="modal-overlay" id="loginModal"><div class="modal"><button class="modal-close" onclick="closeModal('loginModal')">✖</button><h2>Login</h2><div class="form-group"><label>Email</label><input type="email" id="loginEmail"></div><div class="form-group"><label>Password</label><input type="password" id="loginPass"></div><button class="btn-primary" onclick="doLogin()">Login</button><div class="modal-footer"><a onclick="openModal('signup')">Sign Up</a></div></div></div>
-<div class="modal-overlay" id="signupModal"><div class="modal"><button class="modal-close" onclick="closeModal('signupModal')">✖</button><h2>Sign Up</h2><div class="form-group"><label>Name</label><input type="text" id="signupName"></div><div class="form-group"><label>Email</label><input type="email" id="signupEmail"></div><div class="form-group"><label>Password</label><input type="password" id="signupPass"></div><button class="btn-primary" onclick="doSignup()">Create Account</button></div></div>
+  <!-- HOW IT WORKS -->
+  <section>
+    <div class="container">
+      <div class="text-center" style="margin-bottom:0">
+        <div class="section-label">Simple Process</div>
+        <div class="section-title">How It Works</div>
+        <div class="section-desc">Getting started takes less than 2 minutes. Follow these simple steps.</div>
+      </div>
+      <div class="steps-row">
+        <div class="step"><div class="step-num">1</div><h3>Select Platform</h3><p>Choose the social media platform you want to grow on.</p></div>
+        <div class="step"><div class="step-num">2</div><h3>Choose Service</h3><p>Pick the service type — followers, likes, views, and more.</p></div>
+        <div class="step"><div class="step-num">3</div><h3>Place Order</h3><p>Enter your profile link, quantity, and complete payment.</p></div>
+        <div class="step"><div class="step-num">4</div><h3>Receive Delivery</h3><p>Watch your account grow. Fast, reliable delivery guaranteed.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== ORDER PAGE ===================== -->
+<div class="page" id="page-order">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label">New Order</div>
+      <h1>Place Your Order</h1>
+      <p>Select your platform and service, enter details, and boost your social presence instantly.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="wallet-box"><i class="fa-solid fa-wallet"></i> <span id="orderWalletBal">Wallet Balance: $0.00 — <a href="#" onclick="openModal('login')" style="color:var(--accent)">Login to use balance</a></span></div>
+
+    <!-- Platform Filter -->
+    <div class="glass-card">
+      <h3><i class="fa-solid fa-filter" style="color:var(--accent)"></i> Quick Platform Filter</h3>
+      <div class="platform-filter-btns" id="platformFilterBtns">
+        <button class="pf-btn active" onclick="filterPlatform('all',this)">⭐ All</button>
+        <button class="pf-btn" onclick="filterPlatform('tiktok',this)">🎵 TikTok</button>
+        <button class="pf-btn" onclick="filterPlatform('instagram',this)">📷 Instagram</button>
+        <button class="pf-btn" onclick="filterPlatform('facebook',this)">👍 Facebook</button>
+        <button class="pf-btn" onclick="filterPlatform('youtube',this)">▶️ YouTube</button>
+        <button class="pf-btn" onclick="filterPlatform('twitter',this)">𝕏 Twitter/X</button>
+        <button class="pf-btn" onclick="filterPlatform('spotify',this)">🎵 Spotify</button>
+        <button class="pf-btn" onclick="filterPlatform('threads',this)">🧵 Threads</button>
+        <button class="pf-btn" onclick="filterPlatform('google',this)">🔍 Google</button>
+        <button class="pf-btn" onclick="filterPlatform('capcut',this)">🎬 CapCut</button>
+        <button class="pf-btn" onclick="filterPlatform('discord',this)">🎮 Discord</button>
+        <button class="pf-btn" onclick="filterPlatform('telegram',this)">✈️ Telegram</button>
+        <button class="pf-btn" onclick="filterPlatform('whatsapp',this)">💬 WhatsApp</button>
+        <button class="pf-btn" onclick="filterPlatform('snapchat',this)">👻 Snapchat</button>
+        <button class="pf-btn" onclick="filterPlatform('linkedin',this)">💼 LinkedIn</button>
+        <button class="pf-btn" onclick="filterPlatform('pinterest',this)">📌 Pinterest</button>
+        <button class="pf-btn" onclick="filterPlatform('twitch',this)">🟣 Twitch</button>
+        <button class="pf-btn" onclick="filterPlatform('canva',this)">🎨 Canva</button>
+        <button class="pf-btn" onclick="filterPlatform('website',this)">🌐 Website</button>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="glass-card">
+      <h3><i class="fa-solid fa-magnifying-glass" style="color:var(--accent)"></i> Search Services</h3>
+      <div class="search-container">
+        <div class="search-input-group">
+          <label>Search by Platform, Service, or Rate</label>
+          <input type="text" id="searchKeyword" placeholder="e.g., Instagram, Likes, 50..." oninput="performSearch()">
+        </div>
+      </div>
+      <div id="searchResults" class="search-results"></div>
+    </div>
+
+    <!-- Order Form -->
+    <div class="glass-card">
+      <div class="form-section">
+        <h3>Service Selection</h3>
+        <div class="row">
+          <div class="col">
+            <label class="required">Platform</label>
+            <select id="orderPlatform" onchange="updateServices()">
+              <option value="">-- Select Platform --</option>
+              <option>TikTok</option><option>Instagram</option><option>Facebook</option>
+              <option>YouTube</option><option>X / Twitter</option><option>Pinterest</option>
+              <option>Telegram</option><option>WhatsApp</option><option>Snapchat</option>
+              <option>LinkedIn</option><option>Discord</option><option>Spotify</option>
+              <option>Twitch</option><option>Threads</option><option>Google</option>
+            </select>
+            <div class="details-text" id="platformDetailsText"></div>
+          </div>
+          <div class="col">
+            <label class="required">Service</label>
+            <select id="orderService" onchange="calcPrice()">
+              <option value="">-- Select Service --</option>
+            </select>
+            <div class="details-text" id="serviceDetailsText"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label class="required">Quantity</label>
+            <input type="number" id="orderQty" placeholder="Enter quantity" min="1" oninput="calcPrice()">
+            <div class="qty-btns">
+              <button class="quick-qty-btn" onclick="setQty(500)">500</button>
+              <button class="quick-qty-btn" onclick="setQty(1000)">1K</button>
+              <button class="quick-qty-btn" onclick="setQty(2000)">2K</button>
+              <button class="quick-qty-btn" onclick="setQty(5000)">5K</button>
+              <button class="quick-qty-btn" onclick="setQty(10000)">10K</button>
+              <button class="quick-qty-btn" onclick="setQty(100000)">100K</button>
+            </div>
+          </div>
+          <div class="col">
+            <label class="required">Total Amount</label>
+            <input type="text" id="orderAmount" placeholder="$0.00" readonly>
+          </div>
+        </div>
+      </div>
+      <div class="form-section">
+        <h3>Service Details</h3>
+        <div class="col" style="margin-bottom:14px">
+          <label class="required" id="linkLabel">Post / Profile Link</label>
+          <input type="text" id="orderLink" placeholder="Enter link or profile URL">
+        </div>
+        <div class="col" style="margin-bottom:14px" id="emailBox">
+          <label>Email Address</label>
+          <input type="email" id="orderEmail" placeholder="Enter your email">
+        </div>
+        <div class="col" style="margin-bottom:14px" id="countryBox">
+          <label>Target Country</label>
+          <select id="orderCountry">
+            <option value="">Select Country (Optional)</option>
+            <option>United States</option><option>United Kingdom</option>
+            <option>Canada</option><option>Australia</option>
+            <option>India</option><option>Pakistan</option><option>Other</option>
+          </select>
+        </div>
+        <div class="col">
+          <label>Additional Comments / Instructions</label>
+          <textarea id="orderComment" placeholder="Add any special instructions..."></textarea>
+        </div>
+      </div>
+      <div class="price-box">
+        <div><div class="pb-label">Price Summary</div><div style="font-size:13px;color:var(--text3);margin-top:4px">Select a service to see pricing</div></div>
+        <div class="pb-amount" id="priceSummary">$0.00</div>
+      </div>
+      <div class="btn-group">
+        <button class="btn-order" onclick="placeOrder()"><i class="fa-solid fa-bolt"></i> Place Order</button>
+        <button class="btn-clear" onclick="clearOrderForm()"><i class="fa-solid fa-xmark"></i> Clear Form</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SERVICES PAGE ===================== -->
+<div class="page" id="page-services">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label">All Services</div>
+      <h1>Browse Our Services</h1>
+      <p>Search, filter by platform, and order the perfect growth service for your needs.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <!-- Search & Filter -->
+    <div class="glass-card search-bar">
+      <h3><i class="fa-solid fa-magnifying-glass" style="color:var(--accent)"></i> Find a Service</h3>
+      <div class="search-input-group" style="margin-top:14px">
+        <input type="text" id="svcSearch" placeholder="Search by ID, name, platform, category, or price..." oninput="filterServices()">
+      </div>
+      <div class="platform-filter-btns" style="margin-top:14px" id="svcPlatformFilter">
+        <button class="pf-btn active" onclick="filterSvcPlatform('all',this)">⭐ All</button>
+        <button class="pf-btn" onclick="filterSvcPlatform('TikTok',this)">🎵 TikTok</button>
+        <button class="pf-btn" onclick="filterSvcPlatform('Instagram',this)">📷 Instagram</button>
+        <button class="pf-btn" onclick="filterSvcPlatform('Facebook',this)">👍 Facebook</button>
+        <button class="pf-btn" onclick="filterSvcPlatform('YouTube',this)">▶️ YouTube</button>
+        <button class="pf-btn" onclick="filterSvcPlatform('X / Twitter',this)">𝕏 X/Twitter</button>
+        <button class="pf-btn" onclick="filterSvcPlatform('Telegram',this)">✈️ Telegram</button>
+        <button class="pf-btn" onclick="filterSvcPlatform('Instagram',this)">📷 Insta</button>
+      </div>
+    </div>
+    <div class="glass-card" style="padding:0;overflow:hidden">
+      <table class="services-table" id="servicesTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Platform</th>
+            <th>Category</th>
+            <th>Service</th>
+            <th>Min</th>
+            <th>Max</th>
+            <th>Rate/1K</th>
+            <th>Status</th>
+            <th>Action</th>
+           </tr>
+        </thead>
+        <tbody id="svcTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== AFFILIATE PAGE ===================== -->
+<div class="page" id="page-affiliate">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label">Partner With Us</div>
+      <h1>Affiliate Partner Program</h1>
+      <p>Earn commissions by referring clients, or join our salary-based team.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="aff-tabs">
+      <button class="aff-tab active" onclick="switchAffTab('affiliate-program',this)">💰 Affiliate Program</button>
+      <button class="aff-tab" onclick="switchAffTab('salary-based',this)">💼 Salary Based</button>
+    </div>
+
+    <!-- AFFILIATE PROGRAM -->
+    <div class="aff-content active" id="aff-affiliate-program">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px">
+        <div class="commission-box">
+          <div class="rate">20%</div>
+          <div class="label">Default Commission Rate</div>
+          <div style="font-size:13px;color:var(--text3);margin-top:8px">Min. payout: $50 — Paid to Bank / PayPal / Crypto</div>
+        </div>
+        <div class="glass-card" style="margin-bottom:0">
+          <h3><i class="fa-solid fa-link" style="color:var(--accent)"></i> How It Works</h3>
+          <div class="how-steps" style="grid-template-columns:1fr;gap:12px;margin-top:0">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--glass-border)"><span style="font-size:18px">1️⃣</span> <span style="font-size:14px">Register as Affiliate Partner</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--glass-border)"><span style="font-size:18px">2️⃣</span> <span style="font-size:14px">Get Your Unique Referral Link</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--glass-border)"><span style="font-size:18px">3️⃣</span> <span style="font-size:14px">Share With Clients</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0"><span style="font-size:18px">4️⃣</span> <span style="font-size:14px">Earn Commission On Successful Orders</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- Registration Form -->
+      <div class="glass-card">
+        <h3><i class="fa-solid fa-user-plus" style="color:var(--accent)"></i> Join Affiliate Program</h3>
+        <div class="checkbox-wrap">
+          <input type="checkbox" id="affAgree">
+          <label for="affAgree">I agree to the <a href="#" onclick="showPage('privacy')" style="color:var(--accent)">Affiliate Terms & Conditions</a>. I confirm I am 18+ and will only use approved referral links.</label>
+        </div>
+        <div class="row">
+          <div class="col"><label class="required">Full Name</label><input type="text" id="affName" placeholder="Your full name"></div>
+          <div class="col"><label class="required">Username</label><input type="text" id="affUser" placeholder="Your username"></div>
+        </div>
+        <div class="row">
+          <div class="col"><label class="required">Email</label><input type="email" id="affEmail" placeholder="your@email.com"></div>
+          <div class="col"><label>Phone / WhatsApp</label><input type="tel" id="affPhone" placeholder="+1 000 000 0000"></div>
+        </div>
+        <div class="col" style="margin-bottom:14px"><label>About Yourself</label><textarea id="affAbout" placeholder="Tell us about yourself..."></textarea></div>
+        <div class="col" style="margin-bottom:14px"><label>Experience (Detail)</label><textarea id="affExp" placeholder="Describe your experience in social media marketing or affiliate programs in detail..."></textarea></div>
+        <div class="col" style="margin-bottom:20px"><label>Portfolio / Website</label><input type="url" id="affPortfolio" placeholder="https://your-portfolio.com"></div>
+        <button class="btn-primary" onclick="submitAffApp()"><i class="fa-solid fa-paper-plane"></i> Submit Application</button>
+      </div>
+      <!-- Terms -->
+      <div class="glass-card">
+        <h3><i class="fa-solid fa-scale-balanced" style="color:var(--accent2)"></i> Affiliate Terms & Conditions</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <p style="font-weight:700;margin-bottom:8px;font-size:14px">✅ Allowed Activities</p>
+            <ul style="padding-left:18px;color:var(--text2);font-size:13.5px;line-height:1.9">
+              <li>Promote on Social Media, WhatsApp, Email, Website</li>
+              <li>Only approved referral links allowed</li>
+              <li>Must be 18+ with real information</li>
+            </ul>
+          </div>
+          <div>
+            <p style="font-weight:700;margin-bottom:8px;font-size:14px;color:var(--danger)">❌ Prohibited Activities</p>
+            <ul style="padding-left:18px;color:var(--text2);font-size:13.5px;line-height:1.9">
+              <li>No Spam / Cold Calling</li>
+              <li>No False Claims or Fake Reviews</li>
+              <li>No Unauthorized Logo Usage</li>
+              <li>No Promotion on Restricted Platforms</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:14px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:9px;font-size:13.5px;color:var(--text2)">
+          <strong style="color:var(--warning)">Commission Rules:</strong> Paid after successful order completion. No commission on refunds. Rates can change with 7 days notice. Company may terminate any affiliate account at any time.
+        </div>
+      </div>
+    </div>
+
+    <!-- SALARY BASED -->
+    <div class="aff-content" id="aff-salary-based">
+      <div class="glass-card" style="margin-bottom:20px">
+        <h3><i class="fa-solid fa-briefcase" style="color:var(--accent2)"></i> Salary Based Employment</h3>
+        <p style="color:var(--text2);margin-bottom:20px">Join our dedicated team. Submit an application and if approved, access your employee portal.</p>
+        <button class="btn-ghost" onclick="showEmpPortal()" style="margin-bottom:16px"><i class="fa-solid fa-door-open"></i> Employee Home</button>
+      </div>
+      <!-- Application Form -->
+      <div class="glass-card" id="empAppForm">
+        <h3><i class="fa-solid fa-file-pen" style="color:var(--accent)"></i> Submit Application</h3>
+        <div class="row">
+          <div class="col"><label class="required">Full Name</label><input type="text" id="empName" placeholder="Your full name"></div>
+          <div class="col"><label class="required">Username</label><input type="text" id="empUser" placeholder="Preferred username"></div>
+        </div>
+        <div class="row">
+          <div class="col"><label class="required">Email</label><input type="email" id="empEmail" placeholder="your@email.com"></div>
+          <div class="col"><label class="required">Phone / WhatsApp</label><input type="tel" id="empPhone" placeholder="+1 000 000 0000"></div>
+        </div>
+        <div class="col" style="margin-bottom:14px"><label>About Yourself</label><textarea id="empAbout" placeholder="Tell us about yourself..."></textarea></div>
+        <div class="col" style="margin-bottom:14px"><label class="required">Work Experience (Full Detail)</label><textarea id="empExp" style="min-height:120px" placeholder="Describe your full work experience, including job titles, companies, duration, and responsibilities..."></textarea></div>
+        <div class="col" style="margin-bottom:20px"><label>Portfolio / Website</label><input type="url" id="empPortfolio" placeholder="https://your-portfolio.com"></div>
+        <button class="btn-primary" onclick="submitEmpApp()"><i class="fa-solid fa-paper-plane"></i> Submit Application</button>
+      </div>
+      <!-- Employee Portal (shown after approval) -->
+      <div id="empPortal" style="display:none">
+        <div class="emp-tabs">
+          <button class="emp-tab active" onclick="switchEmpTab('attendance',this)">📋 Daily Attendance</button>
+          <button class="emp-tab" onclick="switchEmpTab('workdetail',this)">📝 Daily Work Detail</button>
+          <button class="emp-tab" onclick="switchEmpTab('history',this)">🕐 History</button>
+        </div>
+        <!-- Attendance -->
+        <div class="emp-section active" id="emp-attendance">
+          <div class="glass-card">
+            <h3><i class="fa-solid fa-calendar-check" style="color:var(--accent)"></i> Daily Attendance</h3>
+            <div class="row"><div class="col"><label class="required">Username</label><input type="text" placeholder="Your username"></div><div class="col"><label class="required">Email</label><input type="email" placeholder="Your email"></div></div>
+            <div class="row">
+              <div class="col"><label class="required">Login Time</label><input type="time"></div>
+              <div class="col"><label class="required">Working Hours</label><input type="text" placeholder="e.g., 8 hours"></div>
+            </div>
+            <div class="col" style="margin-bottom:20px"><label class="required">Logout Time</label><input type="time"></div>
+            <button class="btn-primary" onclick="toast('Attendance submitted!','success')"><i class="fa-solid fa-check"></i> Submit Attendance</button>
+          </div>
+        </div>
+        <!-- Work Detail -->
+        <div class="emp-section" id="emp-workdetail">
+          <div class="glass-card">
+            <h3><i class="fa-solid fa-clipboard-list" style="color:var(--accent)"></i> Daily Work Detail</h3>
+            <div class="row"><div class="col"><label class="required">Username</label><input type="text" placeholder="Your username"></div><div class="col"><label class="required">Email</label><input type="email" placeholder="Your email"></div></div>
+            <div class="col" style="margin-bottom:14px"><label class="required">Job Detail / Task Summary</label><textarea placeholder="Describe today's tasks..."></textarea></div>
+            <div class="col" style="margin-bottom:14px">
+              <label class="required">Work Type</label>
+              <select id="workType" onchange="updateWorkFields()">
+                <option value="">-- Select Type --</option>
+                <option value="order">Placed Order</option>
+                <option value="sharing">Post Sharing</option>
+              </select>
+            </div>
+            <!-- Order Fields -->
+            <div id="orderFields" style="display:none">
+              <div class="row"><div class="col"><label class="required">Order ID</label><input type="text" placeholder="Order ID"></div><div class="col"><label class="required">Service Name</label><input type="text" placeholder="Service name"></div></div>
+              <div class="row"><div class="col"><label class="required">Amount</label><input type="number" placeholder="0.00"></div><div class="col"><label class="required">Profile / Post Link</label><input type="url" placeholder="https://..."></div></div>
+            </div>
+            <!-- Sharing Fields -->
+            <div id="sharingFields" style="display:none">
+              <div class="col" style="margin-bottom:14px">
+                <label class="required">Platforms Shared On</label>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px" id="sharePlatforms">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13.5px"><input type="checkbox"> TikTok</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13.5px"><input type="checkbox"> Instagram</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13.5px"><input type="checkbox"> Facebook</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13.5px"><input type="checkbox"> WhatsApp</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13.5px"><input type="checkbox"> Twitter/X</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13.5px"><input type="checkbox"> LinkedIn</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13.5px"><input type="checkbox"> Telegram</label>
+                </div>
+              </div>
+              <div class="col" style="margin-bottom:14px"><label>Post Description</label><textarea placeholder="Describe the post content..."></textarea></div>
+              <div class="col" style="margin-bottom:14px"><label>Upload Photo (Optional)</label><input type="file" accept="image/*" style="padding:8px"></div>
+              <div class="col" style="margin-bottom:14px"><label class="required">Platform Account ID / Handle</label><input type="text" placeholder="@yourhandle or account ID"></div>
+              <div class="checkbox-wrap" style="margin-bottom:14px">
+                <input type="checkbox" id="isBoosted" onchange="toggleBoostFields()">
+                <label for="isBoosted">This post is boosted (paid promotion) <span style="color:var(--accent3);font-weight:700">+5% commission</span></label>
+              </div>
+              <div id="boostFields" style="display:none">
+                <div class="row">
+                  <div class="col"><label>Boost Platform</label><input type="text" placeholder="Platform name where boosted"></div>
+                  <div class="col"><label>Amount Spent on Boost ($)</label><input type="number" placeholder="0.00"></div>
+                </div>
+              </div>
+            </div>
+            <button class="btn-primary" style="margin-top:16px" onclick="toast('Work detail submitted!','success')"><i class="fa-solid fa-check"></i> Submit Work Detail</button>
+          </div>
+        </div>
+        <!-- History -->
+        <div class="emp-section" id="emp-history">
+          <div class="glass-card">
+            <h3><i class="fa-solid fa-clock-rotate-left" style="color:var(--accent2)"></i> Work History</h3>
+            <p style="color:var(--text2);margin-bottom:20px;font-size:14px">Your attendance and work detail history (read-only)</p>
+            <table class="orders-table">
+              <thead><tr><th>Date</th><th>Type</th><th>Details</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>2025-01-15</td><td>Attendance</td><td>Login 9:00 AM → Logout 5:00 PM (8hrs)</td><td><span class="status-badge completed">Recorded</span></td></tr>
+                <tr><td>2025-01-15</td><td>Order Placed</td><td>Order #1023 – Instagram Followers – $12.00</td><td><span class="status-badge completed">Submitted</span></td></tr>
+                <tr><td>2025-01-14</td><td>Post Sharing</td><td>TikTok, Instagram – Boosted</td><td><span class="status-badge completed">+5% bonus</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DASHBOARD PAGE ===================== -->
+<div class="page" id="page-dashboard">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label">My Account</div>
+      <h1 id="dashWelcome">Welcome, User!</h1>
+      <p>Manage your orders, wallet, affiliate earnings, and settings.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="dash-grid">
+      <div class="dash-stat"><i class="fa-solid fa-wallet ds-icon"></i><div class="ds-label">Wallet Balance</div><div class="ds-value" style="color:var(--accent3)" id="dashWallet">$0.00</div><div class="ds-change">Available to spend</div></div>
+      <div class="dash-stat"><i class="fa-solid fa-cart-shopping ds-icon"></i><div class="ds-label">Total Orders</div><div class="ds-value" id="dashOrders">0</div><div class="ds-change">All time</div></div>
+      <div class="dash-stat"><i class="fa-solid fa-handshake ds-icon"></i><div class="ds-label">Affiliate Earnings</div><div class="ds-value" style="color:var(--warning)" id="dashAff">$0.00</div><div class="ds-change">20% commission</div></div>
+      <div class="dash-stat"><i class="fa-solid fa-users ds-icon"></i><div class="ds-label">Referrals</div><div class="ds-value" id="dashRefs">0</div><div class="ds-change">Total referrals</div></div>
+    </div>
+    <div class="glass-card">
+      <h3><i class="fa-solid fa-link" style="color:var(--accent)"></i> Your Referral Link</h3>
+      <div style="display:flex;gap:10px;align-items:center">
+        <input type="text" id="refLink" value="https://mtssmm.com/ref/user123" readonly style="flex:1">
+        <button class="btn-order" style="flex-shrink:0;padding:11px 20px" onclick="copyRef()"><i class="fa-solid fa-copy"></i> Copy</button>
+      </div>
+    </div>
+    <div class="glass-card">
+      <h3><i class="fa-solid fa-list-check" style="color:var(--accent)"></i> Recent Orders</h3>
+      <table class="orders-table">
+        <thead><tr><th>ID</th><th>Service</th><th>Qty</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          <tr><td>#1001</td><td>TikTok Followers</td><td>1,000</td><td>$3.50</td><td><span class="status-badge completed">Completed</span></td><td>Jan 15</td></tr>
+          <tr><td>#1002</td><td>Instagram Likes</td><td>500</td><td>$1.20</td><td><span class="status-badge processing">Processing</span></td><td>Jan 16</td></tr>
+          <tr><td>#1003</td><td>YouTube Views</td><td>10,000</td><td>$18.00</td><td><span class="status-badge pending">Pending</span></td><td>Jan 17</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="glass-card">
+      <h3><i class="fa-solid fa-gear" style="color:var(--text2)"></i> Profile Settings</h3>
+      <div class="row">
+        <div class="col"><label>Full Name</label><input type="text" placeholder="Your name"></div>
+        <div class="col"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+      </div>
+      <div class="row">
+        <div class="col"><label>New Password</label><input type="password" placeholder="New password"></div>
+        <div class="col"><label>Confirm Password</label><input type="password" placeholder="Confirm password"></div>
+      </div>
+      <div class="btn-group"><button class="btn-order" onclick="toast('Profile updated!','success')"><i class="fa-solid fa-check"></i> Save Changes</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN PANEL ===================== -->
+<div class="page" id="page-admin">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label">Admin</div>
+      <h1>Admin Dashboard</h1>
+      <p>Manage users, services, orders, affiliates, and platform settings.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="dash-grid" style="margin-bottom:28px">
+      <div class="dash-stat"><i class="fa-solid fa-users ds-icon"></i><div class="ds-label">Total Users</div><div class="ds-value">1,247</div><div class="ds-change" style="color:var(--accent3)">+12 today</div></div>
+      <div class="dash-stat"><i class="fa-solid fa-cart-shopping ds-icon"></i><div class="ds-label">Total Orders</div><div class="ds-value">8,531</div><div class="ds-change" style="color:var(--accent3)">+43 today</div></div>
+      <div class="dash-stat"><i class="fa-solid fa-dollar-sign ds-icon"></i><div class="ds-label">Revenue</div><div class="ds-value" style="color:var(--accent3)">$12,840</div><div class="ds-change">This month</div></div>
+      <div class="dash-stat"><i class="fa-solid fa-handshake ds-icon"></i><div class="ds-label">Affiliates</div><div class="ds-value">84</div><div class="ds-change">Active partners</div></div>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdmin('users',this)">👥 Users</button>
+      <button class="admin-tab" onclick="switchAdmin('orders',this)">🛒 Orders</button>
+      <button class="admin-tab" onclick="switchAdmin('services',this)">⚙️ Services</button>
+      <button class="admin-tab" onclick="switchAdmin('platforms',this)">📱 Platforms</button>
+      <button class="admin-tab" onclick="switchAdmin('wallets',this)">💳 Wallets</button>
+      <button class="admin-tab" onclick="switchAdmin('affiliates',this)">🤝 Affiliates</button>
+      <button class="admin-tab" onclick="switchAdmin('support',this)">🎫 Support</button>
+      <button class="admin-tab" onclick="switchAdmin('settings',this)">🔧 Settings</button>
+    </div>
+
+    <!-- USERS -->
+    <div class="admin-section active" id="admin-users">
+      <div class="glass-card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--glass-border)">
+          <h3 style="margin-bottom:0;font-size:16px">All Users</h3>
+          <input type="text" placeholder="Search users..." style="width:220px">
+        </div>
+        <table class="admin-table">
+          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td>#001</td><td>Ahmed Khan</td><td>ahmed@email.com</td><td><span class="svc-badge active">User</span></td><td>$45.20</td><td><span class="status-badge completed">Active</span></td><td class="act-btns"><button class="btn-sm-edit">Edit</button><button class="btn-sm-delete">Ban</button></td></tr>
+            <tr><td>#002</td><td>Sara Ali</td><td>sara@email.com</td><td><span class="svc-badge" style="background:rgba(129,140,248,0.15);color:var(--accent2)">Affiliate</span></td><td>$120.00</td><td><span class="status-badge completed">Active</span></td><td class="act-btns"><button class="btn-sm-edit">Edit</button><button class="btn-sm-delete">Ban</button></td></tr>
+            <tr><td>#003</td><td>Admin User</td><td>admin@mtssmm.com</td><td><span class="svc-badge" style="background:rgba(251,191,36,0.15);color:var(--warning)">Admin</span></td><td>—</td><td><span class="status-badge completed">Active</span></td><td class="act-btns"><button class="btn-sm-edit">Edit</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="admin-section" id="admin-orders">
+      <div class="glass-card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--glass-border)"><h3 style="margin-bottom:0;font-size:16px">All Orders</h3></div>
+        <table class="admin-table">
+          <thead><tr><th>ID</th><th>User</th><th>Service</th><th>Qty</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td>#1001</td><td>Ahmed</td><td>TikTok Followers</td><td>1,000</td><td>$3.50</td><td><span class="status-badge completed">Completed</span></td><td class="act-btns"><button class="btn-sm-edit">View</button><button class="btn-sm-delete">Cancel</button></td></tr>
+            <tr><td>#1002</td><td>Sara</td><td>Instagram Likes</td><td>500</td><td>$1.20</td><td><span class="status-badge processing">Processing</span></td><td class="act-btns"><button class="btn-sm-edit">View</button><button class="btn-sm-delete">Cancel</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="admin-section" id="admin-services">
+      <div class="glass-card">
+        <h3><i class="fa-solid fa-plus" style="color:var(--accent3)"></i> Add New Service</h3>
+        <div class="row">
+          <div class="col"><label>Platform</label><select><option>TikTok</option><option>Instagram</option><option>Facebook</option><option>YouTube</option></select></div>
+          <div class="col"><label>Category</label><select><option>Followers</option><option>Likes</option><option>Views</option><option>Comments</option></select></div>
+        </div>
+        <div class="row">
+          <div class="col"><label>Service Name</label><input type="text" placeholder="Service name"></div>
+          <div class="col"><label>Rate per 1K ($)</label><input type="number" placeholder="0.00"></div>
+        </div>
+        <div class="row">
+          <div class="col"><label>Min Quantity</label><input type="number" placeholder="100"></div>
+          <div class="col"><label>Max Quantity</label><input type="number" placeholder="100000"></div>
+        </div>
+        <div class="checkbox-wrap">
+          <input type="checkbox" id="perK" checked>
+          <label for="perK">Price is per 1,000 units</label>
+        </div>
+        <div class="btn-group"><button class="btn-order" onclick="toast('Service added!','success')"><i class="fa-solid fa-plus"></i> Add Service</button></div>
+      </div>
+      <div class="glass-card" style="padding:0;overflow:hidden">
+        <table class="admin-table">
+          <thead><tr><th>ID</th><th>Platform</th><th>Category</th><th>Name</th><th>Rate/1K</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="adminSvcBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PLATFORMS -->
+    <div class="admin-section" id="admin-platforms">
+      <div class="glass-card">
+        <h3>Platform Management</h3>
+        <p style="color:var(--text2);font-size:14px;margin-bottom:16px">Enable or disable platforms. Hidden platforms will not appear in services or ordering.</p>
+        <div style="display:flex;flex-direction:column;gap:14px" id="platformMgmt"></div>
+      </div>
+    </div>
+
+    <!-- WALLETS -->
+    <div class="admin-section" id="admin-wallets">
+      <div class="glass-card">
+        <h3><i class="fa-solid fa-wallet" style="color:var(--accent)"></i> Wallet Management</h3>
+        <div class="row" style="margin-bottom:16px">
+          <div class="col"><label>User Email / ID</label><input type="text" placeholder="Search user..."></div>
+          <div class="col"><label>Amount ($)</label><input type="number" placeholder="0.00"></div>
+        </div>
+        <div class="btn-group">
+          <button class="btn-order" onclick="toast('Balance added!','success')"><i class="fa-solid fa-plus"></i> Add Balance</button>
+          <button class="btn-clear" onclick="toast('Balance deducted','info')"><i class="fa-solid fa-minus"></i> Deduct Balance</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFFILIATES -->
+    <div class="admin-section" id="admin-affiliates">
+      <div class="glass-card">
+        <h3>Affiliate Program Settings</h3>
+        <div class="row">
+          <div class="col"><label>Commission Rate (%)</label><input type="number" value="20" id="adminCommRate"></div>
+          <div class="col"><label>Minimum Payout ($)</label><input type="number" value="50" id="adminMinPayout"></div>
+        </div>
+        <div class="col" style="margin-bottom:16px">
+          <label>Program Visibility</label>
+          <div style="display:flex;gap:16px;margin-top:8px">
+            <label class="toggle-switch"><div class="ts-track on" id="aff-prog-toggle" onclick="this.classList.toggle('on')"><div class="ts-thumb"></div></div> Affiliate Program</label>
+            <label class="toggle-switch"><div class="ts-track on" id="sal-prog-toggle" onclick="this.classList.toggle('on')"><div class="ts-thumb"></div></div> Salary Based</label>
+          </div>
+        </div>
+        <button class="btn-order" onclick="toast('Settings saved!','success')"><i class="fa-solid fa-floppy-disk"></i> Save Settings</button>
+      </div>
+      <div class="glass-card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--glass-border)"><h3 style="margin-bottom:0;font-size:16px">Affiliate Applications</h3></div>
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Email</th><th>Type</th><th>Applied</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>John Doe</td><td>john@email.com</td><td>Affiliate</td><td>Jan 10</td><td><span class="status-badge pending">Pending</span></td><td class="act-btns"><button class="btn-sm-edit" onclick="toast('Application approved!','success')">Approve</button><button class="btn-sm-delete" onclick="toast('Application rejected','error')">Reject</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="admin-section" id="admin-support">
+      <div class="glass-card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--glass-border)"><h3 style="margin-bottom:0;font-size:16px">Support Tickets</h3></div>
+        <table class="admin-table">
+          <thead><tr><th>ID</th><th>User</th><th>Subject</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>#T001</td><td>Ahmed</td><td>Order not delivered</td><td><span class="status-badge pending">Open</span></td><td>Jan 15</td><td class="act-btns"><button class="btn-sm-edit">Reply</button><button class="btn-sm-edit" onclick="toast('Ticket closed','info')">Close</button></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="admin-section" id="admin-settings">
+      <div class="glass-card">
+        <h3><i class="fa-solid fa-sliders" style="color:var(--accent)"></i> Site Settings</h3>
+        <div class="row">
+          <div class="col"><label>Site Name</label><input type="text" value="MTS SMM" id="siteName"></div>
+          <div class="col"><label>Support Email</label><input type="email" value="zone43157@gmail.com" id="supportEmail"></div>
+        </div>
+        <div class="row">
+          <div class="col"><label>Support WhatsApp</label><input type="tel" value="+923218595421" id="supportWA"></div>
+          <div class="col"><label>Currency</label><select><option>USD ($)</option><option>PKR (₨)</option><option>GBP (£)</option></select></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap">
+          <label class="toggle-switch"><div class="ts-track" id="maint-toggle" onclick="this.classList.toggle('on')"><div class="ts-thumb"></div></div> Maintenance Mode</label>
+          <label class="toggle-switch"><div class="ts-track on" id="dark-allowed" onclick="this.classList.toggle('on')"><div class="ts-thumb"></div></div> Dark Mode Option</label>
+        </div>
+        <button class="btn-order" onclick="toast('Settings saved!','success')"><i class="fa-solid fa-floppy-disk"></i> Save All Settings</button>
+      </div>
+      <div class="schema-info">
+        <h4><i class="fa-solid fa-database"></i> Supabase Database Tables</h4>
+        <p>Required tables: <code>users</code>, <code>profiles</code>, <code>wallets</code>, <code>platforms</code>, <code>categories</code>, <code>services</code>, <code>orders</code>, <code>transactions</code>, <code>affiliates</code>, <code>affiliate_referrals</code>, <code>affiliate_payouts</code>, <code>support_tickets</code>, <code>site_settings</code>, <code>notifications</code>. Enable Row Level Security (RLS), JWT Authentication, and role-based policies (admin / user / affiliate).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PRIVACY POLICY ===================== -->
+<div class="page" id="page-privacy">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label">Legal</div>
+      <h1>Privacy Policy</h1>
+      <p>Last updated: January 2025 — GDPR Compliant</p>
+    </div>
+  </div>
+  <div class="page-body" style="max-width:800px">
+    <div class="glass-card">
+      <div class="policy-section">
+        <h2>1. Information We Collect</h2>
+        <p>We collect personal information you voluntarily provide when registering, placing orders, or contacting support. This includes your name, email address, phone number, and payment information. We also collect technical data such as IP addresses, browser type, and usage analytics.</p>
+      </div>
+      <div class="policy-section">
+        <h2>2. How We Use Your Information</h2>
+        <ul>
+          <li>To process and fulfill your orders</li>
+          <li>To communicate with you about your account and services</li>
+          <li>To process payments and prevent fraud</li>
+          <li>To improve our platform and services</li>
+          <li>To comply with legal obligations</li>
+        </ul>
+      </div>
+      <div class="policy-section">
+        <h2>3. Data Sharing</h2>
+        <p>We do not sell your personal data. We may share data with trusted service providers (payment processors, hosting) who are contractually bound to protect your information. We may disclose data when required by law.</p>
+      </div>
+      <div class="policy-section">
+        <h2>4. Cookies</h2>
+        <p>We use cookies and similar tracking technologies to enhance your experience. You can control cookies through your browser settings. Disabling cookies may affect platform functionality.</p>
+      </div>
+      <div class="policy-section">
+        <h2>5. Data Security</h2>
+        <p>We implement industry-standard security measures including SSL encryption, secure data storage, and regular security audits. We use Supabase with Row Level Security (RLS) to protect your data at the database level.</p>
+      </div>
+      <div class="policy-section">
+        <h2>6. Your Rights (GDPR)</h2>
+        <ul>
+          <li>Right to access your personal data</li>
+          <li>Right to rectification of inaccurate data</li>
+          <li>Right to erasure ("right to be forgotten")</li>
+          <li>Right to data portability</li>
+          <li>Right to object to processing</li>
+        </ul>
+      </div>
+      <div class="policy-section">
+        <h2>7. Affiliate Program</h2>
+        <p>Affiliate participants must be 18+ and provide accurate information. Commission data and referral records are stored securely. Participants are responsible for complying with local laws regarding earnings reporting.</p>
+      </div>
+      <div class="policy-section">
+        <h2>8. Contact</h2>
+        <p>For privacy concerns, contact us at: <a href="mailto:zone43157@gmail.com" style="color:var(--accent)">zone43157@gmail.com</a> or via WhatsApp: <a href="https://wa.me/923218595421" style="color:var(--accent)">+92 321 8595421</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CONTACT PAGE ===================== -->
+<div class="page" id="page-contact">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label">Get Help</div>
+      <h1>Contact Support</h1>
+      <p>We're here to help 24/7. Reach us via your preferred channel.</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="contact-grid">
+      <div class="glass-card">
+        <h3><i class="fa-solid fa-paper-plane" style="color:var(--accent)"></i> Send a Message</h3>
+        <div class="form-group"><label>Your Name</label><input type="text" placeholder="Full name"></div>
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Subject</label><input type="text" placeholder="What's your issue?"></div>
+        <div class="form-group"><label>Message</label><textarea style="min-height:120px" placeholder="Describe your issue in detail..."></textarea></div>
+        <button class="btn-primary" onclick="toast('Message sent! We will reply within 24 hours.','success')"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+      </div>
+      <div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px">Reach Us Directly</h3>
+        <div class="contact-channels">
+          <a class="channel-btn" href="https://wa.me/923218595421" target="_blank">
+            <div class="ch-icon wa"><i class="fa-brands fa-whatsapp"></i></div>
+            <div class="ch-text"><div class="ct">WhatsApp</div><div class="cs">Chat with us instantly on WhatsApp</div></div>
+            <i class="fa-solid fa-arrow-right" style="margin-left:auto;color:var(--text3)"></i>
+          </a>
+          <a class="channel-btn" href="https://telegram.org/dl" target="_blank">
+            <div class="ch-icon tg"><i class="fa-brands fa-telegram"></i></div>
+            <div class="ch-text"><div class="ct">Telegram</div><div class="cs">Message us on Telegram</div></div>
+            <i class="fa-solid fa-arrow-right" style="margin-left:auto;color:var(--text3)"></i>
+          </a>
+          <a class="channel-btn" href="mailto:zone43157@gmail.com">
+            <div class="ch-icon em"><i class="fa-solid fa-envelope"></i></div>
+            <div class="ch-text"><div class="ct">Email</div><div class="cs">zone43157@gmail.com</div></div>
+            <i class="fa-solid fa-arrow-right" style="margin-left:auto;color:var(--text3)"></i>
+          </a>
+        </div>
+        <div class="glass-card" style="margin-top:24px">
+          <h3 style="font-size:16px"><i class="fa-solid fa-clock" style="color:var(--accent3)"></i> Response Times</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+            <div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:var(--text2)">WhatsApp / Telegram</span><span style="color:var(--accent3);font-weight:700">&lt; 1 hour</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:var(--text2)">Email</span><span style="color:var(--warning);font-weight:700">&lt; 24 hours</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:var(--text2)">Support Form</span><span style="color:var(--accent);font-weight:700">&lt; 12 hours</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer id="main-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-brand">MTS SMM</div>
+      <div class="logo-sub" style="font-size:11px;letter-spacing:1.5px;color:var(--text3);margin-top:4px">Media Tech Support</div>
+      <p>Affordable, reliable, and high-quality social media marketing services for creators, businesses, and agencies worldwide.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <a onclick="showPage('home')">Home</a>
+      <a onclick="showPage('order')">Place Order</a>
+      <a onclick="showPage('services')">All Services</a>
+      <a onclick="openModal('signup')">Sign Up</a>
+    </div>
+    <div class="footer-col">
+      <h4>Programs</h4>
+      <a onclick="showPage('affiliate')">Affiliate Program</a>
+      <a onclick="showPage('affiliate')">Salary Based</a>
+      <a onclick="showPage('dashboard')">My Dashboard</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal & Support</h4>
+      <a onclick="showPage('privacy')">Privacy Policy</a>
+      <a onclick="showPage('contact')">Contact Support</a>
+      <a href="mailto:zone43157@gmail.com">zone43157@gmail.com</a>
+      <a href="https://wa.me/923218595421" target="_blank">WhatsApp</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 MTS SMM — Media Tech Support. All rights reserved.</p>
+    <p style="color:var(--text3)">Trusted worldwide · 24/7 Support</p>
+  </div>
+</footer>
+
+<!-- ===================== AUTH MODALS ===================== -->
+<!-- Login -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')"><i class="fa-solid fa-xmark"></i></button>
+    <h2>Welcome Back</h2>
+    <p class="sub">Log in to your MTS SMM account</p>
+    <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Your password"></div>
+    <div class="remember-row">
+      <label><input type="checkbox"> Remember Me</label>
+      <a onclick="openModal('forgot')">Forgot Password?</a>
+    </div>
+    <button class="btn-primary" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+    <div class="modal-footer">Don't have an account? <a onclick="openModal('signup')">Sign Up</a></div>
+  </div>
+</div>
+
+<!-- Signup -->
+<div class="modal-overlay" id="signupModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('signupModal')"><i class="fa-solid fa-xmark"></i></button>
+    <h2>Create Account</h2>
+    <p class="sub">Join MTS SMM and start growing today</p>
+    <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="Your full name"></div>
+    <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="your@email.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" id="signupPass" placeholder="Choose a strong password"></div>
+    <button class="btn-primary" onclick="doSignup()"><i class="fa-solid fa-user-plus"></i> Create Account</button>
+    <div class="modal-footer">Already have an account? <a onclick="openModal('login')">Login</a></div>
+  </div>
+</div>
+
+<!-- Forgot Password -->
+<div class="modal-overlay" id="forgotModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('forgotModal')"><i class="fa-solid fa-xmark"></i></button>
+    <h2>Reset Password</h2>
+    <p class="sub">Enter your email to receive a reset link</p>
+    <div class="form-group"><label>Email Address</label><input type="email" placeholder="your@email.com"></div>
+    <button class="btn-primary" onclick="toast('Reset email sent! Check your inbox.','success');closeModal('forgotModal')"><i class="fa-solid fa-envelope"></i> Send Reset Email</button>
+    <div class="modal-footer"><a onclick="openModal('login')">Back to Login</a></div>
+  </div>
+</div>
 
 <script>
-// ----- SUPABASE INTEGRATION (Real credentials inserted) -----
+// ===================== SUPABASE INTEGRATION (Real Credentials) =====================
 const SUPABASE_URL = "https://nualxapdjjekeujfznex.supabase.co";
-const SUPABASE_KEY = "sb_publishable_BawJWtJ6fgZ1l6S7-d7VzQ_3kn2lpTX";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_BawJWtJ6fgZ1l6S7-d7VzQ_3kn2lpTX";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-// Global state
+// ===================== STATE =====================
 let currentUser = null;
-let mockServices = [
-  {id:'S001',platform:'TikTok',name:'TikTok Followers',rate:3.50,min:100,max:100000,status:'active'},
-  {id:'S002',platform:'Instagram',name:'Instagram Followers',rate:4.50,min:100,max:100000,status:'active'},
-  {id:'S003',platform:'YouTube',name:'YouTube Views',rate:2.50,min:500,max:1000000,status:'active'}
+let currentPage = 'home';
+let svcFilter = 'all';
+
+// Mock services data (full from original)
+const mockServices = [
+  {id:'S001',platform:'TikTok',category:'Followers',name:'TikTok Followers – Real',min:100,max:100000,rate:3.50,status:'active'},
+  {id:'S002',platform:'TikTok',category:'Likes',name:'TikTok Likes – Fast',min:50,max:50000,rate:1.20,status:'active'},
+  {id:'S003',platform:'TikTok',category:'Views',name:'TikTok Video Views',min:1000,max:10000000,rate:0.50,status:'active'},
+  {id:'S004',platform:'Instagram',category:'Followers',name:'Instagram Followers – HQ',min:100,max:100000,rate:4.50,status:'active'},
+  {id:'S005',platform:'Instagram',category:'Likes',name:'Instagram Likes – Real',min:50,max:50000,rate:1.80,status:'active'},
+  {id:'S006',platform:'YouTube',category:'Views',name:'YouTube Views – Retention',min:500,max:1000000,rate:2.50,status:'active'},
+  {id:'S007',platform:'YouTube',category:'Subscribers',name:'YouTube Subscribers',min:100,max:50000,rate:8.00,status:'active'},
+  {id:'S008',platform:'Facebook',category:'Followers',name:'Facebook Page Likes',min:200,max:100000,rate:3.00,status:'active'},
+  {id:'S009',platform:'X / Twitter',category:'Followers',name:'Twitter/X Followers',min:100,max:50000,rate:5.00,status:'active'},
+  {id:'S010',platform:'Telegram',category:'Members',name:'Telegram Channel Members',min:100,max:100000,rate:2.00,status:'active'},
 ];
 
-// Helper functions (UI same behavior)
+// ===================== NAVIGATION =====================
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-'+page)?.classList.add('active');
+  const pageEl = document.getElementById('page-' + page);
+  if(pageEl) pageEl.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const navBtn = document.getElementById('nb-' + page);
+  if(navBtn) navBtn.classList.add('active');
+  document.querySelectorAll('.side-nav a').forEach(a => a.classList.remove('active'));
+  const sideLink = document.getElementById('sm-' + page);
+  if(sideLink) sideLink.classList.add('active');
   currentPage = page;
-  if(page === 'services') renderServicesTable(mockServices);
   window.scrollTo(0,0);
+  if(page==='services') renderServicesTable(mockServices);
+  if(page==='admin') renderAdminServices();
 }
-function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
-function closeMenu() { document.getElementById('sideMenu').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
-function toggleTheme() { document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; }
-function openModal(type) { closeAllModals(); document.getElementById(type+'Modal').classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-function closeAllModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show')); }
-function toast(msg, type='info') { const cont = document.getElementById('toastContainer'); const div = document.createElement('div'); div.className = `toast ${type}`; div.innerHTML = `<i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-info'}"></i> ${msg}`; cont.appendChild(div); setTimeout(()=>div.remove(),3500); }
 
-// AUTH with Supabase
+function toggleMenu() {
+  document.getElementById('sideMenu').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+  document.body.classList.toggle('menu-open');
+}
+function closeMenu() {
+  document.getElementById('sideMenu').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  document.body.classList.remove('menu-open');
+}
+
+// ===================== THEME =====================
+function toggleTheme() {
+  const html = document.documentElement;
+  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+}
+
+// ===================== AUTH =====================
+function openModal(type) {
+  closeAllModals();
+  const modal = document.getElementById(type + 'Modal');
+  if(modal) modal.classList.add('show');
+}
+function closeModal(id) { 
+  const modal = document.getElementById(id);
+  if(modal) modal.classList.remove('show');
+}
+function closeAllModals() {
+  document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show'));
+}
+
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
-  if(!email || !pass) { toast("Fill all fields",'error'); return; }
+  if(!email || !pass) { toast('Please fill in all fields','error'); return; }
+  
   const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
-  if(error) { toast(error.message,'error'); return; }
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single();
-  currentUser = { id: data.user.id, email: data.user.email, name: profile?.full_name || email.split('@')[0], wallet: profile?.wallet || 0, role: profile?.role || 'user' };
+  if(error) { toast(error.message, 'error'); return; }
+  
+  // Fetch profile from profiles table
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', data.user.id)
+    .single();
+    
+  if(profileError && profileError.code !== 'PGRST116') {
+    console.error(profileError);
+  }
+  
+  currentUser = {
+    id: data.user.id,
+    email: data.user.email,
+    name: profile?.full_name || email.split('@')[0],
+    wallet: profile?.wallet || 0,
+    role: profile?.role || 'user'
+  };
+  
   updateAuthUI();
   closeAllModals();
-  toast(`Welcome ${currentUser.name}!`,'success');
+  toast('Welcome back, ' + currentUser.name + '!', 'success');
+  showPage('dashboard');
 }
+
 async function doSignup() {
   const name = document.getElementById('signupName').value.trim();
   const email = document.getElementById('signupEmail').value.trim();
   const pass = document.getElementById('signupPass').value;
-  if(!name || !email || !pass) { toast("All fields required",'error'); return; }
-  const { data, error } = await supabase.auth.signUp({ email, password: pass });
-  if(error) { toast(error.message,'error'); return; }
+  if(!name || !email || !pass) { toast('Please fill in all fields','error'); return; }
+  
+  const { data, error } = await supabase.auth.signUp({ 
+    email, 
+    password: pass,
+    options: { data: { full_name: name } }
+  });
+  
+  if(error) { toast(error.message, 'error'); return; }
+  
   if(data.user) {
-    await supabase.from('profiles').insert([{ id: data.user.id, full_name: name, email: email, wallet: 0, role: 'user' }]);
-    currentUser = { id: data.user.id, email, name, wallet: 0, role: 'user' };
+    // Create profile record
+    const { error: insertError } = await supabase
+      .from('profiles')
+      .insert([{ id: data.user.id, full_name: name, email: email, wallet: 0, role: 'user' }]);
+      
+    if(insertError) console.error(insertError);
+    
+    currentUser = {
+      id: data.user.id,
+      email: email,
+      name: name,
+      wallet: 0,
+      role: 'user'
+    };
     updateAuthUI();
     closeAllModals();
-    toast("Account created!",'success');
+    toast('Account created! Welcome to MTS SMM, ' + name + '!', 'success');
     showPage('dashboard');
   }
 }
+
 async function logout() {
   await supabase.auth.signOut();
   currentUser = null;
   updateAuthUI();
   showPage('home');
-  toast("Logged out",'info');
+  toast('Logged out successfully', 'info');
 }
-function updateAuthUI() {
-  const guest = document.getElementById('guest-btns');
-  const chip = document.getElementById('user-chip');
-  const smAdmin = document.getElementById('sm-admin-link');
-  const smDash = document.getElementById('sm-dash-link');
-  const smLogout = document.getElementById('sm-logout-link');
-  const adminNav = document.getElementById('admin-nav-link');
-  if(currentUser) {
-    guest.style.display = 'none';
-    chip.style.display = 'flex';
-    document.getElementById('nav-avatar').textContent = currentUser.name[0].toUpperCase();
-    document.getElementById('nav-username').textContent = currentUser.name;
-    document.getElementById('nav-wallet').textContent = '$' + currentUser.wallet?.toFixed(2) || '0.00';
-    document.getElementById('dashWelcome').innerHTML = `Welcome ${currentUser.name}`;
-    document.getElementById('dashWallet').innerHTML = `$${currentUser.wallet?.toFixed(2) || '0.00'}`;
-    document.getElementById('orderWalletBal').innerHTML = `Wallet Balance: <strong>$${currentUser.wallet?.toFixed(2) || '0.00'}</strong>`;
-    smDash.style.display = 'block';
-    smLogout.style.display = 'block';
-    if(currentUser.role === 'admin') { adminNav.style.display = 'flex'; smAdmin.style.display = 'block'; }
-    else { adminNav.style.display = 'none'; smAdmin.style.display = 'none'; }
-  } else {
-    guest.style.display = 'flex';
-    chip.style.display = 'none';
-    smAdmin.style.display = 'none';
-    smDash.style.display = 'none';
-    smLogout.style.display = 'none';
-    document.getElementById('orderWalletBal').innerHTML = 'Wallet Balance: $0.00 — <a href="#" onclick="openModal(\'login\')">Login</a>';
-  }
-}
+
 async function loadUserFromSession() {
   const { data: { user } } = await supabase.auth.getUser();
   if(user) {
-    const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-    currentUser = { id: user.id, email: user.email, name: profile?.full_name || user.email.split('@')[0], wallet: profile?.wallet || 0, role: profile?.role || 'user' };
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+      
+    currentUser = {
+      id: user.id,
+      email: user.email,
+      name: profile?.full_name || user.email.split('@')[0],
+      wallet: profile?.wallet || 0,
+      role: profile?.role || 'user'
+    };
     updateAuthUI();
   }
 }
-// ORDER functions
-function updateServices() {
-  const plat = document.getElementById('orderPlatform').value;
-  const svcSelect = document.getElementById('orderService');
-  svcSelect.innerHTML = '<option value="">-- Select --</option>';
-  if(!plat) return;
-  mockServices.filter(s => s.platform === plat).forEach(s => {
-    let opt = document.createElement('option'); opt.value = s.rate; opt.text = `${s.name} - $${s.rate}/1K`; svcSelect.appendChild(opt);
-  });
-  calcPrice();
+
+function updateAuthUI() {
+  const guestBtns = document.getElementById('guest-btns');
+  const userChip = document.getElementById('user-chip');
+  const adminLink = document.getElementById('admin-nav-link');
+  const smAdminLink = document.getElementById('sm-admin-link');
+  const smDashLink = document.getElementById('sm-dash-link');
+  const smLogout = document.getElementById('sm-logout-link');
+
+  if(currentUser) {
+    if(guestBtns) guestBtns.style.display = 'none';
+    if(userChip) userChip.style.display = 'flex';
+    const avatarEl = document.getElementById('nav-avatar');
+    if(avatarEl) avatarEl.textContent = currentUser.name[0].toUpperCase();
+    const userNameEl = document.getElementById('nav-username');
+    if(userNameEl) userNameEl.textContent = currentUser.name;
+    const walletEl = document.getElementById('nav-wallet');
+    if(walletEl) walletEl.textContent = '$' + (currentUser.wallet || 0).toFixed(2);
+    const dashWelcome = document.getElementById('dashWelcome');
+    if(dashWelcome) dashWelcome.textContent = 'Welcome, ' + currentUser.name + '!';
+    const dashWallet = document.getElementById('dashWallet');
+    if(dashWallet) dashWallet.textContent = '$' + (currentUser.wallet || 0).toFixed(2);
+    const orderWallet = document.getElementById('orderWalletBal');
+    if(orderWallet) orderWallet.innerHTML = 'Wallet Balance: <strong style="color:var(--accent3)">$' + (currentUser.wallet || 0).toFixed(2) + '</strong>';
+    if(smDashLink) smDashLink.style.display = 'block';
+    if(smLogout) smLogout.style.display = 'block';
+    if(currentUser.role === 'admin') {
+      if(adminLink) adminLink.style.display = 'flex';
+      if(smAdminLink) smAdminLink.style.display = 'block';
+    } else {
+      if(adminLink) adminLink.style.display = 'none';
+      if(smAdminLink) smAdminLink.style.display = 'none';
+    }
+  } else {
+    if(guestBtns) guestBtns.style.display = 'flex';
+    if(userChip) userChip.style.display = 'none';
+    if(adminLink) adminLink.style.display = 'none';
+    if(smAdminLink) smAdminLink.style.display = 'none';
+    if(smDashLink) smDashLink.style.display = 'none';
+    if(smLogout) smLogout.style.display = 'none';
+    const orderWallet = document.getElementById('orderWalletBal');
+    if(orderWallet) orderWallet.innerHTML = 'Wallet Balance: $0.00 — <a href="#" onclick="openModal(\'login\')" style="color:var(--accent)">Login to use balance</a>';
+  }
 }
-function calcPrice() { 
-  const rate = parseFloat(document.getElementById('orderService').value) || 0;
-  const qty = parseInt(document.getElementById('orderQty').value) || 0;
-  const total = rate * qty / 1000;
-  document.getElementById('orderAmount').value = total ? '$'+total.toFixed(2) : '';
-  document.getElementById('priceSummary').innerHTML = total ? '$'+total.toFixed(2) : '$0.00';
-}
+
+// ===================== ORDER =====================
 function filterPlatform(plat, btn) {
   document.querySelectorAll('#platformFilterBtns .pf-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  if(plat !== 'all') { let sel = document.getElementById('orderPlatform'); for(let opt of sel.options) if(opt.text===plat) { sel.value=plat; break; } updateServices(); }
+  if(plat !== 'all') {
+    const sel = document.getElementById('orderPlatform');
+    for(let o of sel.options) {
+      if(o.text.toLowerCase().includes(plat.toLowerCase())) { sel.value = o.value; break; }
+    }
+    updateServices();
+  }
 }
-function placeOrder() { if(!currentUser) { openModal('login'); toast("Please login first",'error'); return; } toast("Order placed (demo) - Supabase ready",'success'); clearOrderForm(); }
-function clearOrderForm() { document.getElementById('orderPlatform').value=''; document.getElementById('orderService').innerHTML='<option>--</option>'; document.getElementById('orderQty').value=''; document.getElementById('orderLink').value=''; document.getElementById('orderAmount').value=''; document.getElementById('priceSummary').innerHTML='$0.00'; }
-function renderServicesTable(data) { const tbody = document.getElementById('svcTableBody'); if(tbody) tbody.innerHTML = data.map(s => `<tr><td>${s.platform}</td><td>${s.name}</td><td>$${s.rate}</td><td><button class="btn-order-sm" onclick="showPage('order'); setTimeout(()=>{ document.getElementById('orderPlatform').value='${s.platform}'; updateServices(); },50)">Order</button></td></tr>`).join(''); }
-function filterServices() { const kw = document.getElementById('svcSearch').value.toLowerCase(); renderServicesTable(mockServices.filter(s => s.name.toLowerCase().includes(kw) || s.platform.toLowerCase().includes(kw))); }
 
-// Init
-document.addEventListener('DOMContentLoaded', () => { loadUserFromSession(); renderServicesTable(mockServices); });
+function updateServices() {
+  const plat = document.getElementById('orderPlatform').value;
+  const svc = document.getElementById('orderService');
+  svc.innerHTML = '<option value="">-- Select Service --</option>';
+  if(!plat) return;
+  const svcs = mockServices.filter(s => s.platform === plat);
+  svcs.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s.rate;
+    o.textContent = s.name + ' — $' + s.rate + '/1K';
+    o.dataset.min = s.min;
+    o.dataset.max = s.max;
+    svc.appendChild(o);
+  });
+  document.getElementById('platformDetailsText').textContent = svcs.length + ' services available';
+  calcPrice();
+}
+
+function setQty(n) {
+  document.getElementById('orderQty').value = n;
+  calcPrice();
+}
+
+function calcPrice() {
+  const svc = document.getElementById('orderService');
+  const qty = parseInt(document.getElementById('orderQty').value) || 0;
+  const rate = parseFloat(svc.value) || 0;
+  if(rate && qty) {
+    const total = (rate / 1000 * qty).toFixed(2);
+    document.getElementById('orderAmount').value = '$' + total;
+    document.getElementById('priceSummary').textContent = '$' + total;
+    document.getElementById('serviceDetailsText').textContent = '$' + rate + ' per 1,000 units';
+  } else {
+    document.getElementById('orderAmount').value = '';
+    document.getElementById('priceSummary').textContent = '$0.00';
+  }
+}
+
+function performSearch() {
+  const kw = document.getElementById('searchKeyword').value.toLowerCase();
+  const results = document.getElementById('searchResults');
+  if(!kw) { results.innerHTML = ''; return; }
+  const matches = mockServices.filter(s =>
+    s.name.toLowerCase().includes(kw) ||
+    s.platform.toLowerCase().includes(kw) ||
+    s.category.toLowerCase().includes(kw) ||
+    String(s.rate).includes(kw)
+  );
+  results.innerHTML = matches.slice(0,5).map(s =>
+    `<div class="sr-item" onclick="selectService('${s.platform}','${s.rate}')">
+      <span class="sr-name">${s.platform} · ${s.name}</span>
+      <span class="sr-rate">$${s.rate}/1K</span>
+    </div>`
+  ).join('');
+}
+
+function selectService(platform, rate) {
+  document.getElementById('orderPlatform').value = platform;
+  updateServices();
+  setTimeout(() => {
+    const svc = document.getElementById('orderService');
+    for(let o of svc.options) { if(o.value == rate) { svc.value = rate; break; } }
+    calcPrice();
+  }, 50);
+  document.getElementById('searchResults').innerHTML = '';
+  document.getElementById('searchKeyword').value = '';
+}
+
+async function placeOrder() {
+  if(!currentUser) { openModal('login'); toast('Please login to place order', 'error'); return; }
+  const platform = document.getElementById('orderPlatform').value;
+  const svc = document.getElementById('orderService').value;
+  const qty = document.getElementById('orderQty').value;
+  const link = document.getElementById('orderLink').value.trim();
+  if(!platform || !svc || !qty || !link) { toast('Please fill all required fields','error'); return; }
+  
+  // In a real implementation, save order to Supabase orders table
+  toast('Order placed successfully! 🚀','success');
+  clearOrderForm();
+}
+
+function clearOrderForm() {
+  document.getElementById('orderPlatform').value = '';
+  document.getElementById('orderService').innerHTML = '<option>-- Select Service --</option>';
+  document.getElementById('orderQty').value = '';
+  document.getElementById('orderAmount').value = '';
+  document.getElementById('orderLink').value = '';
+  document.getElementById('orderEmail').value = '';
+  document.getElementById('orderComment').value = '';
+  document.getElementById('priceSummary').textContent = '$0.00';
+}
+
+// ===================== SERVICES TABLE =====================
+function renderServicesTable(data) {
+  const tbody = document.getElementById('svcTableBody');
+  if(!tbody) return;
+  tbody.innerHTML = data.map(s => `
+    <tr>
+      <td><code>${s.id}</code></td>
+      <td>${s.platform}</td>
+      <td>${s.category}</td>
+      <td>${s.name}</td>
+      <td>${s.min.toLocaleString()}</td>
+      <td>${s.max.toLocaleString()}</td>
+      <td><strong style="color:var(--accent3)">$${s.rate}</strong></td>
+      <td><span class="svc-badge active">Active</span></td>
+      <td><button class="btn-order-sm" onclick="goOrder('${s.platform}','${s.rate}')">Order</button></td>
+    </tr>`).join('');
+}
+
+function goOrder(platform, rate) {
+  showPage('order');
+  setTimeout(() => {
+    document.getElementById('orderPlatform').value = platform;
+    updateServices();
+    setTimeout(() => {
+      const svc = document.getElementById('orderService');
+      for(let o of svc.options) { if(o.value == rate) { svc.value = rate; break; } }
+      calcPrice();
+    }, 80);
+  }, 100);
+}
+
+let svcPlatformActive = 'all';
+function filterSvcPlatform(plat, btn) {
+  document.querySelectorAll('#svcPlatformFilter .pf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  svcPlatformActive = plat;
+  filterServices();
+}
+
+function filterServices() {
+  const kw = document.getElementById('svcSearch').value.toLowerCase();
+  let data = mockServices;
+  if(svcPlatformActive !== 'all') data = data.filter(s => s.platform === svcPlatformActive);
+  if(kw) data = data.filter(s =>
+    s.id.toLowerCase().includes(kw) || s.name.toLowerCase().includes(kw) ||
+    s.platform.toLowerCase().includes(kw) || s.category.toLowerCase().includes(kw) ||
+    String(s.rate).includes(kw)
+  );
+  renderServicesTable(data);
+}
+
+// ===================== AFFILIATE =====================
+function switchAffTab(id, btn) {
+  document.querySelectorAll('.aff-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.aff-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('aff-' + id).classList.add('active');
+}
+
+function submitAffApp() {
+  if(!document.getElementById('affAgree').checked) { toast('Please agree to the Terms & Conditions','error'); return; }
+  if(!document.getElementById('affName').value) { toast('Please fill in all required fields','error'); return; }
+  toast('Application submitted! We will review it and contact you.','success');
+}
+
+function showEmpPortal() {
+  document.getElementById('empPortal').style.display = 'block';
+  document.getElementById('empAppForm').style.display = 'none';
+}
+
+function submitEmpApp() {
+  toast('Application submitted! We will review it within 3-5 business days.','success');
+}
+
+function switchEmpTab(id, btn) {
+  document.querySelectorAll('.emp-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.emp-section').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('emp-' + id).classList.add('active');
+}
+
+function updateWorkFields() {
+  const val = document.getElementById('workType').value;
+  document.getElementById('orderFields').style.display = val === 'order' ? 'block' : 'none';
+  document.getElementById('sharingFields').style.display = val === 'sharing' ? 'block' : 'none';
+}
+
+function toggleBoostFields() {
+  document.getElementById('boostFields').style.display = document.getElementById('isBoosted').checked ? 'block' : 'none';
+}
+
+// ===================== ADMIN =====================
+function switchAdmin(id, btn) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('admin-' + id).classList.add('active');
+}
+
+function renderAdminServices() {
+  const tbody = document.getElementById('adminSvcBody');
+  if(!tbody) return;
+  tbody.innerHTML = mockServices.map(s => `
+    <tr>
+      <td><code>${s.id}</code></td><td>${s.platform}</td><td>${s.category}</td>
+      <td>${s.name}</td><td>$${s.rate}</td>
+      <td><span class="svc-badge active">Active</span></td>
+      <td class="act-btns"><button class="btn-sm-edit">Edit</button><button class="btn-sm-delete" onclick="toast('Service deleted','info')">Delete</button></td>
+    </tr>`).join('');
+}
+
+function renderPlatformMgmt() {
+  const wrap = document.getElementById('platformMgmt');
+  if(!wrap) return;
+  const platforms = ['TikTok','Instagram','Facebook','YouTube','X / Twitter','Pinterest','Telegram','WhatsApp','Snapchat','LinkedIn','Discord','Spotify','Twitch','Threads','Google'];
+  wrap.innerHTML = platforms.map(p => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--glass-border)">
+      <span style="font-size:14px;font-weight:500">${p}</span>
+      <label class="toggle-switch"><div class="ts-track on" onclick="this.classList.toggle('on')"><div class="ts-thumb"></div></div></label>
+    </div>`).join('');
+}
+
+// ===================== DASHBOARD =====================
+function copyRef() {
+  const val = document.getElementById('refLink').value;
+  navigator.clipboard?.writeText(val);
+  toast('Referral link copied!','success');
+}
+
+// ===================== TOAST =====================
+function toast(msg, type='info') {
+  const icons = {success:'fa-circle-check',error:'fa-circle-xmark',info:'fa-circle-info'};
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<i class="fa-solid ${icons[type]}"></i> ${msg}`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(20px)'; el.style.transition='all .3s'; setTimeout(()=>el.remove(),300); }, 3500);
+}
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded', () => {
+  renderServicesTable(mockServices);
+  renderAdminServices();
+  renderPlatformMgmt();
+  loadUserFromSession();
+  
+  // Close modal on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if(e.target === m) m.classList.remove('show'); });
+  });
+  // Close user dropdown on outside click
+  document.addEventListener('click', e => {
+    const chip = document.getElementById('user-chip');
+    if(chip && !chip.contains(e.target)) chip.classList.remove('open');
+  });
+});
 </script>
 </body>
 </html>

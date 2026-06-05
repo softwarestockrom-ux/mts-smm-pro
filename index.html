@@ -1,1087 +1,828 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MTS SMM - Media Tech Support | Social Media Growth Platform</title>
-    <meta name="description" content="Grow your social media presence with confidence. Affordable SMM services for TikTok, Instagram, YouTube, Facebook, and more.">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📱</text></svg>">
-    
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #818cf8;
-            --secondary: #8b5cf6;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --gray: #64748b;
-        }
-
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        body.dark {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-        }
-
-        /* Glass Container */
-        .glass-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        body.dark .glass-container {
-            background: rgba(15, 23, 42, 0.95);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            border-radius: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
-        }
-
-        body.dark .glass-card {
-            background: rgba(15, 23, 42, 0.8);
-            border-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Buttons */
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            padding: 0.875rem 1.75rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            padding: 0.875rem 1.75rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 320px;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            z-index: 1000;
-            transform: translateX(-100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        body.dark .sidebar {
-            background: rgba(15, 23, 42, 0.98);
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
-        }
-
-        .overlay.active {
-            display: block;
-        }
-
-        /* Tabs */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Platform Cards */
-        .platform-card {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
-            border-radius: 1rem;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-        }
-
-        .platform-card:hover {
-            transform: translateY(-5px);
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.25));
-            border-color: var(--primary);
-        }
-
-        /* Form Inputs */
-        input, select, textarea {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border-radius: 1rem;
-            border: 2px solid #e2e8f0;
-            background: white;
-            transition: all 0.2s;
-        }
-
-        body.dark input, body.dark select, body.dark textarea {
-            background: #1e293b;
-            border-color: #334155;
-            color: white;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1100;
-            background: #1e293b;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 1rem;
-            transform: translateX(400px);
-            transition: transform 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        .toast.success {
-            background: var(--success);
-        }
-
-        .toast.error {
-            background: var(--danger);
-        }
-
-        /* Modal */
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            display: none;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 2rem;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        body.dark .modal-content {
-            background: #1e293b;
-        }
-
-        /* Avatar */
-        .avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: white;
-        }
-
-        /* Dropdown */
-        .dropdown-menu {
-            position: absolute;
-            top: 70px;
-            right: 20px;
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            padding: 0.5rem;
-            min-width: 200px;
-            z-index: 100;
-            display: none;
-        }
-
-        body.dark .dropdown-menu {
-            background: #1e293b;
-        }
-
-        .dropdown-menu.show {
-            display: block;
-        }
-
-        .dropdown-item {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            border-radius: 0.5rem;
-            transition: background 0.2s;
-        }
-
-        .dropdown-item:hover {
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        /* Quick Quantity Buttons */
-        .quick-qty-btn {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid var(--primary);
-            padding: 0.5rem 1rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .quick-qty-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Price Box */
-        .price-box {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 1rem;
-            padding: 1.5rem;
-            text-align: center;
-            color: white;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #e2e8f0;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-
-        /* Service Item */
-        .service-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 1rem;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-        }
-
-        .service-item:hover {
-            background: rgba(99, 102, 241, 0.1);
-            transform: translateX(5px);
-        }
-
-        /* Category Badge */
-        .category-badge {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 0.5rem 1.5rem;
-            border-radius: 2rem;
-            color: white;
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MTS SMM - Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--primary:#6366f1;--secondary:#ec4899;--bg-dark:#0f172a;--bg-card:rgba(30,41,59,0.7);--text-light:#f1f5f9;--text-muted:#94a3b8;--border:rgba(255,255,255,0.1);--success:#10b981;--danger:#ef4444;--warning:#f59e0b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#312e81 100%);color:var(--text-light);min-height:100vh}
+.admin-layout{display:flex;min-height:100vh}
+.sidebar{width:260px;background:rgba(15,23,42,0.95);border-right:1px solid var(--border);padding:20px;position:fixed;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:10px;margin-bottom:30px;text-align:center;border-bottom:1px solid var(--border);padding-bottom:20px}
+.sidebar-logo h1{font-size:24px;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sidebar-logo small{color:var(--text-muted);font-size:11px}
+.sidebar-menu{list-style:none}
+.sidebar-menu li{padding:12px 16px;border-radius:8px;cursor:pointer;margin-bottom:4px;display:flex;align-items:center;gap:12px;color:var(--text-muted);transition:all 0.3s}
+.sidebar-menu li:hover,.sidebar-menu li.active{background:rgba(99,102,241,0.2);color:var(--text-light)}
+.sidebar-menu li i{width:20px}
+.main-content{flex:1;margin-left:260px;padding:30px}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;background:var(--bg-card);padding:16px 24px;border-radius:12px;border:1px solid var(--border)}
+.user-info{display:flex;align-items:center;gap:10px}
+.user-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-weight:600}
+.btn{padding:10px 18px;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:6px;transition:all 0.3s}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-success{background:var(--success);color:white}
+.btn-danger{background:var(--danger);color:white}
+.btn-warning{background:var(--warning);color:white}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-light)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:28px;margin-bottom:20px}
+.glass-card{background:var(--bg-card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px}
+.stat-card{background:var(--bg-card);padding:20px;border-radius:12px;border:1px solid var(--border)}
+.stat-card .stat-label{color:var(--text-muted);font-size:12px;text-transform:uppercase;margin-bottom:8px}
+.stat-card .stat-value{font-size:28px;font-weight:700;color:var(--primary)}
+.stat-card .stat-icon{font-size:36px;color:var(--primary);opacity:0.3;float:right}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:13px}
+th{background:rgba(99,102,241,0.1);color:var(--primary);font-weight:600}
+tr:hover{background:rgba(255,255,255,0.02)}
+.status-badge{padding:4px 10px;border-radius:10px;font-size:11px;font-weight:600;text-transform:capitalize;display:inline-block}
+.status-pending,.status-open{background:rgba(245,158,11,0.2);color:var(--warning)}
+.status-active,.status-approved,.status-completed,.status-paid,.status-processed{background:rgba(16,185,129,0.2);color:var(--success)}
+.status-inactive,.status-rejected,.status-cancelled,.status-suspended,.status-failed{background:rgba(239,68,68,0.2);color:var(--danger)}
+.status-processing{background:rgba(99,102,241,0.2);color:var(--primary)}
+input,select,textarea{width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text-light);font-size:13px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)}
+textarea{min-height:80px;resize:vertical}
+label{display:block;margin:10px 0 6px;font-size:13px;font-weight:500}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;overflow-y:auto}
+.modal.active{display:flex}
+.modal-content{background:var(--bg-dark);padding:30px;border-radius:12px;max-width:600px;width:100%;position:relative;border:1px solid var(--border);max-height:90vh;overflow-y:auto}
+.modal-close{position:absolute;top:14px;right:14px;font-size:24px;cursor:pointer;background:none;border:none;color:var(--text-muted)}
+.toast{position:fixed;bottom:30px;right:30px;background:var(--bg-dark);border:1px solid var(--border);padding:14px 20px;border-radius:8px;z-index:1000;transform:translateX(120%);transition:transform 0.3s;max-width:350px}
+.toast.show{transform:translateX(0)}
+.toast.success{border-left:4px solid var(--success)}
+.toast.error{border-left:4px solid var(--danger)}
+.toast.info{border-left:4px solid var(--primary)}
+.spinner-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:999;display:flex;align-items:center;justify-content:center}
+.spinner{width:60px;height:60px;border:4px solid rgba(99,102,241,0.2);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.login-container{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-card{background:var(--bg-card);padding:40px;border-radius:16px;border:1px solid var(--border);max-width:400px;width:100%}
+.login-card h1{text-align:center;margin-bottom:20px;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.login-card input{margin-bottom:12px}
+.table-wrapper{overflow-x:auto}
+.search-input{max-width:300px;margin-bottom:16px}
+.toggle-switch{position:relative;display:inline-block;width:50px;height:26px}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#475569;transition:0.3s;border-radius:26px}
+.toggle-slider:before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;background:white;transition:0.3s;border-radius:50%}
+.toggle-switch input:checked+.toggle-slider{background:var(--success)}
+.toggle-switch input:checked+.toggle-slider:before{transform:translateX(24px)}
+.action-btns{display:flex;gap:6px;flex-wrap:wrap}
+.alert-info{background:rgba(99,102,241,0.1);border-left:4px solid var(--primary);padding:14px;border-radius:8px;margin-bottom:16px;font-size:13px}
+@media(max-width:768px){
+.sidebar{width:100%;height:auto;position:relative}
+.main-content{margin-left:0}
+.admin-layout{flex-direction:column}
+}
+</style>
 </head>
 <body>
-    <div id="overlay" class="overlay"></div>
-    <div id="toast" class="toast"></div>
 
-    <!-- SIDEBAR -->
-    <div id="sidebar" class="sidebar">
-        <div class="p-6">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Menu</h2>
-                </div>
-                <button id="closeSidebar" class="text-3xl hover:text-indigo-500">&times;</button>
-            </div>
-            <nav class="space-y-2">
-                <a href="#" data-page="home" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-home w-5 text-indigo-500"></i> Home</a>
-                <a href="#" data-page="services" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-cogs w-5 text-indigo-500"></i> Services</a>
-                <a href="#" data-page="order" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-shopping-cart w-5 text-indigo-500"></i> Order</a>
-                <a href="#" data-page="affiliate" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-handshake w-5 text-indigo-500"></i> Affiliate Program</a>
-                <a href="#" data-page="privacy" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-shield-alt w-5 text-indigo-500"></i> Privacy Policy</a>
-                <a href="#" data-page="contact" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-headset w-5 text-indigo-500"></i> Contact Support</a>
-                <div id="adminSidebarLink" style="display:none;">
-                    <a href="#" data-page="admin" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-user-shield w-5 text-indigo-500"></i> Admin Panel</a>
-                </div>
-                <hr class="border-gray-200 dark:border-gray-700 my-4">
-                <div id="userSidebarLinks" style="display:none;">
-                    <a href="#" data-page="dashboard" class="sidebar-link flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-500/10 transition"><i class="fas fa-tachometer-alt w-5 text-indigo-500"></i> Dashboard</a>
-                    <a href="#" id="sidebarLogout" class="flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-500/10 transition"><i class="fas fa-sign-out-alt w-5"></i> Logout</a>
-                </div>
-            </nav>
-        </div>
-    </div>
+<!-- LOGIN -->
+<div id="loginScreen" class="login-container">
+<div class="login-card">
+<h1>MTS SMM Admin</h1>
+<p style="text-align:center;color:var(--text-muted);margin-bottom:20px">Sign in to admin panel</p>
+<input type="email" id="loginEmail" placeholder="Admin Email">
+<input type="password" id="loginPassword" placeholder="Password">
+<button class="btn btn-primary" style="width:100%;padding:12px" onclick="adminLogin()">Login</button>
+<p style="text-align:center;color:var(--text-muted);font-size:12px;margin-top:16px">Only admin accounts allowed</p>
+</div>
+</div>
 
-    <!-- MAIN CONTAINER -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <!-- HEADER -->
-        <header class="glass-container p-4 flex justify-between items-center sticky top-4 z-50">
-            <div class="flex items-center gap-4">
-                <button id="menuToggle" class="text-2xl hover:text-indigo-500 transition"><i class="fas fa-bars"></i></button>
-                <div>
-                    <h1 class="text-2xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">MTS SMM</h1>
-                    <p class="text-xs -mt-1 opacity-75">media tech support</p>
-                </div>
-            </div>
-            <div id="headerAuth" class="flex items-center gap-3"></div>
-        </header>
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="admin-layout" style="display:none">
+<aside class="sidebar">
+<div class="sidebar-logo">
+<h1>MTS Admin</h1>
+<small>Media Tech Support</small>
+</div>
+<ul class="sidebar-menu">
+<li class="active" onclick="showPage('dashboard',this)"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+<li onclick="showPage('users',this)"><i class="fas fa-users"></i> Users</li>
+<li onclick="showPage('wallets',this)"><i class="fas fa-wallet"></i> Wallets</li>
+<li onclick="showPage('orders',this)"><i class="fas fa-shopping-cart"></i> Orders</li>
+<li onclick="showPage('transactions',this)"><i class="fas fa-exchange-alt"></i> Transactions</li>
+<li onclick="showPage('platforms',this)"><i class="fas fa-layer-group"></i> Platforms</li>
+<li onclick="showPage('categories',this)"><i class="fas fa-tags"></i> Categories</li>
+<li onclick="showPage('services',this)"><i class="fas fa-list"></i> Services</li>
+<li onclick="showPage('affiliates',this)"><i class="fas fa-handshake"></i> Affiliates</li>
+<li onclick="showPage('referrals',this)"><i class="fas fa-link"></i> Referrals</li>
+<li onclick="showPage('payouts',this)"><i class="fas fa-money-check-alt"></i> Payouts</li>
+<li onclick="showPage('employees',this)"><i class="fas fa-id-badge"></i> Employees</li>
+<li onclick="showPage('attendance',this)"><i class="fas fa-calendar-check"></i> Attendance</li>
+<li onclick="showPage('worklogs',this)"><i class="fas fa-tasks"></i> Work Logs</li>
+<li onclick="showPage('tickets',this)"><i class="fas fa-headset"></i> Support Tickets</li>
+<li onclick="showPage('settings',this)"><i class="fas fa-cog"></i> Settings</li>
+<li onclick="adminLogout()" style="color:var(--danger);margin-top:20px"><i class="fas fa-sign-out-alt"></i> Logout</li>
+</ul>
+</aside>
 
-        <!-- MAIN CONTENT -->
-        <main class="mt-8">
-            <!-- HOME PAGE -->
-            <div id="homePage" class="tab-content active">
-                <!-- Hero Section -->
-                <div class="glass-card p-12 text-center mb-8">
-                    <h2 class="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-4">Grow Your Social Media Presence With Confidence</h2>
-                    <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg">MTS SMM provides affordable, high-quality, and reliable social media marketing services for creators, businesses, agencies, and brands worldwide.</p>
-                    <div class="flex gap-4 justify-center mt-8">
-                        <button id="homeGetStarted" class="btn-primary"><i class="fas fa-rocket mr-2"></i>Get Started</button>
-                        <button id="homeBrowseServices" class="btn-outline"><i class="fas fa-search mr-2"></i>Browse Services</button>
-                    </div>
-                </div>
+<main class="main-content">
+<div class="top-bar">
+<h2 id="topBarTitle">Dashboard</h2>
+<div class="user-info">
+<div class="user-avatar" id="adminAvatar">A</div>
+<div><div id="adminName">Admin</div><small id="adminEmail" style="color:var(--text-muted)"></small></div>
+</div>
+</div>
 
-                <!-- Why Choose Us -->
-                <h3 class="text-3xl font-bold text-center mb-8">Why Choose Us</h3>
-                <div class="grid md:grid-cols-4 gap-6 mb-12">
-                    <div class="glass-card p-6 text-center">
-                        <i class="fas fa-shield-alt text-5xl text-indigo-400 mb-3"></i>
-                        <h3 class="text-xl font-bold mb-2">We Sell Trust</h3>
-                        <p class="text-sm">Trusted by clients worldwide with transparent pricing and reliable service delivery.</p>
-                    </div>
-                    <div class="glass-card p-6 text-center">
-                        <i class="fas fa-tags text-5xl text-indigo-400 mb-3"></i>
-                        <h3 class="text-xl font-bold mb-2">Affordable & Guaranteed</h3>
-                        <p class="text-sm">Competitive pricing with stable delivery and customer satisfaction.</p>
-                    </div>
-                    <div class="glass-card p-6 text-center">
-                        <i class="fas fa-globe text-5xl text-indigo-400 mb-3"></i>
-                        <h3 class="text-xl font-bold mb-2">Global High-Tech Platform</h3>
-                        <p class="text-sm">Support for TikTok, Instagram, YouTube, Telegram, WhatsApp & more.</p>
-                    </div>
-                    <div class="glass-card p-6 text-center">
-                        <i class="fas fa-headset text-5xl text-indigo-400 mb-3"></i>
-                        <h3 class="text-xl font-bold mb-2">Professional Support</h3>
-                        <p class="text-sm">Fast customer assistance and dedicated account support.</p>
-                    </div>
-                </div>
+<!-- DASHBOARD -->
+<section id="dashboard-page" class="page active">
+<div class="stats-grid">
+<div class="stat-card"><i class="fas fa-users stat-icon"></i><div class="stat-label">Total Users</div><div class="stat-value" id="statUsers">0</div></div>
+<div class="stat-card"><i class="fas fa-shopping-cart stat-icon"></i><div class="stat-label">Total Orders</div><div class="stat-value" id="statOrders">0</div></div>
+<div class="stat-card"><i class="fas fa-dollar-sign stat-icon"></i><div class="stat-label">Total Revenue</div><div class="stat-value" id="statRevenue">$0</div></div>
+<div class="stat-card"><i class="fas fa-list stat-icon"></i><div class="stat-label">Active Services</div><div class="stat-value" id="statServices">0</div></div>
+<div class="stat-card"><i class="fas fa-handshake stat-icon"></i><div class="stat-label">Affiliates</div><div class="stat-value" id="statAffiliates">0</div></div>
+<div class="stat-card"><i class="fas fa-id-badge stat-icon"></i><div class="stat-label">Employees</div><div class="stat-value" id="statEmployees">0</div></div>
+<div class="stat-card"><i class="fas fa-headset stat-icon"></i><div class="stat-label">Open Tickets</div><div class="stat-value" id="statTickets">0</div></div>
+<div class="stat-card"><i class="fas fa-clock stat-icon"></i><div class="stat-label">Pending Orders</div><div class="stat-value" id="statPendingOrders">0</div></div>
+</div>
+<div class="glass-card">
+<h3>Recent Orders</h3>
+<div class="table-wrapper">
+<table><thead><tr><th>#</th><th>Service</th><th>User</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrdersTable"></tbody></table>
+</div>
+</div>
+</section>
 
-                <!-- Supported Platforms -->
-                <h3 class="text-3xl font-bold text-center mb-8">Supported Platforms</h3>
-                <div id="platformsGrid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-13 gap-4 mb-12"></div>
+<!-- USERS -->
+<section id="users-page" class="page">
+<h2 class="page-title">Users Management</h2>
+<input class="search-input" id="usersSearch" placeholder="Search users..." oninput="filterUsers()">
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Phone</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead><tbody id="usersTable"></tbody></table>
+</div>
+</section>
 
-                <!-- Services Preview Categories -->
-                <h3 class="text-3xl font-bold text-center mb-8">Popular Services</h3>
-                <div id="categoriesPreview" class="flex flex-wrap gap-3 justify-center mb-12"></div>
+<!-- WALLETS -->
+<section id="wallets-page" class="page">
+<h2 class="page-title">Wallets Management</h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>User</th><th>Balance</th><th>Total Spent</th><th>Affiliate Earned</th><th>Actions</th></tr></thead><tbody id="walletsTable"></tbody></table>
+</div>
+</section>
 
-                <!-- How It Works -->
-                <h3 class="text-3xl font-bold text-center mb-8">How It Works</h3>
-                <div class="grid md:grid-cols-4 gap-8 mb-12">
-                    <div class="text-center">
-                        <div class="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-mobile-alt text-3xl text-indigo-400"></i>
-                        </div>
-                        <h4 class="font-bold text-xl">Select Platform</h4>
-                        <p class="text-sm">Choose your social media platform</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-chart-line text-3xl text-indigo-400"></i>
-                        </div>
-                        <h4 class="font-bold text-xl">Choose Service</h4>
-                        <p class="text-sm">Pick the service you need</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-shopping-cart text-3xl text-indigo-400"></i>
-                        </div>
-                        <h4 class="font-bold text-xl">Place Order</h4>
-                        <p class="text-sm">Enter details and checkout</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-rocket text-3xl text-indigo-400"></i>
-                        </div>
-                        <h4 class="font-bold text-xl">Receive Delivery</h4>
-                        <p class="text-sm">Get instant or scheduled delivery</p>
-                    </div>
-                </div>
-            </div>
+<!-- ORDERS -->
+<section id="orders-page" class="page">
+<h2 class="page-title">Orders Management</h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>#</th><th>User</th><th>Service</th><th>Qty</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="ordersTable"></tbody></table>
+</div>
+</section>
 
-            <!-- SERVICES PAGE -->
-            <div id="servicesPage" class="tab-content">
-                <div class="glass-card p-8">
-                    <h2 class="text-3xl font-bold mb-6">All Services</h2>
-                    <div class="mb-6 flex gap-2 flex-wrap" id="platformFilterServices"></div>
-                    <div id="servicesList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-                </div>
-            </div>
+<!-- TRANSACTIONS -->
+<section id="transactions-page" class="page">
+<h2 class="page-title">All Transactions</h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>User</th><th>Type</th><th>Amount</th><th>Description</th><th>Status</th><th>Date</th></tr></thead><tbody id="transactionsTable"></tbody></table>
+</div>
+</section>
 
-            <!-- ORDER PAGE -->
-            <div id="orderPage" class="tab-content">
-                <div class="glass-card p-8">
-                    <div id="orderWalletBox" class="bg-indigo-500/20 p-4 rounded-xl mb-6 text-right font-bold text-lg">💰 Wallet Balance: $0.00</div>
+<!-- PLATFORMS -->
+<section id="platforms-page" class="page">
+<h2 class="page-title">Platforms <button class="btn btn-primary btn-sm" onclick="openModal('platform')"><i class="fas fa-plus"></i> Add Platform</button></h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>Icon</th><th>Name</th><th>Sort Order</th><th>Enabled</th><th>Actions</th></tr></thead><tbody id="platformsTable"></tbody></table>
+</div>
+</section>
 
-                    <!-- Platform Filter -->
-                    <div class="mb-6">
-                        <h3 class="font-bold text-lg mb-3"><i class="fas fa-filter mr-2"></i>Quick Platform Filter</h3>
-                        <div id="orderPlatformFilters" class="flex flex-wrap gap-2"></div>
-                    </div>
+<!-- CATEGORIES -->
+<section id="categories-page" class="page">
+<h2 class="page-title">Categories <button class="btn btn-primary btn-sm" onclick="openModal('category')"><i class="fas fa-plus"></i> Add Category</button></h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>Name</th><th>Description</th><th>Sort Order</th><th>Actions</th></tr></thead><tbody id="categoriesTable"></tbody></table>
+</div>
+</section>
 
-                    <!-- Search Bar -->
-                    <div class="mb-6">
-                        <h3 class="font-bold text-lg mb-3"><i class="fas fa-search mr-2"></i>Search Services</h3>
-                        <input type="text" id="serviceSearchInput" placeholder="Search by platform, service name, or price..." class="w-full">
-                        <div id="searchResults" class="mt-3 space-y-2 max-h-60 overflow-y-auto"></div>
-                    </div>
+<!-- SERVICES -->
+<section id="services-page" class="page">
+<h2 class="page-title">Services <button class="btn btn-primary btn-sm" onclick="openModal('service')"><i class="fas fa-plus"></i> Add Service</button></h2>
+<input class="search-input" id="servicesSearch" placeholder="Search services..." oninput="filterServicesAdmin()">
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>Code</th><th>Name</th><th>Platform</th><th>Category</th><th>Rate/1K</th><th>Min</th><th>Max</th><th>Status</th><th>Actions</th></tr></thead><tbody id="servicesTable"></tbody></table>
+</div>
+</section>
 
-                    <!-- Order Form -->
-                    <div class="grid md:grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <label class="block mb-2 font-semibold">Platform *</label>
-                            <select id="orderPlatform" class="w-full"></select>
-                        </div>
-                        <div>
-                            <label class="block mb-2 font-semibold">Service *</label>
-                            <select id="orderService" class="w-full"></select>
-                        </div>
-                        <div>
-                            <label class="block mb-2 font-semibold">Quantity *</label>
-                            <input type="number" id="orderQuantity" placeholder="Enter quantity" class="w-full">
-                            <div id="quickQtyContainer" class="flex flex-wrap gap-2 mt-3"></div>
-                        </div>
-                        <div>
-                            <label class="block mb-2 font-semibold">Total Amount</label>
-                            <input type="text" id="orderAmount" readonly class="w-full bg-gray-100 dark:bg-gray-800 font-bold text-lg">
-                        </div>
-                        <div>
-                            <label class="block mb-2 font-semibold">Post / Profile Link *</label>
-                            <input type="text" id="orderLink" placeholder="https://instagram.com/..." class="w-full">
-                        </div>
-                        <div>
-                            <label class="block mb-2 font-semibold">Email Address *</label>
-                            <input type="email" id="orderEmail" class="w-full">
-                        </div>
-                        <div>
-                            <label class="block mb-2 font-semibold">Target Country</label>
-                            <select id="orderCountry" class="w-full">
-                                <option value="">Select Country</option>
-                                <option>USA</option><option>UK</option><option>Canada</option>
-                                <option>Australia</option><option>India</option><option>Pakistan</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block mb-2 font-semibold">Additional Comments</label>
-                            <textarea id="orderComments" rows="2" class="w-full" placeholder="Special instructions..."></textarea>
-                        </div>
-                    </div>
+<!-- AFFILIATES -->
+<section id="affiliates-page" class="page">
+<h2 class="page-title">Affiliates Management</h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>User</th><th>Referral Code</th><th>Rate</th><th>Earnings</th><th>Referrals</th><th>Status</th><th>Actions</th></tr></thead><tbody id="affiliatesTable"></tbody></table>
+</div>
+</section>
 
-                    <div class="price-box mb-6">
-                        <div class="text-sm opacity-90">PRICE SUMMARY</div>
-                        <div class="text-3xl font-bold" id="priceSummaryDisplay">$0.00</div>
-                    </div>
+<!-- REFERRALS -->
+<section id="referrals-page" class="page">
+<h2 class="page-title">Referral History</h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>Affiliate</th><th>Referred User</th><th>Commission</th><th>Status</th><th>Date</th></tr></thead><tbody id="referralsTable"></tbody></table>
+</div>
+</section>
 
-                    <div class="flex gap-4">
-                        <button id="placeOrderBtn" class="btn-primary flex-1"><i class="fas fa-check-circle mr-2"></i>Place Order</button>
-                        <button id="clearOrderBtn" class="btn-outline"><i class="fas fa-eraser mr-2"></i>Clear Form</button>
-                    </div>
-                </div>
-            </div>
+<!-- PAYOUTS -->
+<section id="payouts-page" class="page">
+<h2 class="page-title">Affiliate Payouts</h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>Affiliate</th><th>Amount</th><th>Method</th><th>Details</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="payoutsTable"></tbody></table>
+</div>
+</section>
 
-            <!-- AFFILIATE PAGE -->
-            <div id="affiliatePage" class="tab-content">
-                <div class="glass-card p-8">
-                    <h2 class="text-3xl font-bold mb-4">Affiliate Partner Program</h2>
-                    <p class="text-gray-600 dark:text-gray-300 mb-6">Join us and earn commission by referring clients. Admin controls all programs.</p>
-                    <div class="flex gap-4 mb-6">
-                        <button id="showAffiliateProgram" class="btn-primary"><i class="fas fa-handshake mr-2"></i>Our Affiliate Program</button>
-                        <button id="showSalaryProgram" class="btn-outline"><i class="fas fa-user-tie mr-2"></i>Salary Based (Employee)</button>
-                    </div>
-                    <div id="affiliateDynamicContent"></div>
-                    <hr class="my-6">
-                    <div>
-                        <h3 class="font-bold text-xl mb-3">Affiliate Terms & Conditions</h3>
-                        <div class="text-sm space-y-2">
-                            <p><strong>Eligibility:</strong> Must be 18+, real information required.</p>
-                            <p><strong>Allowed Activities:</strong> Social Media, WhatsApp, Email, Website promotion.</p>
-                            <p><strong>Prohibited:</strong> No Spam, No Cold Calling, No False Claims.</p>
-                            <p><strong>Commission Rules:</strong> Paid after successful order completion.</p>
-                        </div>
-                        <label class="flex items-center gap-2 mt-4">
-                            <input type="checkbox" id="affiliateTermsCheckbox"> 
-                            <span>I agree to Affiliate Terms & Conditions</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
+<!-- EMPLOYEES -->
+<section id="employees-page" class="page">
+<h2 class="page-title">Employee Applications</h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Experience</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="employeesTable"></tbody></table>
+</div>
+</section>
 
-            <!-- PRIVACY POLICY -->
-            <div id="privacyPage" class="tab-content glass-card p-8">
-                <h2 class="text-3xl font-bold mb-6">Privacy Policy</h2>
-                <div class="space-y-4">
-                    <p><strong>Information Collection:</strong> We collect personal information (name, email, phone, payment details) to process orders and provide services.</p>
-                    <p><strong>Data Usage:</strong> Your data is used solely for order fulfillment, account management, and support.</p>
-                    <p><strong>Your Rights:</strong> You may request data deletion or correction by contacting support.</p>
-                    <p><strong>Contact:</strong> zone43157@gmail.com</p>
-                </div>
-            </div>
+<!-- ATTENDANCE -->
+<section id="attendance-page" class="page">
+<h2 class="page-title">Employee Attendance</h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>Employee</th><th>Date</th><th>Login</th><th>Logout</th><th>Hours</th><th>Status</th></tr></thead><tbody id="attendanceTable"></tbody></table>
+</div>
+</section>
 
-            <!-- CONTACT SUPPORT -->
-            <div id="contactPage" class="tab-content glass-card p-8">
-                <h2 class="text-3xl font-bold mb-6">Contact Support</h2>
-                <form id="supportTicketForm" class="space-y-4">
-                    <input type="text" id="supportName" placeholder="Your Name" required>
-                    <input type="email" id="supportEmail" placeholder="Email Address" required>
-                    <input type="text" id="supportSubject" placeholder="Subject" required>
-                    <textarea id="supportMessage" rows="4" placeholder="Message" required></textarea>
-                    <button type="submit" class="btn-primary"><i class="fas fa-paper-plane mr-2"></i>Submit Ticket</button>
-                </form>
-                <div class="flex gap-6 mt-8 justify-center">
-                    <a href="https://wa.me/923218595421" target="_blank" class="flex items-center gap-2 text-green-500 hover:scale-105 transition">
-                        <i class="fab fa-whatsapp text-3xl"></i> WhatsApp
-                    </a>
-                    <a href="https://t.me/dl" target="_blank" class="flex items-center gap-2 text-blue-400 hover:scale-105 transition">
-                        <i class="fab fa-telegram text-3xl"></i> Telegram
-                    </a>
-                    <a href="mailto:zone43157@gmail.com" class="flex items-center gap-2 text-red-400 hover:scale-105 transition">
-                        <i class="fas fa-envelope text-3xl"></i> Email
-                    </a>
-                </div>
-            </div>
+<!-- WORKLOGS -->
+<section id="worklogs-page" class="page">
+<h2 class="page-title">Employee Work Logs</h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>Employee</th><th>Date</th><th>Type</th><th>Details</th><th>Boosted</th><th>Submitted</th></tr></thead><tbody id="worklogsTable"></tbody></table>
+</div>
+</section>
 
-            <!-- USER DASHBOARD -->
-            <div id="dashboardPage" class="tab-content glass-card p-8">
-                <h2 class="text-3xl font-bold mb-6">User Dashboard</h2>
-                <div id="dashboardContent"></div>
-            </div>
+<!-- TICKETS -->
+<section id="tickets-page" class="page">
+<h2 class="page-title">Support Tickets</h2>
+<div class="glass-card table-wrapper">
+<table><thead><tr><th>#</th><th>User</th><th>Subject</th><th>Priority</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="ticketsTable"></tbody></table>
+</div>
+</section>
 
-            <!-- ADMIN PANEL -->
-            <div id="adminPage" class="tab-content">
-                <div class="glass-card p-8">
-                    <h2 class="text-3xl font-bold mb-6">Admin Dashboard</h2>
-                    <div id="adminStatsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"></div>
-                    <h3 class="text-xl font-bold mb-4">Admin Settings</h3>
-                    <div class="space-y-3">
-                        <div><label class="block mb-2">Commission Rate (%)</label><input type="number" id="adminCommissionRate" class="w-full"></div>
-                        <div><label class="block mb-2">Minimum Payout ($)</label><input type="number" id="adminMinPayout" class="w-full"></div>
-                        <button id="saveAdminSettings" class="btn-primary"><i class="fas fa-save mr-2"></i>Save Settings</button>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
+<!-- SETTINGS -->
+<section id="settings-page" class="page">
+<h2 class="page-title">Site Settings</h2>
 
-    <!-- AUTH MODAL -->
-    <div id="authModal" class="modal">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="modalTitle" class="text-2xl font-bold">Create Account</h2>
-                <button id="closeModal" class="text-3xl hover:text-indigo-500">&times;</button>
-            </div>
-            <form id="authForm">
-                <div id="signupFields" style="display:none;">
-                    <input type="text" id="signupFullName" placeholder="Full Name" required class="mb-3">
-                    <input type="text" id="signupUsername" placeholder="Username" required class="mb-3">
-                    <input type="tel" id="signupPhone" placeholder="Phone Number" required class="mb-3">
-                </div>
-                <input type="email" id="authEmail" placeholder="Email Address" required class="mb-3">
-                <input type="password" id="authPassword" placeholder="Password" required class="mb-3">
-                <div id="confirmPasswordField" style="display:none;">
-                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required class="mb-3">
-                </div>
-                <button type="submit" id="authSubmitBtn" class="btn-primary w-full mb-3">Sign Up</button>
-                <button type="button" id="switchAuthMode" class="btn-outline w-full">Already have an account? Login</button>
-                <button type="button" id="forgotPasswordBtn" class="text-sm text-indigo-400 mt-3 w-full">Forgot Password?</button>
-            </form>
-        </div>
-    </div>
+<div class="alert-info"><i class="fas fa-info-circle"></i> Use the toggles below to <strong>show / hide</strong> programs on the user website.</div>
 
-    <script>
-        // SUPABASE INIT
-        const supabaseUrl = "https://nualxapdjjekeujfznex.supabase.co";
-        const supabaseKey = "sb_publishable_BawJWtJ6fgZ1l6S7-d7VzQ_3kn2lpTX";
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-        
-        let currentUser = null;
-        let userRole = 'user';
-        let userProfile = null;
-        let userWallet = 0;
-        let authMode = 'signup';
-        let allServices = [];
-        let allPlatforms = [];
-        
-        function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.className = `toast ${type}`;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-        
-        async function loadUserData() {
-            if (!currentUser) return;
-            const { data: profile } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
-            if (profile) { userProfile = profile; userRole = profile.role || 'user'; }
-            const { data: wallet } = await supabase.from('wallets').select('balance').eq('user_id', currentUser.id).single();
-            if (wallet) userWallet = wallet.balance;
-            const walletBox = document.getElementById('orderWalletBox');
-            if (walletBox) walletBox.innerHTML = `💰 Wallet Balance: $${userWallet.toFixed(2)}`;
-            if (userRole === 'admin') document.getElementById('adminSidebarLink').style.display = 'block';
-        }
-        
-        async function renderHeader() {
-            const headerDiv = document.getElementById('headerAuth');
-            if (!currentUser) {
-                headerDiv.innerHTML = `<button id="showLoginModal" class="btn-outline"><i class="fas fa-sign-in-alt mr-2"></i>Login</button><button id="showSignupModal" class="btn-primary"><i class="fas fa-user-plus mr-2"></i>Sign Up</button>`;
-                document.getElementById('showLoginModal')?.addEventListener('click', () => openAuthModal('login'));
-                document.getElementById('showSignupModal')?.addEventListener('click', () => openAuthModal('signup'));
-                document.getElementById('userSidebarLinks').style.display = 'none';
-            } else {
-                headerDiv.innerHTML = `<div class="flex items-center gap-3 relative"><div class="avatar">${(userProfile?.username || currentUser.email)[0].toUpperCase()}</div><div class="hidden sm:block"><div class="font-semibold">${userProfile?.username || currentUser.email.split('@')[0]}</div><div class="text-xs text-green-500">$${userWallet.toFixed(2)}</div></div><i id="userDropdownIcon" class="fas fa-chevron-down cursor-pointer"></i><div id="dropdownMenu" class="dropdown-menu"><div data-page="dashboard" class="dropdown-item"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</div><div id="dropdownLogout" class="dropdown-item text-red-500"><i class="fas fa-sign-out-alt mr-2"></i>Logout</div></div></div>`;
-                document.getElementById('userSidebarLinks').style.display = 'block';
-                const dropdown = document.getElementById('dropdownMenu');
-                document.getElementById('userDropdownIcon')?.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('show'); });
-                document.getElementById('dropdownLogout')?.addEventListener('click', () => logout());
-                document.querySelectorAll('.dropdown-item').forEach(el => el.addEventListener('click', () => { switchPage(el.getAttribute('data-page')); dropdown.classList.remove('show'); }));
-                window.addEventListener('click', () => dropdown.classList.remove('show'));
-            }
-        }
-        
-        async function logout() { await supabase.auth.signOut(); location.reload(); }
-        
-        function openAuthModal(mode) {
-            authMode = mode;
-            const isSignup = mode === 'signup';
-            document.getElementById('modalTitle').innerText = isSignup ? 'Create Account' : 'Welcome Back';
-            document.getElementById('signupFields').style.display = isSignup ? 'block' : 'none';
-            document.getElementById('confirmPasswordField').style.display = isSignup ? 'block' : 'none';
-            document.getElementById('authSubmitBtn').innerText = isSignup ? 'Sign Up' : 'Login';
-            document.getElementById('switchAuthMode').innerText = isSignup ? 'Already have an account? Login' : 'Create new account';
-            document.getElementById('authModal').classList.add('active');
-        }
-        
-        document.getElementById('authForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            
-            if (authMode === 'signup') {
-                const fullName = document.getElementById('signupFullName').value;
-                const username = document.getElementById('signupUsername').value;
-                const phone = document.getElementById('signupPhone').value;
-                const confirmPass = document.getElementById('confirmPassword').value;
-                
-                if (password !== confirmPass) { showToast('Passwords do not match!', 'error'); return; }
-                if (!fullName || !username || !phone) { showToast('Please fill all fields', 'error'); return; }
-                
-                const { error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName, username: username, phone: phone } } });
-                if (error) showToast(error.message, 'error');
-                else { showToast('Account created! Please verify your email.'); document.getElementById('authModal').classList.remove('active'); }
-            } else {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) showToast(error.message, 'error');
-                else { document.getElementById('authModal').classList.remove('active'); location.reload(); }
-            }
-        });
-        
-        document.getElementById('switchAuthMode')?.addEventListener('click', () => { authMode = authMode === 'signup' ? 'login' : 'signup'; openAuthModal(authMode); });
-        document.getElementById('forgotPasswordBtn')?.addEventListener('click', async () => { const email = prompt('Enter your email for reset link'); if(email) { await supabase.auth.resetPasswordForEmail(email); showToast('Reset email sent!'); } });
-        document.getElementById('closeModal')?.addEventListener('click', () => document.getElementById('authModal').classList.remove('active'));
-        
-        // Load all data from Supabase
-        async function loadAllData() {
-            // Load platforms
-            const { data: platforms } = await supabase.from('platforms').select('*').order('sort_order');
-            allPlatforms = platforms || [];
-            
-            // Load services
-            const { data: services } = await supabase.from('services').select('*, platforms(name)').eq('status', 'active');
-            allServices = services || [];
-            
-            // Render platforms grid on home page
-            const platformsGrid = document.getElementById('platformsGrid');
-            if (platformsGrid && allPlatforms.length > 0) {
-                platformsGrid.innerHTML = allPlatforms.slice(0, 16).map(p => `
-                    <div class="platform-card" onclick="filterByPlatform('${p.name}')">
-                        <i class="fab fa-${p.name.toLowerCase().replace(/[^a-z]/g, '')} text-3xl mb-2"></i>
-                        <div class="text-sm font-semibold">${p.name}</div>
-                    </div>
-                `).join('');
-            }
-            
-            // Render categories preview
-            const categories = ['Followers', 'Likes', 'Views', 'Comments', 'Shares', 'Subscribers', 'Watch Time', 'Members'];
-            const catPreview = document.getElementById('categoriesPreview');
-            if (catPreview) {
-                catPreview.innerHTML = categories.map(c => `<span class="category-badge">${c}</span>`).join('');
-            }
-            
-            // Render platform filters for order page
-            const filterDiv = document.getElementById('orderPlatformFilters');
-            if (filterDiv && allPlatforms.length > 0) {
-                filterDiv.innerHTML = `<button data-platform="all" class="platform-filter px-4 py-2 rounded-full bg-indigo-500 text-white">All</button>` +
-                    allPlatforms.map(p => `<button data-platform="${p.id}" class="platform-filter px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-indigo-500/40 transition">${p.name}</button>`).join('');
-                
-                document.querySelectorAll('.platform-filter').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        const platformId = e.target.getAttribute('data-platform');
-                        await loadServicesForOrder(platformId === 'all' ? null : platformId);
-                    });
-                });
-            }
-            
-            // Render platform select
-            const platformSelect = document.getElementById('orderPlatform');
-            if (platformSelect && allPlatforms.length > 0) {
-                platformSelect.innerHTML = '<option value="">Select Platform</option>' + 
-                    allPlatforms.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            }
-            
-            // Load initial services
-            await loadServicesForOrder(null);
-            
-            // Render platform filter for services page
-            const servicesFilter = document.getElementById('platformFilterServices');
-            if (servicesFilter && allPlatforms.length > 0) {
-                servicesFilter.innerHTML = `<button data-filter="all" class="service-filter px-4 py-2 rounded-full bg-indigo-500 text-white">All</button>` +
-                    allPlatforms.map(p => `<button data-filter="${p.id}" class="service-filter px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700">${p.name}</button>`).join('');
-                
-                document.querySelectorAll('.service-filter').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        const filterId = e.target.getAttribute('data-filter');
-                        await renderServicesList(filterId === 'all' ? null : filterId);
-                    });
-                });
-            }
-            
-            await renderServicesList(null);
-        }
-        
-        async function loadServicesForOrder(platformId = null) {
-            let servicesToShow = allServices;
-            if (platformId) {
-                servicesToShow = allServices.filter(s => s.platform_id === platformId);
-            }
-            
-            const serviceSelect = document.getElementById('orderService');
-            if (serviceSelect) {
-                serviceSelect.innerHTML = '<option value="">Select Service</option>';
-                servicesToShow.forEach(s => {
-                    serviceSelect.innerHTML += `<option value="${s.id}" data-rate="${s.rate_per_1k}">${s.name} ($${s.rate_per_1k}/1k)</option>`;
-                });
-            }
-        }
-        
-        async function renderServicesList(platformId = null) {
-            let servicesToShow = allServices;
-            if (platformId) {
-                servicesToShow = allServices.filter(s => s.platform_id === platformId);
-            }
-            
-            const servicesList = document.getElementById('servicesList');
-            if (servicesList) {
-                servicesList.innerHTML = servicesToShow.map(s => `
-                    <div class="service-item" onclick="selectServiceForOrder('${s.id}')">
-                        <div class="font-bold text-lg">${s.name}</div>
-                        <div class="text-sm text-gray-500">${s.platforms?.name || 'Platform'}</div>
-                        <div class="text-indigo-400 font-bold mt-2">$${s.rate_per_1k} per 1k</div>
-                        <div class="text-xs mt-1">Min: ${s.min_quantity} | Max: ${s.max_quantity}</div>
-                    </div>
-                `).join('');
-            }
-        }
-        
-        window.selectServiceForOrder = function(serviceId) {
-            const service = allServices.find(s => s.id === serviceId);
-            if (service) {
-                switchPage('order');
-                setTimeout(() => {
-                    const platformSelect = document.getElementById('orderPlatform');
-                    if (platformSelect) platformSelect.value = service.platform_id;
-                    loadServicesForOrder(service.platform_id);
-                    setTimeout(() => {
-                        const serviceSelect = document.getElementById('orderService');
-                        if (serviceSelect) serviceSelect.value = serviceId;
-                        calculateOrderTotal();
-                    }, 100);
-                }, 100);
-            }
-        };
-        
-        window.filterByPlatform = function(platformName) {
-            const platform = allPlatforms.find(p => p.name === platformName);
-            if (platform) {
-                renderServicesList(platform.id);
-                switchPage('services');
-            }
-        };
-        
-        document.getElementById('orderPlatform')?.addEventListener('change', (e) => loadServicesForOrder(e.target.value));
-        
-        function calculateOrderTotal() {
-            const qty = parseInt(document.getElementById('orderQuantity')?.value) || 0;
-            const selected = document.getElementById('orderService')?.selectedOptions[0];
-            if (selected && qty > 0) {
-                const rate = parseFloat(selected.getAttribute('data-rate'));
-                const total = (rate / 1000) * qty;
-                document.getElementById('orderAmount').value = total.toFixed(2);
-                document.getElementById('priceSummaryDisplay').innerHTML = `$${total.toFixed(2)}`;
-            } else {
-                document.getElementById('orderAmount').value = '0.00';
-                document.getElementById('priceSummaryDisplay').innerHTML = '$0.00';
-            }
-        }
-        
-        document.getElementById('orderQuantity')?.addEventListener('input', calculateOrderTotal);
-        document.getElementById('orderService')?.addEventListener('change', calculateOrderTotal);
-        
-        const quickQtys = [500, 1000, 2000, 5000, 10000];
-        const qtyContainer = document.getElementById('quickQtyContainer');
-        if (qtyContainer) {
-            quickQtys.forEach(q => {
-                const btn = document.createElement('button');
-                btn.textContent = q >= 1000 ? `${q/1000}K` : q;
-                btn.className = 'quick-qty-btn';
-                btn.onclick = () => { document.getElementById('orderQuantity').value = q; calculateOrderTotal(); };
-                qtyContainer.appendChild(btn);
-            });
-        }
-        
-        // Search functionality
-        document.getElementById('serviceSearchInput')?.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const results = allServices.filter(s => 
-                s.name.toLowerCase().includes(searchTerm) || 
-                (s.platforms?.name || '').toLowerCase().includes(searchTerm) ||
-                s.rate_per_1k.toString().includes(searchTerm)
-            );
-            const resultsDiv = document.getElementById('searchResults');
-            if (resultsDiv && searchTerm.length > 0) {
-                resultsDiv.innerHTML = results.slice(0, 5).map(s => `
-                    <div class="service-item p-3" onclick="selectServiceForOrder('${s.id}')">
-                        <div class="font-semibold">${s.name}</div>
-                        <div class="text-sm">${s.platforms?.name} - $${s.rate_per_1k}/1k</div>
-                    </div>
-                `).join('');
-            } else if (resultsDiv) {
-                resultsDiv.innerHTML = '';
-            }
-        });
-        
-        document.getElementById('placeOrderBtn')?.addEventListener('click', async () => {
-            if (!currentUser) { showToast('Please login first', 'error'); return; }
-            const serviceId = document.getElementById('orderService').value;
-            const quantity = parseInt(document.getElementById('orderQuantity').value);
-            const link = document.getElementById('orderLink').value;
-            const email = document.getElementById('orderEmail').value;
-            if (!serviceId || !quantity || !link || !email) { showToast('Fill all required fields', 'error'); return; }
-            const service = allServices.find(s => s.id === serviceId);
-            if (!service) return;
-            const total = (service.rate_per_1k / 1000) * quantity;
-            if (userWallet < total) { showToast('Insufficient wallet balance', 'error'); return; }
-            const { error } = await supabase.from('orders').insert({
-                user_id: currentUser.id, service_id: serviceId, platform_name: service.platforms?.name || 'Platform',
-                service_name: service.name, quantity, price: service.rate_per_1k, total_amount: total,
-                link, email, target_country: document.getElementById('orderCountry').value,
-                instructions: document.getElementById('orderComments').value, status: 'pending'
-            });
-            if (error) showToast('Order failed: ' + error.message, 'error');
-            else { showToast('Order placed successfully!'); await loadUserData(); renderHeader(); calculateOrderTotal(); }
-        });
-        
-        document.getElementById('clearOrderBtn')?.addEventListener('click', () => {
-            document.getElementById('orderQuantity').value = '';
-            document.getElementById('orderLink').value = '';
-            document.getElementById('orderEmail').value = '';
-            calculateOrderTotal();
-        });
-        
-        // Affiliate logic
-        document.getElementById('showAffiliateProgram')?.addEventListener('click', () => {
-            document.getElementById('affiliateDynamicContent').innerHTML = `
-                <div class="p-6 border-2 border-indigo-500/30 rounded-xl">
-                    <h3 class="text-2xl font-bold mb-3">Register as Affiliate</h3>
-                    <p class="mb-4">Earn 20% commission on every referral!</p>
-                    <button id="registerAffiliateBtn" class="btn-primary">Apply Now</button>
-                </div>`;
-            document.getElementById('registerAffiliateBtn')?.addEventListener('click', async () => {
-                if (!document.getElementById('affiliateTermsCheckbox').checked) { showToast('Accept terms first', 'error'); return; }
-                if (!currentUser) { showToast('Please login first', 'error'); return; }
-                const { error } = await supabase.from('affiliates').insert({ 
-                    user_id: currentUser.id, referral_code: Math.random().toString(36).substring(2, 10), 
-                    commission_rate: 20, status: 'pending' 
-                });
-                if (error) showToast(error.message, 'error'); else showToast('Application submitted!');
-            });
-        });
-        
-        document.getElementById('showSalaryProgram')?.addEventListener('click', () => {
-            document.getElementById('affiliateDynamicContent').innerHTML = `
-                <div class="p-6 border-2 border-indigo-500/30 rounded-xl">
-                    <h3 class="text-2xl font-bold mb-3">Employee Application</h3>
-                    <form id="employeeAppForm" class="space-y-3">
-                        <input placeholder="Full Name" id="empName" required class="w-full">
-                        <input placeholder="Username" id="empUsername" required class="w-full">
-                        <input placeholder="Email" id="empEmail" required class="w-full">
-                        <input placeholder="Phone/WhatsApp" id="empPhone" required class="w-full">
-                        <textarea placeholder="Experience Details" id="empExp" rows="3" required class="w-full"></textarea>
-                        <input placeholder="Portfolio URL" id="empPort" class="w-full">
-                        <button type="submit" class="btn-primary w-full">Submit Application</button>
-                    </form>
-                </div>`;
-            document.getElementById('employeeAppForm')?.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                if (!currentUser) { showToast('Please login first', 'error'); return; }
-                const { error } = await supabase.from('employee_applications').insert({ 
-                    user_id: currentUser.id, full_name: document.getElementById('empName').value, 
-                    email: document.getElementById('empEmail').value, phone: document.getElementById('empPhone').value, 
-                    experience: document.getElementById('empExp').value, portfolio_url: document.getElementById('empPort').value 
-                });
-                if (error) showToast(error.message, 'error'); else showToast('Application sent to admin!');
-            });
-        });
-        
-        async function renderDashboard() {
-            if (!currentUser) return;
-            const { data: orders } = await supabase.from('orders').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false }).limit(10);
-            document.getElementById('dashboardContent').innerHTML = `
-                <div class="grid md:grid-cols-3 gap-4 mb-6">
-                    <div class="glass-card p-4 text-center"><i class="fas fa-wallet text-4xl text-indigo-400 mb-2"></i><h3 class="text-lg font-semibold">Wallet Balance</h3><p class="text-2xl font-bold">$${userWallet}</p></div>
-                    <div class="glass-card p-4 text-center"><i class="fas fa-shopping-cart text-4xl text-indigo-400 mb-2"></i><h3 class="text-lg font-semibold">Total Orders</h3><p class="text-2xl font-bold">${orders?.length || 0}</p></div>
-                </div>
-                <h3 class="font-bold text-xl mb-3">Recent Orders</h3>
-                <div class="space-y-2">${orders?.map(o => `<div class="glass-card p-3 flex justify-between items-center"><div><strong>${o.service_name}</strong><br><small>${o.quantity} units</small></div><div>$${o.total_amount}</div><span class="px-3 py-1 rounded-full text-xs bg-${o.status === 'completed' ? 'green' : 'yellow'}-500/20">${o.status}</span></div>`).join('') || '<p>No orders yet</p>'}</div>
-            `;
-        }
-        
-        function switchPage(page) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(`${page}Page`).classList.add('active');
-            document.getElementById('sidebar')?.classList.remove('open');
-            document.getElementById('overlay')?.classList.remove('active');
-            if (page === 'dashboard') renderDashboard();
-            if (page === 'order') loadUserData();
-        }
-        
-        document.getElementById('menuToggle')?.addEventListener('click', () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('active'); });
-        document.getElementById('closeSidebar')?.addEventListener('click', () => { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('active'); });
-        document.querySelectorAll('.sidebar-link').forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); switchPage(link.getAttribute('data-page')); }));
-        document.getElementById('homeGetStarted')?.addEventListener('click', () => switchPage('order'));
-        document.getElementById('homeBrowseServices')?.addEventListener('click', () => switchPage('services'));
-        document.getElementById('sidebarLogout')?.addEventListener('click', logout);
-        
-        document.getElementById('supportTicketForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUser) { showToast('Login to submit ticket', 'error'); return; }
-            const { error } = await supabase.from('support_tickets').insert({ 
-                user_id: currentUser.id, subject: document.getElementById('supportSubject').value, 
-                message: document.getElementById('supportMessage').value 
-            });
-            if (error) showToast(error.message, 'error'); else showToast('Ticket submitted!');
-        });
-        
-        supabase.auth.onAuthStateChange(async (event, session) => {
-            if (session?.user) { currentUser = session.user; await loadUserData(); renderHeader(); }
-            else { currentUser = null; renderHeader(); }
-        });
-        
-        (async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session?.user) { currentUser = session.user; await loadUserData(); }
-            await loadAllData();
-            renderHeader();
-            switchPage('home');
-        })();
-    </script>
+<div class="glass-card">
+<h3>Program Visibility</h3>
+<table style="margin-top:16px">
+<tr>
+<td><strong>Commission Based Program</strong><br><small style="color:var(--text-muted)">Auto referral link generation</small></td>
+<td><label class="toggle-switch"><input type="checkbox" id="showCommissionToggle" onchange="toggleProgram('show_commission_program',this.checked)"><span class="toggle-slider"></span></label></td>
+</tr>
+<tr>
+<td><strong>Salary Based Program</strong><br><small style="color:var(--text-muted)">Employee application required</small></td>
+<td><label class="toggle-switch"><input type="checkbox" id="showSalaryToggle" onchange="toggleProgram('show_salary_program',this.checked)"><span class="toggle-slider"></span></label></td>
+</tr>
+</table>
+</div>
+
+<div class="glass-card">
+<h3>General Settings</h3>
+<div class="form-grid">
+<div><label>Site Name</label><input id="setSiteName"></div>
+<div><label>Support Email</label><input id="setSupportEmail"></div>
+<div><label>Support WhatsApp</label><input id="setSupportWhatsapp"></div>
+<div><label>Currency</label><input id="setCurrency"></div>
+<div><label>Affiliate Commission Rate (%)</label><input type="number" id="setCommissionRate"></div>
+<div><label>Affiliate Min Payout ($)</label><input type="number" id="setMinPayout"></div>
+</div>
+<div style="margin-top:14px">
+<label><input type="checkbox" id="setMaintenanceMode"> Maintenance Mode</label>
+</div>
+<button class="btn btn-primary" style="margin-top:20px" onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button>
+</div>
+</section>
+
+</main>
+</div>
+
+<!-- GENERIC MODAL -->
+<div id="genericModal" class="modal">
+<div class="modal-content">
+<button class="modal-close" onclick="closeModal()">&times;</button>
+<h3 id="modalTitle"></h3>
+<div id="modalBody"></div>
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+<div id="loadingSpinner" class="spinner-overlay" style="display:none"><div class="spinner"></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://nualxapdjjekeujfznex.supabase.co';
+const SUPABASE_KEY='sb_publishable_BawJWtJ6fgZ1l6S7-d7VzQ_3kn2lpTX';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let adminUser=null,adminProfile=null,siteSettings={};
+let allUsers=[],allServicesAdmin=[],allPlatformsAdmin=[],allCategoriesAdmin=[];
+
+function showToast(m,t='info'){const e=document.getElementById('toast');e.textContent=m;e.className=`toast ${t} show`;setTimeout(()=>e.classList.remove('show'),3500)}
+function showSpinner(){document.getElementById('loadingSpinner').style.display='flex'}
+function hideSpinner(){document.getElementById('loadingSpinner').style.display='none'}
+function fmt(n){return '$'+Number(n||0).toFixed(2)}
+function fmtDate(d){return new Date(d).toLocaleString()}
+
+// ===== AUTH =====
+async function adminLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const password=document.getElementById('loginPassword').value;
+  if(!email||!password)return showToast('Enter credentials','error');
+  showSpinner();
+  try{
+    const{data,error}=await sb.auth.signInWithPassword({email,password});
+    if(error)throw error;
+    const{data:profile}=await sb.from('profiles').select('*').eq('id',data.user.id).single();
+    if(profile?.role!=='admin'){await sb.auth.signOut();throw new Error('Not an admin account')}
+    adminUser=data.user;adminProfile=profile;
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').style.display='flex';
+    document.getElementById('adminName').textContent=profile.full_name||profile.username||'Admin';
+    document.getElementById('adminEmail').textContent=data.user.email;
+    document.getElementById('adminAvatar').textContent=(profile.full_name||'A').charAt(0).toUpperCase();
+    await loadAllData();
+    showToast('Welcome Admin!','success');
+  }catch(err){showToast(err.message,'error')}
+  hideSpinner();
+}
+
+async function adminLogout(){
+  await sb.auth.signOut();
+  location.reload();
+}
+
+async function checkSession(){
+  const{data:{user}}=await sb.auth.getUser();
+  if(user){
+    const{data:profile}=await sb.from('profiles').select('*').eq('id',user.id).single();
+    if(profile?.role==='admin'){
+      adminUser=user;adminProfile=profile;
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('adminPanel').style.display='flex';
+      document.getElementById('adminName').textContent=profile.full_name||'Admin';
+      document.getElementById('adminEmail').textContent=user.email;
+      document.getElementById('adminAvatar').textContent=(profile.full_name||'A').charAt(0).toUpperCase();
+      await loadAllData();
+    }
+  }
+}
+
+// ===== NAVIGATION =====
+function showPage(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(`${name}-page`).classList.add('active');
+  document.querySelectorAll('.sidebar-menu li').forEach(l=>l.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.getElementById('topBarTitle').textContent=el?.textContent.trim()||'Dashboard';
+  if(name==='dashboard')loadDashboard();
+  if(name==='users')loadUsers();
+  if(name==='wallets')loadWallets();
+  if(name==='orders')loadOrders();
+  if(name==='transactions')loadTransactions();
+  if(name==='platforms')loadPlatforms();
+  if(name==='categories')loadCategories();
+  if(name==='services')loadServices();
+  if(name==='affiliates')loadAffiliates();
+  if(name==='referrals')loadReferrals();
+  if(name==='payouts')loadPayouts();
+  if(name==='employees')loadEmployees();
+  if(name==='attendance')loadAttendance();
+  if(name==='worklogs')loadWorkLogs();
+  if(name==='tickets')loadTickets();
+  if(name==='settings')loadSettings();
+}
+
+// ===== INITIAL LOAD =====
+async function loadAllData(){
+  await loadSiteSettings();
+  await loadDashboard();
+}
+
+// ===== DASHBOARD =====
+async function loadDashboard(){
+  const[users,orders,services,affs,emps,tix,pending,trans]=await Promise.all([
+    sb.from('profiles').select('*',{count:'exact',head:true}),
+    sb.from('orders').select('*',{count:'exact'}),
+    sb.from('services').select('*',{count:'exact',head:true}).eq('status','active'),
+    sb.from('affiliates').select('*',{count:'exact',head:true}).eq('status','approved'),
+    sb.from('employee_applications').select('*',{count:'exact',head:true}).eq('status','approved'),
+    sb.from('support_tickets').select('*',{count:'exact',head:true}).eq('status','open'),
+    sb.from('orders').select('*',{count:'exact',head:true}).eq('status','pending'),
+    sb.from('orders').select('total_amount')
+  ]);
+  document.getElementById('statUsers').textContent=users.count||0;
+  document.getElementById('statOrders').textContent=orders.count||0;
+  document.getElementById('statServices').textContent=services.count||0;
+  document.getElementById('statAffiliates').textContent=affs.count||0;
+  document.getElementById('statEmployees').textContent=emps.count||0;
+  document.getElementById('statTickets').textContent=tix.count||0;
+  document.getElementById('statPendingOrders').textContent=pending.count||0;
+  const rev=(trans.data||[]).reduce((s,o)=>s+Number(o.total_amount||0),0);
+  document.getElementById('statRevenue').textContent=fmt(rev);
+  
+  const{data:recent}=await sb.from('orders').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false}).limit(10);
+  document.getElementById('recentOrdersTable').innerHTML=(recent||[]).map(o=>`<tr><td>#${o.order_number}</td><td>${o.service_name}</td><td>${o.profiles?.full_name||o.profiles?.username||'-'}</td><td>${fmt(o.total_amount)}</td><td><span class="status-badge status-${o.status}">${o.status}</span></td><td>${fmtDate(o.created_at)}</td></tr>`).join('');
+}
+
+// ===== USERS =====
+async function loadUsers(){
+  const{data}=await sb.from('profiles').select('*').order('created_at',{ascending:false});
+  allUsers=data||[];
+  renderUsers(allUsers);
+}
+function renderUsers(list){
+  document.getElementById('usersTable').innerHTML=list.map(u=>`<tr>
+    <td>${u.full_name||'-'}</td><td>${u.username||'-'}</td><td>${u.id}</td><td>${u.phone||'-'}</td>
+    <td><select onchange="updateUserRole('${u.id}',this.value)" style="padding:4px">
+      <option value="user" ${u.role==='user'?'selected':''}>User</option>
+      <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+      <option value="affiliate" ${u.role==='affiliate'?'selected':''}>Affiliate</option>
+      <option value="employee" ${u.role==='employee'?'selected':''}>Employee</option>
+    </select></td>
+    <td><span class="status-badge status-${u.is_active?'active':'inactive'}">${u.is_active?'Active':'Inactive'}</span></td>
+    <td>${fmtDate(u.created_at)}</td>
+    <td><div class="action-btns">
+      <button class="btn btn-sm ${u.is_active?'btn-warning':'btn-success'}" onclick="toggleUserActive('${u.id}',${!u.is_active})">${u.is_active?'Disable':'Enable'}</button>
+      <button class="btn btn-sm btn-primary" onclick="adjustBalance('${u.id}')">Balance</button>
+    </div></td></tr>`).join('');
+}
+function filterUsers(){
+  const q=document.getElementById('usersSearch').value.toLowerCase();
+  renderUsers(allUsers.filter(u=>(u.full_name||'').toLowerCase().includes(q)||(u.username||'').toLowerCase().includes(q)));
+}
+async function updateUserRole(id,role){
+  const{error}=await sb.from('profiles').update({role}).eq('id',id);
+  if(error)showToast(error.message,'error');else showToast('Role updated','success');
+}
+async function toggleUserActive(id,active){
+  const{error}=await sb.from('profiles').update({is_active:active}).eq('id',id);
+  if(error)showToast(error.message,'error');else{showToast('Status updated','success');loadUsers()}
+}
+async function adjustBalance(userId){
+  const amount=parseFloat(prompt('Enter amount (+ to add, - to deduct):'));
+  if(!amount)return;
+  const desc=prompt('Description:','Admin balance adjustment');
+  const{error}=await sb.from('transactions').insert({
+    user_id:userId,type:amount>0?'deposit':'withdrawal',amount,description:desc,status:'completed'
+  });
+  if(error)showToast(error.message,'error');else{showToast('Balance updated','success');loadUsers()}
+}
+
+// ===== WALLETS =====
+async function loadWallets(){
+  const{data}=await sb.from('wallets').select('*,profiles:user_id(full_name,username)').order('balance',{ascending:false});
+  document.getElementById('walletsTable').innerHTML=(data||[]).map(w=>`<tr>
+    <td>${w.profiles?.full_name||w.profiles?.username||'-'}</td>
+    <td><strong>${fmt(w.balance)}</strong></td>
+    <td>${fmt(w.total_spent)}</td>
+    <td>${fmt(w.total_earned_affiliate)}</td>
+    <td><button class="btn btn-sm btn-primary" onclick="adjustBalance('${w.user_id}')">Adjust</button></td>
+  </tr>`).join('');
+}
+
+// ===== ORDERS =====
+async function loadOrders(){
+  const{data}=await sb.from('orders').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false}).limit(200);
+  document.getElementById('ordersTable').innerHTML=(data||[]).map(o=>`<tr>
+    <td>#${o.order_number}</td><td>${o.profiles?.full_name||'-'}</td><td>${o.service_name}</td><td>${o.quantity}</td>
+    <td>${fmt(o.total_amount)}</td>
+    <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+    <td>${fmtDate(o.created_at)}</td>
+    <td><select onchange="updateOrderStatus('${o.id}',this.value)" style="padding:4px">
+      <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
+      <option value="processing" ${o.status==='processing'?'selected':''}>Processing</option>
+      <option value="completed" ${o.status==='completed'?'selected':''}>Completed</option>
+      <option value="cancelled" ${o.status==='cancelled'?'selected':''}>Cancelled</option>
+      <option value="refunded" ${o.status==='refunded'?'selected':''}>Refunded</option>
+    </select></td></tr>`).join('');
+}
+async function updateOrderStatus(id,status){
+  const{error}=await sb.from('orders').update({status}).eq('id',id);
+  if(error)showToast(error.message,'error');else showToast('Order updated','success');
+}
+
+// ===== TRANSACTIONS =====
+async function loadTransactions(){
+  const{data}=await sb.from('transactions').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false}).limit(200);
+  document.getElementById('transactionsTable').innerHTML=(data||[]).map(t=>`<tr>
+    <td>${t.profiles?.full_name||'-'}</td><td>${t.type.replace('_',' ')}</td>
+    <td style="color:${t.amount>0?'var(--success)':'var(--danger)'};font-weight:700">${t.amount>0?'+':''}${fmt(t.amount)}</td>
+    <td>${t.description||'-'}</td>
+    <td><span class="status-badge status-${t.status}">${t.status}</span></td>
+    <td>${fmtDate(t.created_at)}</td></tr>`).join('');
+}
+
+// ===== PLATFORMS =====
+async function loadPlatforms(){
+  const{data}=await sb.from('platforms').select('*').order('sort_order');
+  allPlatformsAdmin=data||[];
+  document.getElementById('platformsTable').innerHTML=(data||[]).map(p=>`<tr>
+    <td style="font-size:24px">${p.icon||'🌐'}</td><td>${p.name}</td><td>${p.sort_order}</td>
+    <td><label class="toggle-switch"><input type="checkbox" ${p.is_enabled?'checked':''} onchange="togglePlatform('${p.id}',this.checked)"><span class="toggle-slider"></span></label></td>
+    <td><div class="action-btns">
+      <button class="btn btn-sm btn-primary" onclick="editPlatform('${p.id}')">Edit</button>
+      <button class="btn btn-sm btn-danger" onclick="deleteItem('platforms','${p.id}')">Delete</button>
+    </div></td></tr>`).join('');
+}
+async function togglePlatform(id,enabled){
+  await sb.from('platforms').update({is_enabled:enabled}).eq('id',id);
+  showToast('Platform updated','success');
+}
+function editPlatform(id){
+  const p=allPlatformsAdmin.find(x=>x.id===id);
+  openModal('platform',p);
+}
+
+// ===== CATEGORIES =====
+async function loadCategories(){
+  const{data}=await sb.from('categories').select('*').order('sort_order');
+  allCategoriesAdmin=data||[];
+  document.getElementById('categoriesTable').innerHTML=(data||[]).map(c=>`<tr>
+    <td>${c.name}</td><td>${c.description||'-'}</td><td>${c.sort_order}</td>
+    <td><div class="action-btns">
+      <button class="btn btn-sm btn-primary" onclick="editCategory('${c.id}')">Edit</button>
+      <button class="btn btn-sm btn-danger" onclick="deleteItem('categories','${c.id}')">Delete</button>
+    </div></td></tr>`).join('');
+}
+function editCategory(id){openModal('category',allCategoriesAdmin.find(x=>x.id===id))}
+
+// ===== SERVICES =====
+async function loadServices(){
+  const{data}=await sb.from('services').select('*,platforms(name),categories(name)').order('created_at',{ascending:false});
+  allServicesAdmin=data||[];
+  renderServicesAdmin(allServicesAdmin);
+}
+function renderServicesAdmin(list){
+  document.getElementById('servicesTable').innerHTML=list.map(s=>`<tr>
+    <td>${s.service_code}</td><td>${s.name}</td><td>${s.platforms?.name||'-'}</td><td>${s.categories?.name||'-'}</td>
+    <td>${fmt(s.rate_per_1k)}</td><td>${s.min_quantity}</td><td>${s.max_quantity}</td>
+    <td><span class="status-badge status-${s.status}">${s.status}</span></td>
+    <td><div class="action-btns">
+      <button class="btn btn-sm btn-primary" onclick="editService('${s.id}')">Edit</button>
+      <button class="btn btn-sm btn-danger" onclick="deleteItem('services','${s.id}')">Delete</button>
+    </div></td></tr>`).join('');
+}
+function filterServicesAdmin(){
+  const q=document.getElementById('servicesSearch').value.toLowerCase();
+  renderServicesAdmin(allServicesAdmin.filter(s=>s.name.toLowerCase().includes(q)||s.service_code.toLowerCase().includes(q)));
+}
+function editService(id){openModal('service',allServicesAdmin.find(x=>x.id===id))}
+
+// ===== AFFILIATES =====
+async function loadAffiliates(){
+  const{data}=await sb.from('affiliates').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false});
+  document.getElementById('affiliatesTable').innerHTML=(data||[]).map(a=>`<tr>
+    <td>${a.profiles?.full_name||a.profiles?.username||'-'}</td>
+    <td><code>${a.referral_code}</code></td>
+    <td>${a.commission_rate}%</td>
+    <td>${fmt(a.total_earnings)}</td>
+    <td>${a.total_referrals}</td>
+    <td><span class="status-badge status-${a.status}">${a.status}</span></td>
+    <td><div class="action-btns">
+      ${a.status==='pending'?`<button class="btn btn-sm btn-success" onclick="updateAffiliateStatus('${a.id}','approved')">Approve</button><button class="btn btn-sm btn-danger" onclick="updateAffiliateStatus('${a.id}','rejected')">Reject</button>`:''}
+      ${a.status==='approved'?`<button class="btn btn-sm btn-warning" onclick="updateAffiliateStatus('${a.id}','suspended')">Suspend</button>`:''}
+      ${a.status==='suspended'?`<button class="btn btn-sm btn-success" onclick="updateAffiliateStatus('${a.id}','approved')">Activate</button>`:''}
+      <button class="btn btn-sm btn-primary" onclick="changeCommission('${a.id}',${a.commission_rate})">Rate</button>
+    </div></td></tr>`).join('');
+}
+async function updateAffiliateStatus(id,status){
+  const u={status};if(status==='approved')u.approved_at=new Date().toISOString();
+  const{error}=await sb.from('affiliates').update(u).eq('id',id);
+  if(error)showToast(error.message,'error');else{showToast('Updated','success');loadAffiliates()}
+}
+async function changeCommission(id,current){
+  const rate=parseFloat(prompt('New commission rate (%):',current));
+  if(!rate)return;
+  await sb.from('affiliates').update({commission_rate:rate}).eq('id',id);
+  showToast('Rate updated','success');loadAffiliates();
+}
+
+// ===== REFERRALS =====
+async function loadReferrals(){
+  const{data}=await sb.from('affiliate_referrals').select('*,affiliates:affiliate_id(referral_code,profiles:user_id(full_name)),profiles:referred_user_id(full_name,username)').order('created_at',{ascending:false}).limit(200);
+  document.getElementById('referralsTable').innerHTML=(data||[]).map(r=>`<tr>
+    <td>${r.affiliates?.profiles?.full_name||'-'} <small style="color:var(--text-muted)">(${r.affiliates?.referral_code||''})</small></td>
+    <td>${r.profiles?.full_name||r.profiles?.username||'-'}</td>
+    <td>${fmt(r.commission_earned)}</td>
+    <td><span class="status-badge status-${r.status}">${r.status}</span></td>
+    <td>${fmtDate(r.created_at)}</td></tr>`).join('');
+}
+
+// ===== PAYOUTS =====
+async function loadPayouts(){
+  const{data}=await sb.from('affiliate_payouts').select('*,affiliates:affiliate_id(referral_code,profiles:user_id(full_name))').order('created_at',{ascending:false});
+  document.getElementById('payoutsTable').innerHTML=(data||[]).map(p=>`<tr>
+    <td>${p.affiliates?.profiles?.full_name||'-'}</td>
+    <td>${fmt(p.amount)}</td><td>${p.payment_method}</td><td>${p.payment_details||'-'}</td>
+    <td><span class="status-badge status-${p.status}">${p.status}</span></td>
+    <td>${fmtDate(p.created_at)}</td>
+    <td>${p.status==='pending'?`<div class="action-btns"><button class="btn btn-sm btn-success" onclick="updatePayout('${p.id}','processed')">Process</button><button class="btn btn-sm btn-danger" onclick="updatePayout('${p.id}','failed')">Fail</button></div>`:'-'}</td></tr>`).join('');
+}
+async function updatePayout(id,status){
+  const u={status};if(status==='processed')u.processed_at=new Date().toISOString();
+  await sb.from('affiliate_payouts').update(u).eq('id',id);
+  showToast('Updated','success');loadPayouts();
+}
+
+// ===== EMPLOYEES =====
+async function loadEmployees(){
+  const{data}=await sb.from('employee_applications').select('*').order('created_at',{ascending:false});
+  document.getElementById('employeesTable').innerHTML=(data||[]).map(e=>`<tr>
+    <td>${e.full_name}</td><td>${e.email}</td><td>${e.phone}</td>
+    <td><small>${(e.experience||'').substring(0,60)}...</small></td>
+    <td><span class="status-badge status-${e.status}">${e.status}</span></td>
+    <td>${fmtDate(e.created_at)}</td>
+    <td><div class="action-btns">
+      ${e.status==='pending'?`<button class="btn btn-sm btn-success" onclick="updateEmployee('${e.id}','${e.user_id}','approved')">Approve</button><button class="btn btn-sm btn-danger" onclick="updateEmployee('${e.id}','${e.user_id}','rejected')">Reject</button>`:''}
+      <button class="btn btn-sm btn-primary" onclick="viewEmployee('${e.id}')">View</button>
+    </div></td></tr>`).join('');
+}
+async function updateEmployee(id,userId,status){
+  await sb.from('employee_applications').update({status,reviewed_by:adminUser.id,reviewed_at:new Date().toISOString()}).eq('id',id);
+  if(status==='approved')await sb.from('profiles').update({role:'employee'}).eq('id',userId);
+  showToast('Updated','success');loadEmployees();
+}
+async function viewEmployee(id){
+  const{data}=await sb.from('employee_applications').select('*').eq('id',id).single();
+  document.getElementById('modalTitle').textContent='Employee Application';
+  document.getElementById('modalBody').innerHTML=`<div style="display:grid;gap:8px"><p><strong>Name:</strong> ${data.full_name}</p><p><strong>Email:</strong> ${data.email}</p><p><strong>Phone:</strong> ${data.phone}</p><p><strong>About:</strong> ${data.about||'-'}</p><p><strong>Experience:</strong><br>${data.experience}</p><p><strong>Portfolio:</strong> ${data.portfolio_url?`<a href="${data.portfolio_url}" target="_blank">${data.portfolio_url}</a>`:'-'}</p></div>`;
+  document.getElementById('genericModal').classList.add('active');
+}
+
+// ===== ATTENDANCE =====
+async function loadAttendance(){
+  const{data}=await sb.from('employee_attendance').select('*,profiles:user_id(full_name,username)').order('date',{ascending:false}).limit(200);
+  document.getElementById('attendanceTable').innerHTML=(data||[]).map(a=>`<tr>
+    <td>${a.profiles?.full_name||'-'}</td><td>${a.date}</td>
+    <td>${a.login_time||'-'}</td><td>${a.logout_time||'-'}</td>
+    <td>${a.working_hours||'-'}</td>
+    <td><span class="status-badge status-active">${a.status}</span></td></tr>`).join('');
+}
+
+// ===== WORKLOGS =====
+async function loadWorkLogs(){
+  const{data}=await sb.from('employee_work_logs').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false}).limit(200);
+  document.getElementById('worklogsTable').innerHTML=(data||[]).map(w=>`<tr>
+    <td>${w.profiles?.full_name||'-'}</td><td>${w.date}</td><td>${w.work_type}</td>
+    <td><small>${w.work_type==='order'?`Order: ${w.order_id||'-'}, ${w.service_name||'-'}`:(w.platforms_shared||[]).join(', ')}</small></td>
+    <td>${w.is_boosted?'✅':'-'}</td>
+    <td>${fmtDate(w.created_at)}</td></tr>`).join('');
+}
+
+// ===== TICKETS =====
+async function loadTickets(){
+  const{data}=await sb.from('support_tickets').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false});
+  document.getElementById('ticketsTable').innerHTML=(data||[]).map(t=>`<tr>
+    <td>#${t.ticket_number}</td><td>${t.profiles?.full_name||'-'}</td><td>${t.subject}</td>
+    <td>${t.priority}</td>
+    <td><span class="status-badge status-${t.status==='open'?'pending':'completed'}">${t.status}</span></td>
+    <td>${fmtDate(t.created_at)}</td>
+    <td><select onchange="updateTicket('${t.id}',this.value)" style="padding:4px">
+      <option value="open" ${t.status==='open'?'selected':''}>Open</option>
+      <option value="in_progress" ${t.status==='in_progress'?'selected':''}>In Progress</option>
+      <option value="resolved" ${t.status==='resolved'?'selected':''}>Resolved</option>
+      <option value="closed" ${t.status==='closed'?'selected':''}>Closed</option>
+    </select></td></tr>`).join('');
+}
+async function updateTicket(id,status){
+  const u={status};if(status==='resolved'||status==='closed')u.resolved_at=new Date().toISOString();
+  await sb.from('support_tickets').update(u).eq('id',id);
+  showToast('Updated','success');
+}
+
+// ===== SETTINGS =====
+async function loadSiteSettings(){
+  const{data}=await sb.from('site_settings').select('*');
+  if(data)data.forEach(s=>siteSettings[s.key]=s.value);
+}
+function loadSettings(){
+  document.getElementById('showCommissionToggle').checked=siteSettings['show_commission_program']!=='false';
+  document.getElementById('showSalaryToggle').checked=siteSettings['show_salary_program']!=='false';
+  document.getElementById('setSiteName').value=siteSettings['site_name']||'';
+  document.getElementById('setSupportEmail').value=siteSettings['support_email']||'';
+  document.getElementById('setSupportWhatsapp').value=siteSettings['support_whatsapp']||'';
+  document.getElementById('setCurrency').value=siteSettings['currency']||'';
+  document.getElementById('setCommissionRate').value=siteSettings['affiliate_commission_rate']||'';
+  document.getElementById('setMinPayout').value=siteSettings['affiliate_min_payout']||'';
+  document.getElementById('setMaintenanceMode').checked=siteSettings['maintenance_mode']==='true';
+}
+async function toggleProgram(key,enabled){
+  await upsertSetting(key,enabled?'true':'false');
+  siteSettings[key]=enabled?'true':'false';
+  showToast(`${key.includes('commission')?'Commission':'Salary'} program ${enabled?'enabled':'disabled'}`,'success');
+}
+async function upsertSetting(key,value){
+  const{data:existing}=await sb.from('site_settings').select('id').eq('key',key).maybeSingle();
+  if(existing)await sb.from('site_settings').update({value}).eq('key',key);
+  else await sb.from('site_settings').insert({key,value});
+}
+async function saveSettings(){
+  showSpinner();
+  const map={
+    site_name:document.getElementById('setSiteName').value,
+    support_email:document.getElementById('setSupportEmail').value,
+    support_whatsapp:document.getElementById('setSupportWhatsapp').value,
+    currency:document.getElementById('setCurrency').value,
+    affiliate_commission_rate:document.getElementById('setCommissionRate').value,
+    affiliate_min_payout:document.getElementById('setMinPayout').value,
+    maintenance_mode:document.getElementById('setMaintenanceMode').checked?'true':'false'
+  };
+  for(const[k,v]of Object.entries(map))await upsertSetting(k,v);
+  await loadSiteSettings();
+  showToast('Settings saved','success');
+  hideSpinner();
+}
+
+// ===== MODAL & CRUD =====
+function openModal(type,data=null){
+  const title=document.getElementById('modalTitle');
+  const body=document.getElementById('modalBody');
+  if(type==='platform'){
+    title.textContent=data?'Edit Platform':'Add Platform';
+    body.innerHTML=`<div class="form-grid">
+      <div><label>Name</label><input id="mPlatName" value="${data?.name||''}"></div>
+      <div><label>Icon (Emoji)</label><input id="mPlatIcon" value="${data?.icon||''}"></div>
+      <div><label>Sort Order</label><input type="number" id="mPlatSort" value="${data?.sort_order||0}"></div>
+    </div><button class="btn btn-primary" style="margin-top:16px" onclick="savePlatform('${data?.id||''}')">Save</button>`;
+  }else if(type==='category'){
+    title.textContent=data?'Edit Category':'Add Category';
+    body.innerHTML=`<div><label>Name</label><input id="mCatName" value="${data?.name||''}"></div>
+      <div><label>Description</label><textarea id="mCatDesc">${data?.description||''}</textarea></div>
+      <div><label>Sort Order</label><input type="number" id="mCatSort" value="${data?.sort_order||0}"></div>
+      <button class="btn btn-primary" style="margin-top:16px" onclick="saveCategory('${data?.id||''}')">Save</button>`;
+  }else if(type==='service'){
+    const platOpts=allPlatformsAdmin.map(p=>`<option value="${p.id}" ${data?.platform_id===p.id?'selected':''}>${p.name}</option>`).join('');
+    const catOpts=allCategoriesAdmin.map(c=>`<option value="${c.id}" ${data?.category_id===c.id?'selected':''}>${c.name}</option>`).join('');
+    title.textContent=data?'Edit Service':'Add Service';
+    body.innerHTML=`<div class="form-grid">
+      <div><label>Service Code</label><input id="mSvcCode" value="${data?.service_code||''}"></div>
+      <div><label>Name</label><input id="mSvcName" value="${data?.name||''}"></div>
+      <div><label>Platform</label><select id="mSvcPlatform"><option value="">Select</option>${platOpts}</select></div>
+      <div><label>Category</label><select id="mSvcCategory"><option value="">Select</option>${catOpts}</select></div>
+      <div><label>Rate/1K</label><input type="number" step="0.01" id="mSvcRate" value="${data?.rate_per_1k||''}"></div>
+      <div><label>Min Quantity</label><input type="number" id="mSvcMin" value="${data?.min_quantity||100}"></div>
+      <div><label>Max Quantity</label><input type="number" id="mSvcMax" value="${data?.max_quantity||100000}"></div>
+      <div><label>Status</label><select id="mSvcStatus"><option value="active" ${data?.status==='active'?'selected':''}>Active</option><option value="inactive" ${data?.status==='inactive'?'selected':''}>Inactive</option><option value="maintenance" ${data?.status==='maintenance'?'selected':''}>Maintenance</option></select></div>
+    </div><div><label>Description</label><textarea id="mSvcDesc">${data?.description||''}</textarea></div>
+    <button class="btn btn-primary" style="margin-top:16px" onclick="saveService('${data?.id||''}')">Save</button>`;
+  }
+  document.getElementById('genericModal').classList.add('active');
+}
+function closeModal(){document.getElementById('genericModal').classList.remove('active')}
+
+async function savePlatform(id){
+  const payload={name:document.getElementById('mPlatName').value,icon:document.getElementById('mPlatIcon').value,sort_order:+document.getElementById('mPlatSort').value};
+  const{error}=id?await sb.from('platforms').update(payload).eq('id',id):await sb.from('platforms').insert(payload);
+  if(error)showToast(error.message,'error');else{showToast('Saved','success');closeModal();loadPlatforms()}
+}
+async function saveCategory(id){
+  const payload={name:document.getElementById('mCatName').value,description:document.getElementById('mCatDesc').value,sort_order:+document.getElementById('mCatSort').value};
+  const{error}=id?await sb.from('categories').update(payload).eq('id',id):await sb.from('categories').insert(payload);
+  if(error)showToast(error.message,'error');else{showToast('Saved','success');closeModal();loadCategories()}
+}
+async function saveService(id){
+  const payload={
+    service_code:document.getElementById('mSvcCode').value,
+    name:document.getElementById('mSvcName').value,
+    platform_id:document.getElementById('mSvcPlatform').value,
+    category_id:document.getElementById('mSvcCategory').value,
+    rate_per_1k:+document.getElementById('mSvcRate').value,
+    min_quantity:+document.getElementById('mSvcMin').value,
+    max_quantity:+document.getElementById('mSvcMax').value,
+    status:document.getElementById('mSvcStatus').value,
+    description:document.getElementById('mSvcDesc').value
+  };
+  const{error}=id?await sb.from('services').update(payload).eq('id',id):await sb.from('services').insert(payload);
+  if(error)showToast(error.message,'error');else{showToast('Saved','success');closeModal();loadServices()}
+}
+async function deleteItem(table,id){
+  if(!confirm('Are you sure?'))return;
+  const{error}=await sb.from(table).delete().eq('id',id);
+  if(error)showToast(error.message,'error');
+  else{
+    showToast('Deleted','success');
+    if(table==='platforms')loadPlatforms();
+    if(table==='categories')loadCategories();
+    if(table==='services')loadServices();
+  }
+}
+
+window.addEventListener('DOMContentLoaded',checkSession);
+</script>
 </body>
 </html>

@@ -1,828 +1,1722 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MTS SMM - Admin Panel</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root{--primary:#6366f1;--secondary:#ec4899;--bg-dark:#0f172a;--bg-card:rgba(30,41,59,0.7);--text-light:#f1f5f9;--text-muted:#94a3b8;--border:rgba(255,255,255,0.1);--success:#10b981;--danger:#ef4444;--warning:#f59e0b}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#312e81 100%);color:var(--text-light);min-height:100vh}
-.admin-layout{display:flex;min-height:100vh}
-.sidebar{width:260px;background:rgba(15,23,42,0.95);border-right:1px solid var(--border);padding:20px;position:fixed;height:100vh;overflow-y:auto}
-.sidebar-logo{padding:10px;margin-bottom:30px;text-align:center;border-bottom:1px solid var(--border);padding-bottom:20px}
-.sidebar-logo h1{font-size:24px;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sidebar-logo small{color:var(--text-muted);font-size:11px}
-.sidebar-menu{list-style:none}
-.sidebar-menu li{padding:12px 16px;border-radius:8px;cursor:pointer;margin-bottom:4px;display:flex;align-items:center;gap:12px;color:var(--text-muted);transition:all 0.3s}
-.sidebar-menu li:hover,.sidebar-menu li.active{background:rgba(99,102,241,0.2);color:var(--text-light)}
-.sidebar-menu li i{width:20px}
-.main-content{flex:1;margin-left:260px;padding:30px}
-.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;background:var(--bg-card);padding:16px 24px;border-radius:12px;border:1px solid var(--border)}
-.user-info{display:flex;align-items:center;gap:10px}
-.user-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-weight:600}
-.btn{padding:10px 18px;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:6px;transition:all 0.3s}
-.btn-primary{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white}
-.btn-primary:hover{transform:translateY(-2px)}
-.btn-success{background:var(--success);color:white}
-.btn-danger{background:var(--danger);color:white}
-.btn-warning{background:var(--warning);color:white}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-light)}
-.btn-sm{padding:6px 12px;font-size:12px}
-.page{display:none}
-.page.active{display:block}
-.page-title{font-size:28px;margin-bottom:20px}
-.glass-card{background:var(--bg-card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px}
-.stat-card{background:var(--bg-card);padding:20px;border-radius:12px;border:1px solid var(--border)}
-.stat-card .stat-label{color:var(--text-muted);font-size:12px;text-transform:uppercase;margin-bottom:8px}
-.stat-card .stat-value{font-size:28px;font-weight:700;color:var(--primary)}
-.stat-card .stat-icon{font-size:36px;color:var(--primary);opacity:0.3;float:right}
-table{width:100%;border-collapse:collapse}
-th,td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:13px}
-th{background:rgba(99,102,241,0.1);color:var(--primary);font-weight:600}
-tr:hover{background:rgba(255,255,255,0.02)}
-.status-badge{padding:4px 10px;border-radius:10px;font-size:11px;font-weight:600;text-transform:capitalize;display:inline-block}
-.status-pending,.status-open{background:rgba(245,158,11,0.2);color:var(--warning)}
-.status-active,.status-approved,.status-completed,.status-paid,.status-processed{background:rgba(16,185,129,0.2);color:var(--success)}
-.status-inactive,.status-rejected,.status-cancelled,.status-suspended,.status-failed{background:rgba(239,68,68,0.2);color:var(--danger)}
-.status-processing{background:rgba(99,102,241,0.2);color:var(--primary)}
-input,select,textarea{width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text-light);font-size:13px;font-family:inherit}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)}
-textarea{min-height:80px;resize:vertical}
-label{display:block;margin:10px 0 6px;font-size:13px;font-weight:500}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;overflow-y:auto}
-.modal.active{display:flex}
-.modal-content{background:var(--bg-dark);padding:30px;border-radius:12px;max-width:600px;width:100%;position:relative;border:1px solid var(--border);max-height:90vh;overflow-y:auto}
-.modal-close{position:absolute;top:14px;right:14px;font-size:24px;cursor:pointer;background:none;border:none;color:var(--text-muted)}
-.toast{position:fixed;bottom:30px;right:30px;background:var(--bg-dark);border:1px solid var(--border);padding:14px 20px;border-radius:8px;z-index:1000;transform:translateX(120%);transition:transform 0.3s;max-width:350px}
-.toast.show{transform:translateX(0)}
-.toast.success{border-left:4px solid var(--success)}
-.toast.error{border-left:4px solid var(--danger)}
-.toast.info{border-left:4px solid var(--primary)}
-.spinner-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:999;display:flex;align-items:center;justify-content:center}
-.spinner{width:60px;height:60px;border:4px solid rgba(99,102,241,0.2);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.login-container{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-.login-card{background:var(--bg-card);padding:40px;border-radius:16px;border:1px solid var(--border);max-width:400px;width:100%}
-.login-card h1{text-align:center;margin-bottom:20px;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.login-card input{margin-bottom:12px}
-.table-wrapper{overflow-x:auto}
-.search-input{max-width:300px;margin-bottom:16px}
-.toggle-switch{position:relative;display:inline-block;width:50px;height:26px}
-.toggle-switch input{opacity:0;width:0;height:0}
-.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#475569;transition:0.3s;border-radius:26px}
-.toggle-slider:before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;background:white;transition:0.3s;border-radius:50%}
-.toggle-switch input:checked+.toggle-slider{background:var(--success)}
-.toggle-switch input:checked+.toggle-slider:before{transform:translateX(24px)}
-.action-btns{display:flex;gap:6px;flex-wrap:wrap}
-.alert-info{background:rgba(99,102,241,0.1);border-left:4px solid var(--primary);padding:14px;border-radius:8px;margin-bottom:16px;font-size:13px}
-@media(max-width:768px){
-.sidebar{width:100%;height:auto;position:relative}
-.main-content{margin-left:0}
-.admin-layout{flex-direction:column}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTS SMM - Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        /* ========== HEADER ========== */
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+            padding: 0 30px;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #ff006e, #ff1493);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 10px;
+            color: white;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .admin-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 15px;
+            background: rgba(51, 65, 85, 0.3);
+            border-radius: 8px;
+        }
+
+        .admin-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .dropdown-menu {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 8px;
+            min-width: 180px;
+            margin-top: 10px;
+            display: none;
+            z-index: 1001;
+        }
+
+        .dropdown-content.active {
+            display: block;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 12px 20px;
+            color: #e2e8f0;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+            transition: all 0.3s;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 250px;
+            height: calc(100vh - 70px);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(51, 65, 85, 0.5);
+            padding: 20px 0;
+            overflow-y: auto;
+            z-index: 999;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            color: var(--primary);
+            border-left-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        main {
+            margin-left: 250px;
+            margin-top: 70px;
+            padding: 30px;
+            min-height: calc(100vh - 70px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== GLASS CARD ========== */
+        .glass-card {
+            background: rgba(51, 65, 85, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        /* ========== STATS GRID ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ========== TABS ========== */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            padding: 12px 20px;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* ========== TABLE ========== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            color: #cbd5e1;
+        }
+
+        tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        /* ========== FORMS ========== */
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: #e2e8f0;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(15, 23, 42, 0.7);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn-primary, .btn-secondary, .btn-danger, .btn-success {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(51, 65, 85, 0.5);
+            color: #cbd5e1;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(51, 65, 85, 0.8);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .btn-success:hover {
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        /* ========== MODALS ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        /* ========== TOAST ========== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 8px;
+            padding: 15px 20px;
+            color: #e2e8f0;
+            animation: slideIn 0.3s;
+            z-index: 3000;
+            max-width: 300px;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            main {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .sidebar {
+                transform: translateX(-250px);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            td, th {
+                padding: 8px;
+            }
+        }
+
+        /* ========== STATUS BADGE ========== */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-approved {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background: rgba(100, 116, 139, 0.1);
+            color: #94a3b8;
+        }
+
+        /* ========== SECTION TITLE ========== */
+        .section-title {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* ========== CHECKBOX ========== */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        /* ========== ALERT ========== */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .alert-info {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        /* ========== ACTION BUTTONS ========== */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .action-btn.edit {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .action-btn.delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .action-btn.approve {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+    </style>
 </head>
 <body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-left">
+            <div class="logo">MTS <span class="admin-badge">ADMIN</span></div>
+        </div>
 
-<!-- LOGIN -->
-<div id="loginScreen" class="login-container">
-<div class="login-card">
-<h1>MTS SMM Admin</h1>
-<p style="text-align:center;color:var(--text-muted);margin-bottom:20px">Sign in to admin panel</p>
-<input type="email" id="loginEmail" placeholder="Admin Email">
-<input type="password" id="loginPassword" placeholder="Password">
-<button class="btn btn-primary" style="width:100%;padding:12px" onclick="adminLogin()">Login</button>
-<p style="text-align:center;color:var(--text-muted);font-size:12px;margin-top:16px">Only admin accounts allowed</p>
-</div>
-</div>
+        <div class="header-right">
+            <div class="admin-section">
+                <div class="admin-avatar" id="adminAvatar">A</div>
+                <div style="display: flex; flex-direction: column;">
+                    <span style="font-weight: 600; color: var(--primary);" id="adminName">Admin</span>
+                    <span style="font-size: 11px; color: #94a3b8;">Administrator</span>
+                </div>
+                <div class="dropdown-menu" onclick="toggleDropdown()">
+                    <span style="cursor: pointer; font-size: 18px;">⋮</span>
+                    <div class="dropdown-content" id="dropdownMenu">
+                        <a href="#" onclick="showTab('settings')">Settings</a>
+                        <a href="#" onclick="logout()">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<!-- ADMIN PANEL -->
-<div id="adminPanel" class="admin-layout" style="display:none">
-<aside class="sidebar">
-<div class="sidebar-logo">
-<h1>MTS Admin</h1>
-<small>Media Tech Support</small>
-</div>
-<ul class="sidebar-menu">
-<li class="active" onclick="showPage('dashboard',this)"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
-<li onclick="showPage('users',this)"><i class="fas fa-users"></i> Users</li>
-<li onclick="showPage('wallets',this)"><i class="fas fa-wallet"></i> Wallets</li>
-<li onclick="showPage('orders',this)"><i class="fas fa-shopping-cart"></i> Orders</li>
-<li onclick="showPage('transactions',this)"><i class="fas fa-exchange-alt"></i> Transactions</li>
-<li onclick="showPage('platforms',this)"><i class="fas fa-layer-group"></i> Platforms</li>
-<li onclick="showPage('categories',this)"><i class="fas fa-tags"></i> Categories</li>
-<li onclick="showPage('services',this)"><i class="fas fa-list"></i> Services</li>
-<li onclick="showPage('affiliates',this)"><i class="fas fa-handshake"></i> Affiliates</li>
-<li onclick="showPage('referrals',this)"><i class="fas fa-link"></i> Referrals</li>
-<li onclick="showPage('payouts',this)"><i class="fas fa-money-check-alt"></i> Payouts</li>
-<li onclick="showPage('employees',this)"><i class="fas fa-id-badge"></i> Employees</li>
-<li onclick="showPage('attendance',this)"><i class="fas fa-calendar-check"></i> Attendance</li>
-<li onclick="showPage('worklogs',this)"><i class="fas fa-tasks"></i> Work Logs</li>
-<li onclick="showPage('tickets',this)"><i class="fas fa-headset"></i> Support Tickets</li>
-<li onclick="showPage('settings',this)"><i class="fas fa-cog"></i> Settings</li>
-<li onclick="adminLogout()" style="color:var(--danger);margin-top:20px"><i class="fas fa-sign-out-alt"></i> Logout</li>
-</ul>
-</aside>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="#" onclick="showTab('dashboard')" class="active">📊 Dashboard</a></li>
+            <li><a href="#" onclick="showTab('users')">👥 Users</a></li>
+            <li><a href="#" onclick="showTab('orders')">📦 Orders</a></li>
+            <li><a href="#" onclick="showTab('services')">🛍️ Services</a></li>
+            <li><a href="#" onclick="showTab('platforms')">🌐 Platforms</a></li>
+            <li><a href="#" onclick="showTab('affiliates')">💰 Affiliates</a></li>
+            <li><a href="#" onclick="showTab('support')">💬 Support</a></li>
+            <li><a href="#" onclick="showTab('settings')">⚙️ Settings</a></li>
+        </ul>
+    </aside>
 
-<main class="main-content">
-<div class="top-bar">
-<h2 id="topBarTitle">Dashboard</h2>
-<div class="user-info">
-<div class="user-avatar" id="adminAvatar">A</div>
-<div><div id="adminName">Admin</div><small id="adminEmail" style="color:var(--text-muted)"></small></div>
-</div>
-</div>
+    <main>
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="tab-content active">
+            <h2 class="section-title">Dashboard</h2>
 
-<!-- DASHBOARD -->
-<section id="dashboard-page" class="page active">
-<div class="stats-grid">
-<div class="stat-card"><i class="fas fa-users stat-icon"></i><div class="stat-label">Total Users</div><div class="stat-value" id="statUsers">0</div></div>
-<div class="stat-card"><i class="fas fa-shopping-cart stat-icon"></i><div class="stat-label">Total Orders</div><div class="stat-value" id="statOrders">0</div></div>
-<div class="stat-card"><i class="fas fa-dollar-sign stat-icon"></i><div class="stat-label">Total Revenue</div><div class="stat-value" id="statRevenue">$0</div></div>
-<div class="stat-card"><i class="fas fa-list stat-icon"></i><div class="stat-label">Active Services</div><div class="stat-value" id="statServices">0</div></div>
-<div class="stat-card"><i class="fas fa-handshake stat-icon"></i><div class="stat-label">Affiliates</div><div class="stat-value" id="statAffiliates">0</div></div>
-<div class="stat-card"><i class="fas fa-id-badge stat-icon"></i><div class="stat-label">Employees</div><div class="stat-value" id="statEmployees">0</div></div>
-<div class="stat-card"><i class="fas fa-headset stat-icon"></i><div class="stat-label">Open Tickets</div><div class="stat-value" id="statTickets">0</div></div>
-<div class="stat-card"><i class="fas fa-clock stat-icon"></i><div class="stat-label">Pending Orders</div><div class="stat-value" id="statPendingOrders">0</div></div>
-</div>
-<div class="glass-card">
-<h3>Recent Orders</h3>
-<div class="table-wrapper">
-<table><thead><tr><th>#</th><th>Service</th><th>User</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrdersTable"></tbody></table>
-</div>
-</div>
-</section>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <div class="value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Orders</h3>
+                    <div class="value" id="totalOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Revenue</h3>
+                    <div class="value" id="totalRevenue">$0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Services</h3>
+                    <div class="value" id="activeServices">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Applications</h3>
+                    <div class="value" id="pendingApps">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Affiliates</h3>
+                    <div class="value" id="activeAffiliates">0</div>
+                </div>
+            </div>
 
-<!-- USERS -->
-<section id="users-page" class="page">
-<h2 class="page-title">Users Management</h2>
-<input class="search-input" id="usersSearch" placeholder="Search users..." oninput="filterUsers()">
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Phone</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead><tbody id="usersTable"></tbody></table>
-</div>
-</section>
+            <div class="glass-card">
+                <h3>Recent Orders</h3>
+                <table id="recentOrdersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>User</th>
+                            <th>Service</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Orders will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-<!-- WALLETS -->
-<section id="wallets-page" class="page">
-<h2 class="page-title">Wallets Management</h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>User</th><th>Balance</th><th>Total Spent</th><th>Affiliate Earned</th><th>Actions</th></tr></thead><tbody id="walletsTable"></tbody></table>
-</div>
-</section>
+        <!-- USERS MANAGEMENT -->
+        <div id="users" class="tab-content">
+            <h2 class="section-title">Users Management</h2>
 
-<!-- ORDERS -->
-<section id="orders-page" class="page">
-<h2 class="page-title">Orders Management</h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>#</th><th>User</th><th>Service</th><th>Qty</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="ordersTable"></tbody></table>
-</div>
-</section>
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>All Users</h3>
+                    <button class="btn-primary" onclick="openUserModal()">+ Add User</button>
+                </div>
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Username</th>
+                            <th>Wallet Balance</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Users will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-<!-- TRANSACTIONS -->
-<section id="transactions-page" class="page">
-<h2 class="page-title">All Transactions</h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>User</th><th>Type</th><th>Amount</th><th>Description</th><th>Status</th><th>Date</th></tr></thead><tbody id="transactionsTable"></tbody></table>
-</div>
-</section>
+        <!-- ORDERS MANAGEMENT -->
+        <div id="orders" class="tab-content">
+            <h2 class="section-title">Orders Management</h2>
 
-<!-- PLATFORMS -->
-<section id="platforms-page" class="page">
-<h2 class="page-title">Platforms <button class="btn btn-primary btn-sm" onclick="openModal('platform')"><i class="fas fa-plus"></i> Add Platform</button></h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>Icon</th><th>Name</th><th>Sort Order</th><th>Enabled</th><th>Actions</th></tr></thead><tbody id="platformsTable"></tbody></table>
-</div>
-</section>
+            <div class="glass-card" style="margin-bottom: 20px;">
+                <h3>Quick Filters</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn-secondary" onclick="filterOrders('all')">All Orders</button>
+                    <button class="btn-secondary" onclick="filterOrders('pending')">Pending</button>
+                    <button class="btn-success" onclick="filterOrders('completed')">Completed</button>
+                    <button class="btn-danger" onclick="filterOrders('cancelled')">Cancelled</button>
+                </div>
+            </div>
 
-<!-- CATEGORIES -->
-<section id="categories-page" class="page">
-<h2 class="page-title">Categories <button class="btn btn-primary btn-sm" onclick="openModal('category')"><i class="fas fa-plus"></i> Add Category</button></h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>Name</th><th>Description</th><th>Sort Order</th><th>Actions</th></tr></thead><tbody id="categoriesTable"></tbody></table>
-</div>
-</section>
+            <div class="glass-card">
+                <h3>Orders</h3>
+                <table id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>User</th>
+                            <th>Platform</th>
+                            <th>Service</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Orders will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-<!-- SERVICES -->
-<section id="services-page" class="page">
-<h2 class="page-title">Services <button class="btn btn-primary btn-sm" onclick="openModal('service')"><i class="fas fa-plus"></i> Add Service</button></h2>
-<input class="search-input" id="servicesSearch" placeholder="Search services..." oninput="filterServicesAdmin()">
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>Code</th><th>Name</th><th>Platform</th><th>Category</th><th>Rate/1K</th><th>Min</th><th>Max</th><th>Status</th><th>Actions</th></tr></thead><tbody id="servicesTable"></tbody></table>
-</div>
-</section>
+        <!-- SERVICES MANAGEMENT -->
+        <div id="services" class="tab-content">
+            <h2 class="section-title">Services Management</h2>
 
-<!-- AFFILIATES -->
-<section id="affiliates-page" class="page">
-<h2 class="page-title">Affiliates Management</h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>User</th><th>Referral Code</th><th>Rate</th><th>Earnings</th><th>Referrals</th><th>Status</th><th>Actions</th></tr></thead><tbody id="affiliatesTable"></tbody></table>
-</div>
-</section>
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Services</h3>
+                    <button class="btn-primary" onclick="openServiceModal()">+ Add Service</button>
+                </div>
+                <table id="servicesTable">
+                    <thead>
+                        <tr>
+                            <th>Service ID</th>
+                            <th>Name</th>
+                            <th>Platform</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Services will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-<!-- REFERRALS -->
-<section id="referrals-page" class="page">
-<h2 class="page-title">Referral History</h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>Affiliate</th><th>Referred User</th><th>Commission</th><th>Status</th><th>Date</th></tr></thead><tbody id="referralsTable"></tbody></table>
-</div>
-</section>
+        <!-- PLATFORMS MANAGEMENT -->
+        <div id="platforms" class="tab-content">
+            <h2 class="section-title">Platforms Management</h2>
 
-<!-- PAYOUTS -->
-<section id="payouts-page" class="page">
-<h2 class="page-title">Affiliate Payouts</h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>Affiliate</th><th>Amount</th><th>Method</th><th>Details</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="payoutsTable"></tbody></table>
-</div>
-</section>
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Platforms</h3>
+                    <button class="btn-primary" onclick="openPlatformModal()">+ Add Platform</button>
+                </div>
+                <table id="platformsTable">
+                    <thead>
+                        <tr>
+                            <th>Platform ID</th>
+                            <th>Name</th>
+                            <th>Icon</th>
+                            <th>Status</th>
+                            <th>Services Count</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Platforms will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-<!-- EMPLOYEES -->
-<section id="employees-page" class="page">
-<h2 class="page-title">Employee Applications</h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Experience</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="employeesTable"></tbody></table>
-</div>
-</section>
+        <!-- AFFILIATES MANAGEMENT -->
+        <div id="affiliates" class="tab-content">
+            <h2 class="section-title">Affiliate Management</h2>
 
-<!-- ATTENDANCE -->
-<section id="attendance-page" class="page">
-<h2 class="page-title">Employee Attendance</h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>Employee</th><th>Date</th><th>Login</th><th>Logout</th><th>Hours</th><th>Status</th></tr></thead><tbody id="attendanceTable"></tbody></table>
-</div>
-</section>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterAffiliates('all')">All</button>
+                <button class="tab-btn" onclick="filterAffiliates('commission')">Commission Based</button>
+                <button class="tab-btn" onclick="filterAffiliates('salary')">Salary Based</button>
+                <button class="tab-btn" onclick="filterAffiliates('pending')">Pending</button>
+            </div>
 
-<!-- WORKLOGS -->
-<section id="worklogs-page" class="page">
-<h2 class="page-title">Employee Work Logs</h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>Employee</th><th>Date</th><th>Type</th><th>Details</th><th>Boosted</th><th>Submitted</th></tr></thead><tbody id="worklogsTable"></tbody></table>
-</div>
-</section>
+            <div class="glass-card">
+                <h3>Affiliates</h3>
+                <table id="affiliatesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Type</th>
+                            <th>Commission Rate</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Affiliates will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
 
-<!-- TICKETS -->
-<section id="tickets-page" class="page">
-<h2 class="page-title">Support Tickets</h2>
-<div class="glass-card table-wrapper">
-<table><thead><tr><th>#</th><th>User</th><th>Subject</th><th>Priority</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="ticketsTable"></tbody></table>
-</div>
-</section>
+            <div class="glass-card" style="margin-top: 30px;">
+                <h3>Employee Applications</h3>
+                <table id="applicationsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Applied</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Applications will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-<!-- SETTINGS -->
-<section id="settings-page" class="page">
-<h2 class="page-title">Site Settings</h2>
+        <!-- SUPPORT TICKETS -->
+        <div id="support" class="tab-content">
+            <h2 class="section-title">Support Tickets</h2>
 
-<div class="alert-info"><i class="fas fa-info-circle"></i> Use the toggles below to <strong>show / hide</strong> programs on the user website.</div>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterTickets('all')">All</button>
+                <button class="tab-btn" onclick="filterTickets('open')">Open</button>
+                <button class="tab-btn" onclick="filterTickets('in-progress')">In Progress</button>
+                <button class="tab-btn" onclick="filterTickets('closed')">Closed</button>
+            </div>
 
-<div class="glass-card">
-<h3>Program Visibility</h3>
-<table style="margin-top:16px">
-<tr>
-<td><strong>Commission Based Program</strong><br><small style="color:var(--text-muted)">Auto referral link generation</small></td>
-<td><label class="toggle-switch"><input type="checkbox" id="showCommissionToggle" onchange="toggleProgram('show_commission_program',this.checked)"><span class="toggle-slider"></span></label></td>
-</tr>
-<tr>
-<td><strong>Salary Based Program</strong><br><small style="color:var(--text-muted)">Employee application required</small></td>
-<td><label class="toggle-switch"><input type="checkbox" id="showSalaryToggle" onchange="toggleProgram('show_salary_program',this.checked)"><span class="toggle-slider"></span></label></td>
-</tr>
-</table>
-</div>
+            <div class="glass-card">
+                <h3>Support Tickets</h3>
+                <table id="ticketsTable">
+                    <thead>
+                        <tr>
+                            <th>Ticket ID</th>
+                            <th>User</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Tickets will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-<div class="glass-card">
-<h3>General Settings</h3>
-<div class="form-grid">
-<div><label>Site Name</label><input id="setSiteName"></div>
-<div><label>Support Email</label><input id="setSupportEmail"></div>
-<div><label>Support WhatsApp</label><input id="setSupportWhatsapp"></div>
-<div><label>Currency</label><input id="setCurrency"></div>
-<div><label>Affiliate Commission Rate (%)</label><input type="number" id="setCommissionRate"></div>
-<div><label>Affiliate Min Payout ($)</label><input type="number" id="setMinPayout"></div>
-</div>
-<div style="margin-top:14px">
-<label><input type="checkbox" id="setMaintenanceMode"> Maintenance Mode</label>
-</div>
-<button class="btn btn-primary" style="margin-top:20px" onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button>
-</div>
-</section>
+        <!-- SETTINGS -->
+        <div id="settings" class="tab-content">
+            <h2 class="section-title">Settings</h2>
 
-</main>
-</div>
+            <div class="glass-card">
+                <h3>Site Settings</h3>
+                <form onsubmit="saveSiteSettings(event)">
+                    <div class="form-section">
+                        <div class="row">
+                            <div class="col">
+                                <label>Site Name</label>
+                                <input type="text" id="siteName" value="MTS SMM">
+                            </div>
+                            <div class="col">
+                                <label>Support Email</label>
+                                <input type="email" id="supportEmail" value="zone43157@gmail.com">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>Support WhatsApp</label>
+                                <input type="tel" id="supportWhatsapp" value="923218595421">
+                            </div>
+                            <div class="col">
+                                <label>Currency</label>
+                                <select id="currency">
+                                    <option value="USD">USD ($)</option>
+                                    <option value="PKR">PKR (₹)</option>
+                                    <option value="EUR">EUR (€)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Save Settings</button>
+                </form>
+            </div>
 
-<!-- GENERIC MODAL -->
-<div id="genericModal" class="modal">
-<div class="modal-content">
-<button class="modal-close" onclick="closeModal()">&times;</button>
-<h3 id="modalTitle"></h3>
-<div id="modalBody"></div>
-</div>
-</div>
+            <div class="glass-card" style="margin-top: 20px;">
+                <h3>Affiliate Settings</h3>
+                <form onsubmit="saveAffiliateSettings(event)">
+                    <div class="form-section">
+                        <div class="row">
+                            <div class="col">
+                                <label>Default Commission Rate (%)</label>
+                                <input type="number" id="commissionRate" min="0" max="100" value="20">
+                            </div>
+                            <div class="col">
+                                <label>Minimum Payout Amount</label>
+                                <input type="number" id="minimumPayout" min="0" value="50">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label>Enabled Payout Methods (comma separated)</label>
+                            <input type="text" id="payoutMethods" value="Bank Transfer, PayPal, Crypto">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Save Affiliate Settings</button>
+                </form>
+            </div>
 
-<div id="toast" class="toast"></div>
-<div id="loadingSpinner" class="spinner-overlay" style="display:none"><div class="spinner"></div></div>
+            <div class="glass-card" style="margin-top: 20px;">
+                <h3>Maintenance Mode</h3>
+                <div class="form-section">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="maintenanceMode">
+                        <label for="maintenanceMode">Enable Maintenance Mode</label>
+                    </div>
+                    <p style="color: #94a3b8; margin-top: 10px; font-size: 12px;">When enabled, only admins can access the platform.</p>
+                </div>
+                <button class="btn-primary" onclick="saveMaintenanceMode()">Save</button>
+            </div>
+        </div>
+    </main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL='https://nualxapdjjekeujfznex.supabase.co';
-const SUPABASE_KEY='sb_publishable_BawJWtJ6fgZ1l6S7-d7VzQ_3kn2lpTX';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let adminUser=null,adminProfile=null,siteSettings={};
-let allUsers=[],allServicesAdmin=[],allPlatformsAdmin=[],allCategoriesAdmin=[];
+    <!-- MODALS -->
+    <!-- User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add User</h2>
+                <button class="close-btn" onclick="closeModal('userModal')">&times;</button>
+            </div>
+            <form onsubmit="saveUser(event)">
+                <div class="form-section">
+                    <label class="required">Email</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-section">
+                    <label class="required">Password</label>
+                    <input type="password" id="userPassword" required>
+                </div>
+                <div class="form-section">
+                    <label>Wallet Balance</label>
+                    <input type="number" id="userBalance" min="0" value="0">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Save User</button>
+            </form>
+        </div>
+    </div>
 
-function showToast(m,t='info'){const e=document.getElementById('toast');e.textContent=m;e.className=`toast ${t} show`;setTimeout(()=>e.classList.remove('show'),3500)}
-function showSpinner(){document.getElementById('loadingSpinner').style.display='flex'}
-function hideSpinner(){document.getElementById('loadingSpinner').style.display='none'}
-function fmt(n){return '$'+Number(n||0).toFixed(2)}
-function fmtDate(d){return new Date(d).toLocaleString()}
+    <!-- Service Modal -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Service</h2>
+                <button class="close-btn" onclick="closeModal('serviceModal')">&times;</button>
+            </div>
+            <form onsubmit="saveService(event)">
+                <div class="form-section">
+                    <label class="required">Service Name</label>
+                    <input type="text" id="serviceName" required>
+                </div>
+                <div class="form-section">
+                    <label class="required">Platform</label>
+                    <select id="servicePlatform" required>
+                        <option value="">Select Platform</option>
+                    </select>
+                </div>
+                <div class="form-section">
+                    <label class="required">Category</label>
+                    <input type="text" id="serviceCategory" placeholder="e.g., Followers" required>
+                </div>
+                <div class="form-section">
+                    <label class="required">Price</label>
+                    <input type="number" id="servicePrice" step="0.01" required>
+                </div>
+                <div class="form-section">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="servicePer1k">
+                        <label for="servicePer1k">Price per 1000 units</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Save Service</button>
+            </form>
+        </div>
+    </div>
 
-// ===== AUTH =====
-async function adminLogin(){
-  const email=document.getElementById('loginEmail').value.trim();
-  const password=document.getElementById('loginPassword').value;
-  if(!email||!password)return showToast('Enter credentials','error');
-  showSpinner();
-  try{
-    const{data,error}=await sb.auth.signInWithPassword({email,password});
-    if(error)throw error;
-    const{data:profile}=await sb.from('profiles').select('*').eq('id',data.user.id).single();
-    if(profile?.role!=='admin'){await sb.auth.signOut();throw new Error('Not an admin account')}
-    adminUser=data.user;adminProfile=profile;
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('adminPanel').style.display='flex';
-    document.getElementById('adminName').textContent=profile.full_name||profile.username||'Admin';
-    document.getElementById('adminEmail').textContent=data.user.email;
-    document.getElementById('adminAvatar').textContent=(profile.full_name||'A').charAt(0).toUpperCase();
-    await loadAllData();
-    showToast('Welcome Admin!','success');
-  }catch(err){showToast(err.message,'error')}
-  hideSpinner();
-}
+    <!-- Platform Modal -->
+    <div id="platformModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Platform</h2>
+                <button class="close-btn" onclick="closeModal('platformModal')">&times;</button>
+            </div>
+            <form onsubmit="savePlatform(event)">
+                <div class="form-section">
+                    <label class="required">Platform Name</label>
+                    <input type="text" id="platformName" required>
+                </div>
+                <div class="form-section">
+                    <label class="required">Icon (Emoji)</label>
+                    <input type="text" id="platformIcon" placeholder="e.g., 📷" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Save Platform</button>
+            </form>
+        </div>
+    </div>
 
-async function adminLogout(){
-  await sb.auth.signOut();
-  location.reload();
-}
+    <script>
+        // ==================== SUPABASE CONFIGURATION ====================
+        // REPLACE THESE WITH YOUR ACTUAL SUPABASE CREDENTIALS
+        const SUPABASE_URL = 'https://nualxapdjjekeujfznex.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_BawJWtJ6fgZ1l6S7-d7VzQ_3kn2lpTX';
+        const { createClient } = window.supabase;
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function checkSession(){
-  const{data:{user}}=await sb.auth.getUser();
-  if(user){
-    const{data:profile}=await sb.from('profiles').select('*').eq('id',user.id).single();
-    if(profile?.role==='admin'){
-      adminUser=user;adminProfile=profile;
-      document.getElementById('loginScreen').style.display='none';
-      document.getElementById('adminPanel').style.display='flex';
-      document.getElementById('adminName').textContent=profile.full_name||'Admin';
-      document.getElementById('adminEmail').textContent=user.email;
-      document.getElementById('adminAvatar').textContent=(profile.full_name||'A').charAt(0).toUpperCase();
-      await loadAllData();
-    }
-  }
-}
+        // ==================== DEFAULT ADMIN CREDENTIALS ====================
+        // Default Email: admin@mtsmm.com
+        // Default Password: Admin@12345
+        // IMPORTANT: Change these credentials after first login!
 
-// ===== NAVIGATION =====
-function showPage(name,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(`${name}-page`).classList.add('active');
-  document.querySelectorAll('.sidebar-menu li').forEach(l=>l.classList.remove('active'));
-  if(el)el.classList.add('active');
-  document.getElementById('topBarTitle').textContent=el?.textContent.trim()||'Dashboard';
-  if(name==='dashboard')loadDashboard();
-  if(name==='users')loadUsers();
-  if(name==='wallets')loadWallets();
-  if(name==='orders')loadOrders();
-  if(name==='transactions')loadTransactions();
-  if(name==='platforms')loadPlatforms();
-  if(name==='categories')loadCategories();
-  if(name==='services')loadServices();
-  if(name==='affiliates')loadAffiliates();
-  if(name==='referrals')loadReferrals();
-  if(name==='payouts')loadPayouts();
-  if(name==='employees')loadEmployees();
-  if(name==='attendance')loadAttendance();
-  if(name==='worklogs')loadWorkLogs();
-  if(name==='tickets')loadTickets();
-  if(name==='settings')loadSettings();
-}
+        // ==================== GLOBAL STATE ====================
+        let currentAdmin = null;
+        let allUsers = [];
+        let allOrders = [];
+        let allServices = [];
+        let allPlatforms = [];
+        let allAffiliates = [];
+        let allApplications = [];
+        let allTickets = [];
 
-// ===== INITIAL LOAD =====
-async function loadAllData(){
-  await loadSiteSettings();
-  await loadDashboard();
-}
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAdminAuth();
+        });
 
-// ===== DASHBOARD =====
-async function loadDashboard(){
-  const[users,orders,services,affs,emps,tix,pending,trans]=await Promise.all([
-    sb.from('profiles').select('*',{count:'exact',head:true}),
-    sb.from('orders').select('*',{count:'exact'}),
-    sb.from('services').select('*',{count:'exact',head:true}).eq('status','active'),
-    sb.from('affiliates').select('*',{count:'exact',head:true}).eq('status','approved'),
-    sb.from('employee_applications').select('*',{count:'exact',head:true}).eq('status','approved'),
-    sb.from('support_tickets').select('*',{count:'exact',head:true}).eq('status','open'),
-    sb.from('orders').select('*',{count:'exact',head:true}).eq('status','pending'),
-    sb.from('orders').select('total_amount')
-  ]);
-  document.getElementById('statUsers').textContent=users.count||0;
-  document.getElementById('statOrders').textContent=orders.count||0;
-  document.getElementById('statServices').textContent=services.count||0;
-  document.getElementById('statAffiliates').textContent=affs.count||0;
-  document.getElementById('statEmployees').textContent=emps.count||0;
-  document.getElementById('statTickets').textContent=tix.count||0;
-  document.getElementById('statPendingOrders').textContent=pending.count||0;
-  const rev=(trans.data||[]).reduce((s,o)=>s+Number(o.total_amount||0),0);
-  document.getElementById('statRevenue').textContent=fmt(rev);
-  
-  const{data:recent}=await sb.from('orders').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false}).limit(10);
-  document.getElementById('recentOrdersTable').innerHTML=(recent||[]).map(o=>`<tr><td>#${o.order_number}</td><td>${o.service_name}</td><td>${o.profiles?.full_name||o.profiles?.username||'-'}</td><td>${fmt(o.total_amount)}</td><td><span class="status-badge status-${o.status}">${o.status}</span></td><td>${fmtDate(o.created_at)}</td></tr>`).join('');
-}
+        // ==================== AUTHENTICATION ====================
+        async function checkAdminAuth() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    showLoginPrompt();
+                    return;
+                }
 
-// ===== USERS =====
-async function loadUsers(){
-  const{data}=await sb.from('profiles').select('*').order('created_at',{ascending:false});
-  allUsers=data||[];
-  renderUsers(allUsers);
-}
-function renderUsers(list){
-  document.getElementById('usersTable').innerHTML=list.map(u=>`<tr>
-    <td>${u.full_name||'-'}</td><td>${u.username||'-'}</td><td>${u.id}</td><td>${u.phone||'-'}</td>
-    <td><select onchange="updateUserRole('${u.id}',this.value)" style="padding:4px">
-      <option value="user" ${u.role==='user'?'selected':''}>User</option>
-      <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
-      <option value="affiliate" ${u.role==='affiliate'?'selected':''}>Affiliate</option>
-      <option value="employee" ${u.role==='employee'?'selected':''}>Employee</option>
-    </select></td>
-    <td><span class="status-badge status-${u.is_active?'active':'inactive'}">${u.is_active?'Active':'Inactive'}</span></td>
-    <td>${fmtDate(u.created_at)}</td>
-    <td><div class="action-btns">
-      <button class="btn btn-sm ${u.is_active?'btn-warning':'btn-success'}" onclick="toggleUserActive('${u.id}',${!u.is_active})">${u.is_active?'Disable':'Enable'}</button>
-      <button class="btn btn-sm btn-primary" onclick="adjustBalance('${u.id}')">Balance</button>
-    </div></td></tr>`).join('');
-}
-function filterUsers(){
-  const q=document.getElementById('usersSearch').value.toLowerCase();
-  renderUsers(allUsers.filter(u=>(u.full_name||'').toLowerCase().includes(q)||(u.username||'').toLowerCase().includes(q)));
-}
-async function updateUserRole(id,role){
-  const{error}=await sb.from('profiles').update({role}).eq('id',id);
-  if(error)showToast(error.message,'error');else showToast('Role updated','success');
-}
-async function toggleUserActive(id,active){
-  const{error}=await sb.from('profiles').update({is_active:active}).eq('id',id);
-  if(error)showToast(error.message,'error');else{showToast('Status updated','success');loadUsers()}
-}
-async function adjustBalance(userId){
-  const amount=parseFloat(prompt('Enter amount (+ to add, - to deduct):'));
-  if(!amount)return;
-  const desc=prompt('Description:','Admin balance adjustment');
-  const{error}=await sb.from('transactions').insert({
-    user_id:userId,type:amount>0?'deposit':'withdrawal',amount,description:desc,status:'completed'
-  });
-  if(error)showToast(error.message,'error');else{showToast('Balance updated','success');loadUsers()}
-}
+                // Check if user is admin (you can add a check in profiles table)
+                currentAdmin = user;
+                document.getElementById('adminName').textContent = user.email.split('@')[0];
+                document.getElementById('adminAvatar').textContent = user.email[0].toUpperCase();
 
-// ===== WALLETS =====
-async function loadWallets(){
-  const{data}=await sb.from('wallets').select('*,profiles:user_id(full_name,username)').order('balance',{ascending:false});
-  document.getElementById('walletsTable').innerHTML=(data||[]).map(w=>`<tr>
-    <td>${w.profiles?.full_name||w.profiles?.username||'-'}</td>
-    <td><strong>${fmt(w.balance)}</strong></td>
-    <td>${fmt(w.total_spent)}</td>
-    <td>${fmt(w.total_earned_affiliate)}</td>
-    <td><button class="btn btn-sm btn-primary" onclick="adjustBalance('${w.user_id}')">Adjust</button></td>
-  </tr>`).join('');
-}
+                loadDashboardData();
+            } catch (error) {
+                console.error('Auth error:', error);
+                showLoginPrompt();
+            }
+        }
 
-// ===== ORDERS =====
-async function loadOrders(){
-  const{data}=await sb.from('orders').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false}).limit(200);
-  document.getElementById('ordersTable').innerHTML=(data||[]).map(o=>`<tr>
-    <td>#${o.order_number}</td><td>${o.profiles?.full_name||'-'}</td><td>${o.service_name}</td><td>${o.quantity}</td>
-    <td>${fmt(o.total_amount)}</td>
-    <td><span class="status-badge status-${o.status}">${o.status}</span></td>
-    <td>${fmtDate(o.created_at)}</td>
-    <td><select onchange="updateOrderStatus('${o.id}',this.value)" style="padding:4px">
-      <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
-      <option value="processing" ${o.status==='processing'?'selected':''}>Processing</option>
-      <option value="completed" ${o.status==='completed'?'selected':''}>Completed</option>
-      <option value="cancelled" ${o.status==='cancelled'?'selected':''}>Cancelled</option>
-      <option value="refunded" ${o.status==='refunded'?'selected':''}>Refunded</option>
-    </select></td></tr>`).join('');
-}
-async function updateOrderStatus(id,status){
-  const{error}=await sb.from('orders').update({status}).eq('id',id);
-  if(error)showToast(error.message,'error');else showToast('Order updated','success');
-}
+        function showLoginPrompt() {
+            const loginHTML = `
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0f172a 0%, #020617 100%); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+                <div style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(51, 65, 85, 0.5); border-radius: 12px; padding: 40px; max-width: 400px; text-align: center;">
+                    <h2 style="color: #6366f1; margin-bottom: 20px;">Admin Login</h2>
+                    <form onsubmit="handleAdminLogin(event)">
+                        <div style="margin-bottom: 15px;">
+                            <label style="color: #e2e8f0; display: block; margin-bottom: 8px;">Email</label>
+                            <input type="email" id="adminEmail" value="admin@mtsmm.com" style="width: 100%; padding: 10px; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 6px; color: #e2e8f0;" required>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="color: #e2e8f0; display: block; margin-bottom: 8px;">Password</label>
+                            <input type="password" id="adminPassword" value="Admin@12345" style="width: 100%; padding: 10px; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 6px; color: #e2e8f0;" required>
+                        </div>
+                        <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px;">Default credentials provided for testing.</p>
+                        <button type="submit" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Login</button>
+                    </form>
+                </div>
+            </div>
+            `;
+            document.body.insertAdjacentHTML('afterbegin', loginHTML);
+        }
 
-// ===== TRANSACTIONS =====
-async function loadTransactions(){
-  const{data}=await sb.from('transactions').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false}).limit(200);
-  document.getElementById('transactionsTable').innerHTML=(data||[]).map(t=>`<tr>
-    <td>${t.profiles?.full_name||'-'}</td><td>${t.type.replace('_',' ')}</td>
-    <td style="color:${t.amount>0?'var(--success)':'var(--danger)'};font-weight:700">${t.amount>0?'+':''}${fmt(t.amount)}</td>
-    <td>${t.description||'-'}</td>
-    <td><span class="status-badge status-${t.status}">${t.status}</span></td>
-    <td>${fmtDate(t.created_at)}</td></tr>`).join('');
-}
+        async function handleAdminLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
 
-// ===== PLATFORMS =====
-async function loadPlatforms(){
-  const{data}=await sb.from('platforms').select('*').order('sort_order');
-  allPlatformsAdmin=data||[];
-  document.getElementById('platformsTable').innerHTML=(data||[]).map(p=>`<tr>
-    <td style="font-size:24px">${p.icon||'🌐'}</td><td>${p.name}</td><td>${p.sort_order}</td>
-    <td><label class="toggle-switch"><input type="checkbox" ${p.is_enabled?'checked':''} onchange="togglePlatform('${p.id}',this.checked)"><span class="toggle-slider"></span></label></td>
-    <td><div class="action-btns">
-      <button class="btn btn-sm btn-primary" onclick="editPlatform('${p.id}')">Edit</button>
-      <button class="btn btn-sm btn-danger" onclick="deleteItem('platforms','${p.id}')">Delete</button>
-    </div></td></tr>`).join('');
-}
-async function togglePlatform(id,enabled){
-  await sb.from('platforms').update({is_enabled:enabled}).eq('id',id);
-  showToast('Platform updated','success');
-}
-function editPlatform(id){
-  const p=allPlatformsAdmin.find(x=>x.id===id);
-  openModal('platform',p);
-}
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                currentAdmin = data.user;
+                document.querySelector('div[style*="position: fixed"]').remove();
+                location.reload();
+            } catch (error) {
+                showToast('Login failed: ' + error.message, 'error');
+            }
+        }
 
-// ===== CATEGORIES =====
-async function loadCategories(){
-  const{data}=await sb.from('categories').select('*').order('sort_order');
-  allCategoriesAdmin=data||[];
-  document.getElementById('categoriesTable').innerHTML=(data||[]).map(c=>`<tr>
-    <td>${c.name}</td><td>${c.description||'-'}</td><td>${c.sort_order}</td>
-    <td><div class="action-btns">
-      <button class="btn btn-sm btn-primary" onclick="editCategory('${c.id}')">Edit</button>
-      <button class="btn btn-sm btn-danger" onclick="deleteItem('categories','${c.id}')">Delete</button>
-    </div></td></tr>`).join('');
-}
-function editCategory(id){openModal('category',allCategoriesAdmin.find(x=>x.id===id))}
+        async function logout() {
+            try {
+                await supabase.auth.signOut();
+                location.reload();
+            } catch (error) {
+                showToast('Logout error: ' + error.message, 'error');
+            }
+        }
 
-// ===== SERVICES =====
-async function loadServices(){
-  const{data}=await sb.from('services').select('*,platforms(name),categories(name)').order('created_at',{ascending:false});
-  allServicesAdmin=data||[];
-  renderServicesAdmin(allServicesAdmin);
-}
-function renderServicesAdmin(list){
-  document.getElementById('servicesTable').innerHTML=list.map(s=>`<tr>
-    <td>${s.service_code}</td><td>${s.name}</td><td>${s.platforms?.name||'-'}</td><td>${s.categories?.name||'-'}</td>
-    <td>${fmt(s.rate_per_1k)}</td><td>${s.min_quantity}</td><td>${s.max_quantity}</td>
-    <td><span class="status-badge status-${s.status}">${s.status}</span></td>
-    <td><div class="action-btns">
-      <button class="btn btn-sm btn-primary" onclick="editService('${s.id}')">Edit</button>
-      <button class="btn btn-sm btn-danger" onclick="deleteItem('services','${s.id}')">Delete</button>
-    </div></td></tr>`).join('');
-}
-function filterServicesAdmin(){
-  const q=document.getElementById('servicesSearch').value.toLowerCase();
-  renderServicesAdmin(allServicesAdmin.filter(s=>s.name.toLowerCase().includes(q)||s.service_code.toLowerCase().includes(q)));
-}
-function editService(id){openModal('service',allServicesAdmin.find(x=>x.id===id))}
+        // ==================== DATA LOADING ====================
+        async function loadDashboardData() {
+            await Promise.all([
+                loadUsers(),
+                loadOrders(),
+                loadServices(),
+                loadPlatforms(),
+                loadAffiliates(),
+                loadApplications(),
+                loadTickets()
+            ]);
 
-// ===== AFFILIATES =====
-async function loadAffiliates(){
-  const{data}=await sb.from('affiliates').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false});
-  document.getElementById('affiliatesTable').innerHTML=(data||[]).map(a=>`<tr>
-    <td>${a.profiles?.full_name||a.profiles?.username||'-'}</td>
-    <td><code>${a.referral_code}</code></td>
-    <td>${a.commission_rate}%</td>
-    <td>${fmt(a.total_earnings)}</td>
-    <td>${a.total_referrals}</td>
-    <td><span class="status-badge status-${a.status}">${a.status}</span></td>
-    <td><div class="action-btns">
-      ${a.status==='pending'?`<button class="btn btn-sm btn-success" onclick="updateAffiliateStatus('${a.id}','approved')">Approve</button><button class="btn btn-sm btn-danger" onclick="updateAffiliateStatus('${a.id}','rejected')">Reject</button>`:''}
-      ${a.status==='approved'?`<button class="btn btn-sm btn-warning" onclick="updateAffiliateStatus('${a.id}','suspended')">Suspend</button>`:''}
-      ${a.status==='suspended'?`<button class="btn btn-sm btn-success" onclick="updateAffiliateStatus('${a.id}','approved')">Activate</button>`:''}
-      <button class="btn btn-sm btn-primary" onclick="changeCommission('${a.id}',${a.commission_rate})">Rate</button>
-    </div></td></tr>`).join('');
-}
-async function updateAffiliateStatus(id,status){
-  const u={status};if(status==='approved')u.approved_at=new Date().toISOString();
-  const{error}=await sb.from('affiliates').update(u).eq('id',id);
-  if(error)showToast(error.message,'error');else{showToast('Updated','success');loadAffiliates()}
-}
-async function changeCommission(id,current){
-  const rate=parseFloat(prompt('New commission rate (%):',current));
-  if(!rate)return;
-  await sb.from('affiliates').update({commission_rate:rate}).eq('id',id);
-  showToast('Rate updated','success');loadAffiliates();
-}
+            updateDashboardStats();
+            renderDashboard();
+        }
 
-// ===== REFERRALS =====
-async function loadReferrals(){
-  const{data}=await sb.from('affiliate_referrals').select('*,affiliates:affiliate_id(referral_code,profiles:user_id(full_name)),profiles:referred_user_id(full_name,username)').order('created_at',{ascending:false}).limit(200);
-  document.getElementById('referralsTable').innerHTML=(data||[]).map(r=>`<tr>
-    <td>${r.affiliates?.profiles?.full_name||'-'} <small style="color:var(--text-muted)">(${r.affiliates?.referral_code||''})</small></td>
-    <td>${r.profiles?.full_name||r.profiles?.username||'-'}</td>
-    <td>${fmt(r.commission_earned)}</td>
-    <td><span class="status-badge status-${r.status}">${r.status}</span></td>
-    <td>${fmtDate(r.created_at)}</td></tr>`).join('');
-}
+        async function loadUsers() {
+            try {
+                const { data, error } = await supabase.from('profiles').select('*');
+                allUsers = data || [];
+                renderUsersTable();
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
 
-// ===== PAYOUTS =====
-async function loadPayouts(){
-  const{data}=await sb.from('affiliate_payouts').select('*,affiliates:affiliate_id(referral_code,profiles:user_id(full_name))').order('created_at',{ascending:false});
-  document.getElementById('payoutsTable').innerHTML=(data||[]).map(p=>`<tr>
-    <td>${p.affiliates?.profiles?.full_name||'-'}</td>
-    <td>${fmt(p.amount)}</td><td>${p.payment_method}</td><td>${p.payment_details||'-'}</td>
-    <td><span class="status-badge status-${p.status}">${p.status}</span></td>
-    <td>${fmtDate(p.created_at)}</td>
-    <td>${p.status==='pending'?`<div class="action-btns"><button class="btn btn-sm btn-success" onclick="updatePayout('${p.id}','processed')">Process</button><button class="btn btn-sm btn-danger" onclick="updatePayout('${p.id}','failed')">Fail</button></div>`:'-'}</td></tr>`).join('');
-}
-async function updatePayout(id,status){
-  const u={status};if(status==='processed')u.processed_at=new Date().toISOString();
-  await sb.from('affiliate_payouts').update(u).eq('id',id);
-  showToast('Updated','success');loadPayouts();
-}
+        async function loadOrders() {
+            try {
+                const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+                allOrders = data || [];
+                renderOrdersTable();
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
 
-// ===== EMPLOYEES =====
-async function loadEmployees(){
-  const{data}=await sb.from('employee_applications').select('*').order('created_at',{ascending:false});
-  document.getElementById('employeesTable').innerHTML=(data||[]).map(e=>`<tr>
-    <td>${e.full_name}</td><td>${e.email}</td><td>${e.phone}</td>
-    <td><small>${(e.experience||'').substring(0,60)}...</small></td>
-    <td><span class="status-badge status-${e.status}">${e.status}</span></td>
-    <td>${fmtDate(e.created_at)}</td>
-    <td><div class="action-btns">
-      ${e.status==='pending'?`<button class="btn btn-sm btn-success" onclick="updateEmployee('${e.id}','${e.user_id}','approved')">Approve</button><button class="btn btn-sm btn-danger" onclick="updateEmployee('${e.id}','${e.user_id}','rejected')">Reject</button>`:''}
-      <button class="btn btn-sm btn-primary" onclick="viewEmployee('${e.id}')">View</button>
-    </div></td></tr>`).join('');
-}
-async function updateEmployee(id,userId,status){
-  await sb.from('employee_applications').update({status,reviewed_by:adminUser.id,reviewed_at:new Date().toISOString()}).eq('id',id);
-  if(status==='approved')await sb.from('profiles').update({role:'employee'}).eq('id',userId);
-  showToast('Updated','success');loadEmployees();
-}
-async function viewEmployee(id){
-  const{data}=await sb.from('employee_applications').select('*').eq('id',id).single();
-  document.getElementById('modalTitle').textContent='Employee Application';
-  document.getElementById('modalBody').innerHTML=`<div style="display:grid;gap:8px"><p><strong>Name:</strong> ${data.full_name}</p><p><strong>Email:</strong> ${data.email}</p><p><strong>Phone:</strong> ${data.phone}</p><p><strong>About:</strong> ${data.about||'-'}</p><p><strong>Experience:</strong><br>${data.experience}</p><p><strong>Portfolio:</strong> ${data.portfolio_url?`<a href="${data.portfolio_url}" target="_blank">${data.portfolio_url}</a>`:'-'}</p></div>`;
-  document.getElementById('genericModal').classList.add('active');
-}
+        async function loadServices() {
+            try {
+                const { data, error } = await supabase.from('services').select('*');
+                allServices = data || [];
+                renderServicesTable();
+                updateServiceSelect();
+            } catch (error) {
+                console.error('Error loading services:', error);
+            }
+        }
 
-// ===== ATTENDANCE =====
-async function loadAttendance(){
-  const{data}=await sb.from('employee_attendance').select('*,profiles:user_id(full_name,username)').order('date',{ascending:false}).limit(200);
-  document.getElementById('attendanceTable').innerHTML=(data||[]).map(a=>`<tr>
-    <td>${a.profiles?.full_name||'-'}</td><td>${a.date}</td>
-    <td>${a.login_time||'-'}</td><td>${a.logout_time||'-'}</td>
-    <td>${a.working_hours||'-'}</td>
-    <td><span class="status-badge status-active">${a.status}</span></td></tr>`).join('');
-}
+        async function loadPlatforms() {
+            try {
+                const { data, error } = await supabase.from('platforms').select('*');
+                allPlatforms = data || [];
+                renderPlatformsTable();
+                updatePlatformSelect();
+            } catch (error) {
+                console.error('Error loading platforms:', error);
+            }
+        }
 
-// ===== WORKLOGS =====
-async function loadWorkLogs(){
-  const{data}=await sb.from('employee_work_logs').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false}).limit(200);
-  document.getElementById('worklogsTable').innerHTML=(data||[]).map(w=>`<tr>
-    <td>${w.profiles?.full_name||'-'}</td><td>${w.date}</td><td>${w.work_type}</td>
-    <td><small>${w.work_type==='order'?`Order: ${w.order_id||'-'}, ${w.service_name||'-'}`:(w.platforms_shared||[]).join(', ')}</small></td>
-    <td>${w.is_boosted?'✅':'-'}</td>
-    <td>${fmtDate(w.created_at)}</td></tr>`).join('');
-}
+        async function loadAffiliates() {
+            try {
+                const { data, error } = await supabase.from('affiliates').select('*');
+                allAffiliates = data || [];
+                renderAffiliatesTable();
+            } catch (error) {
+                console.error('Error loading affiliates:', error);
+            }
+        }
 
-// ===== TICKETS =====
-async function loadTickets(){
-  const{data}=await sb.from('support_tickets').select('*,profiles:user_id(full_name,username)').order('created_at',{ascending:false});
-  document.getElementById('ticketsTable').innerHTML=(data||[]).map(t=>`<tr>
-    <td>#${t.ticket_number}</td><td>${t.profiles?.full_name||'-'}</td><td>${t.subject}</td>
-    <td>${t.priority}</td>
-    <td><span class="status-badge status-${t.status==='open'?'pending':'completed'}">${t.status}</span></td>
-    <td>${fmtDate(t.created_at)}</td>
-    <td><select onchange="updateTicket('${t.id}',this.value)" style="padding:4px">
-      <option value="open" ${t.status==='open'?'selected':''}>Open</option>
-      <option value="in_progress" ${t.status==='in_progress'?'selected':''}>In Progress</option>
-      <option value="resolved" ${t.status==='resolved'?'selected':''}>Resolved</option>
-      <option value="closed" ${t.status==='closed'?'selected':''}>Closed</option>
-    </select></td></tr>`).join('');
-}
-async function updateTicket(id,status){
-  const u={status};if(status==='resolved'||status==='closed')u.resolved_at=new Date().toISOString();
-  await sb.from('support_tickets').update(u).eq('id',id);
-  showToast('Updated','success');
-}
+        async function loadApplications() {
+            try {
+                const { data, error } = await supabase.from('employee_applications').select('*');
+                allApplications = data || [];
+                renderApplicationsTable();
+            } catch (error) {
+                console.error('Error loading applications:', error);
+            }
+        }
 
-// ===== SETTINGS =====
-async function loadSiteSettings(){
-  const{data}=await sb.from('site_settings').select('*');
-  if(data)data.forEach(s=>siteSettings[s.key]=s.value);
-}
-function loadSettings(){
-  document.getElementById('showCommissionToggle').checked=siteSettings['show_commission_program']!=='false';
-  document.getElementById('showSalaryToggle').checked=siteSettings['show_salary_program']!=='false';
-  document.getElementById('setSiteName').value=siteSettings['site_name']||'';
-  document.getElementById('setSupportEmail').value=siteSettings['support_email']||'';
-  document.getElementById('setSupportWhatsapp').value=siteSettings['support_whatsapp']||'';
-  document.getElementById('setCurrency').value=siteSettings['currency']||'';
-  document.getElementById('setCommissionRate').value=siteSettings['affiliate_commission_rate']||'';
-  document.getElementById('setMinPayout').value=siteSettings['affiliate_min_payout']||'';
-  document.getElementById('setMaintenanceMode').checked=siteSettings['maintenance_mode']==='true';
-}
-async function toggleProgram(key,enabled){
-  await upsertSetting(key,enabled?'true':'false');
-  siteSettings[key]=enabled?'true':'false';
-  showToast(`${key.includes('commission')?'Commission':'Salary'} program ${enabled?'enabled':'disabled'}`,'success');
-}
-async function upsertSetting(key,value){
-  const{data:existing}=await sb.from('site_settings').select('id').eq('key',key).maybeSingle();
-  if(existing)await sb.from('site_settings').update({value}).eq('key',key);
-  else await sb.from('site_settings').insert({key,value});
-}
-async function saveSettings(){
-  showSpinner();
-  const map={
-    site_name:document.getElementById('setSiteName').value,
-    support_email:document.getElementById('setSupportEmail').value,
-    support_whatsapp:document.getElementById('setSupportWhatsapp').value,
-    currency:document.getElementById('setCurrency').value,
-    affiliate_commission_rate:document.getElementById('setCommissionRate').value,
-    affiliate_min_payout:document.getElementById('setMinPayout').value,
-    maintenance_mode:document.getElementById('setMaintenanceMode').checked?'true':'false'
-  };
-  for(const[k,v]of Object.entries(map))await upsertSetting(k,v);
-  await loadSiteSettings();
-  showToast('Settings saved','success');
-  hideSpinner();
-}
+        async function loadTickets() {
+            try {
+                const { data, error } = await supabase.from('support_tickets').select('*');
+                allTickets = data || [];
+                renderTicketsTable();
+            } catch (error) {
+                console.error('Error loading tickets:', error);
+            }
+        }
 
-// ===== MODAL & CRUD =====
-function openModal(type,data=null){
-  const title=document.getElementById('modalTitle');
-  const body=document.getElementById('modalBody');
-  if(type==='platform'){
-    title.textContent=data?'Edit Platform':'Add Platform';
-    body.innerHTML=`<div class="form-grid">
-      <div><label>Name</label><input id="mPlatName" value="${data?.name||''}"></div>
-      <div><label>Icon (Emoji)</label><input id="mPlatIcon" value="${data?.icon||''}"></div>
-      <div><label>Sort Order</label><input type="number" id="mPlatSort" value="${data?.sort_order||0}"></div>
-    </div><button class="btn btn-primary" style="margin-top:16px" onclick="savePlatform('${data?.id||''}')">Save</button>`;
-  }else if(type==='category'){
-    title.textContent=data?'Edit Category':'Add Category';
-    body.innerHTML=`<div><label>Name</label><input id="mCatName" value="${data?.name||''}"></div>
-      <div><label>Description</label><textarea id="mCatDesc">${data?.description||''}</textarea></div>
-      <div><label>Sort Order</label><input type="number" id="mCatSort" value="${data?.sort_order||0}"></div>
-      <button class="btn btn-primary" style="margin-top:16px" onclick="saveCategory('${data?.id||''}')">Save</button>`;
-  }else if(type==='service'){
-    const platOpts=allPlatformsAdmin.map(p=>`<option value="${p.id}" ${data?.platform_id===p.id?'selected':''}>${p.name}</option>`).join('');
-    const catOpts=allCategoriesAdmin.map(c=>`<option value="${c.id}" ${data?.category_id===c.id?'selected':''}>${c.name}</option>`).join('');
-    title.textContent=data?'Edit Service':'Add Service';
-    body.innerHTML=`<div class="form-grid">
-      <div><label>Service Code</label><input id="mSvcCode" value="${data?.service_code||''}"></div>
-      <div><label>Name</label><input id="mSvcName" value="${data?.name||''}"></div>
-      <div><label>Platform</label><select id="mSvcPlatform"><option value="">Select</option>${platOpts}</select></div>
-      <div><label>Category</label><select id="mSvcCategory"><option value="">Select</option>${catOpts}</select></div>
-      <div><label>Rate/1K</label><input type="number" step="0.01" id="mSvcRate" value="${data?.rate_per_1k||''}"></div>
-      <div><label>Min Quantity</label><input type="number" id="mSvcMin" value="${data?.min_quantity||100}"></div>
-      <div><label>Max Quantity</label><input type="number" id="mSvcMax" value="${data?.max_quantity||100000}"></div>
-      <div><label>Status</label><select id="mSvcStatus"><option value="active" ${data?.status==='active'?'selected':''}>Active</option><option value="inactive" ${data?.status==='inactive'?'selected':''}>Inactive</option><option value="maintenance" ${data?.status==='maintenance'?'selected':''}>Maintenance</option></select></div>
-    </div><div><label>Description</label><textarea id="mSvcDesc">${data?.description||''}</textarea></div>
-    <button class="btn btn-primary" style="margin-top:16px" onclick="saveService('${data?.id||''}')">Save</button>`;
-  }
-  document.getElementById('genericModal').classList.add('active');
-}
-function closeModal(){document.getElementById('genericModal').classList.remove('active')}
+        // ==================== DASHBOARD STATS ====================
+        function updateDashboardStats() {
+            document.getElementById('totalUsers').textContent = allUsers.length;
+            document.getElementById('totalOrders').textContent = allOrders.length;
+            document.getElementById('activeServices').textContent = allServices.length;
+            document.getElementById('pendingApps').textContent = allApplications.filter(a => a.status === 'pending').length;
+            document.getElementById('activeAffiliates').textContent = allAffiliates.filter(a => a.status === 'approved').length;
 
-async function savePlatform(id){
-  const payload={name:document.getElementById('mPlatName').value,icon:document.getElementById('mPlatIcon').value,sort_order:+document.getElementById('mPlatSort').value};
-  const{error}=id?await sb.from('platforms').update(payload).eq('id',id):await sb.from('platforms').insert(payload);
-  if(error)showToast(error.message,'error');else{showToast('Saved','success');closeModal();loadPlatforms()}
-}
-async function saveCategory(id){
-  const payload={name:document.getElementById('mCatName').value,description:document.getElementById('mCatDesc').value,sort_order:+document.getElementById('mCatSort').value};
-  const{error}=id?await sb.from('categories').update(payload).eq('id',id):await sb.from('categories').insert(payload);
-  if(error)showToast(error.message,'error');else{showToast('Saved','success');closeModal();loadCategories()}
-}
-async function saveService(id){
-  const payload={
-    service_code:document.getElementById('mSvcCode').value,
-    name:document.getElementById('mSvcName').value,
-    platform_id:document.getElementById('mSvcPlatform').value,
-    category_id:document.getElementById('mSvcCategory').value,
-    rate_per_1k:+document.getElementById('mSvcRate').value,
-    min_quantity:+document.getElementById('mSvcMin').value,
-    max_quantity:+document.getElementById('mSvcMax').value,
-    status:document.getElementById('mSvcStatus').value,
-    description:document.getElementById('mSvcDesc').value
-  };
-  const{error}=id?await sb.from('services').update(payload).eq('id',id):await sb.from('services').insert(payload);
-  if(error)showToast(error.message,'error');else{showToast('Saved','success');closeModal();loadServices()}
-}
-async function deleteItem(table,id){
-  if(!confirm('Are you sure?'))return;
-  const{error}=await sb.from(table).delete().eq('id',id);
-  if(error)showToast(error.message,'error');
-  else{
-    showToast('Deleted','success');
-    if(table==='platforms')loadPlatforms();
-    if(table==='categories')loadCategories();
-    if(table==='services')loadServices();
-  }
-}
+            const revenue = allOrders.reduce((sum, order) => sum + (order.amount || 0), 0);
+            document.getElementById('totalRevenue').textContent = '$' + revenue.toFixed(2);
+        }
 
-window.addEventListener('DOMContentLoaded',checkSession);
-</script>
+        function renderDashboard() {
+            const tbody = document.querySelector('#recentOrdersTable tbody');
+            tbody.innerHTML = allOrders.slice(0, 5).map(order => `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>${order.user_id}</td>
+                    <td>Service ${order.service_id}</td>
+                    <td>$${order.amount.toFixed(2)}</td>
+                    <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                    <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ==================== TABLE RENDERING ====================
+        function renderUsersTable() {
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = allUsers.map(user => `
+                <tr>
+                    <td>${user.email || '-'}</td>
+                    <td>${user.username || '-'}</td>
+                    <td>$${user.wallet_balance || 0}</td>
+                    <td><span class="status-badge status-active">Active</span></td>
+                    <td>${user.created_at ? new Date(user.created_at).toLocaleDateString() : '-'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn edit" onclick="editUser(${user.id})">Edit</button>
+                            <button class="action-btn delete" onclick="deleteUser(${user.id})">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderOrdersTable() {
+            const tbody = document.querySelector('#ordersTable tbody');
+            tbody.innerHTML = allOrders.map(order => `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>${order.user_id}</td>
+                    <td>Platform ${order.platform_id}</td>
+                    <td>Service ${order.service_id}</td>
+                    <td>${order.quantity}</td>
+                    <td>$${order.amount.toFixed(2)}</td>
+                    <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                    <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <button class="action-btn edit" onclick="editOrder(${order.id})">Edit</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderServicesTable() {
+            const tbody = document.querySelector('#servicesTable tbody');
+            tbody.innerHTML = allServices.map(service => {
+                const platform = allPlatforms.find(p => p.id === service.platform_id);
+                return `
+                    <tr>
+                        <td>#${service.id}</td>
+                        <td>${service.name}</td>
+                        <td>${platform?.name || 'Unknown'}</td>
+                        <td>${service.category}</td>
+                        <td>$${service.price}</td>
+                        <td>${service.service_per_1k ? 'Per 1K' : 'Fixed'}</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit" onclick="editService(${service.id})">Edit</button>
+                                <button class="action-btn delete" onclick="deleteService(${service.id})">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderPlatformsTable() {
+            const tbody = document.querySelector('#platformsTable tbody');
+            tbody.innerHTML = allPlatforms.map(platform => {
+                const count = allServices.filter(s => s.platform_id === platform.id).length;
+                return `
+                    <tr>
+                        <td>#${platform.id}</td>
+                        <td>${platform.name}</td>
+                        <td>${platform.icon}</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>${count}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit" onclick="editPlatform(${platform.id})">Edit</button>
+                                <button class="action-btn delete" onclick="deletePlatform(${platform.id})">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderAffiliatesTable() {
+            const tbody = document.querySelector('#affiliatesTable tbody');
+            tbody.innerHTML = allAffiliates.map(affiliate => `
+                <tr>
+                    <td>#${affiliate.id}</td>
+                    <td>User ${affiliate.user_id}</td>
+                    <td><span style="background: rgba(99, 102, 241, 0.1); padding: 4px 8px; border-radius: 4px; font-size: 12px;">${affiliate.type}</span></td>
+                    <td>${affiliate.commission_rate}%</td>
+                    <td><span class="status-badge status-${affiliate.status}">${affiliate.status}</span></td>
+                    <td>${new Date(affiliate.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <div class="action-buttons">
+                            ${affiliate.status === 'pending' ? `
+                                <button class="action-btn approve" onclick="approveAffiliate(${affiliate.id})">Approve</button>
+                                <button class="action-btn delete" onclick="rejectAffiliate(${affiliate.id})">Reject</button>
+                            ` : `
+                                <button class="action-btn edit" onclick="editAffiliate(${affiliate.id})">Edit</button>
+                            `}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderApplicationsTable() {
+            const tbody = document.querySelector('#applicationsTable tbody');
+            tbody.innerHTML = allApplications.map(app => `
+                <tr>
+                    <td>#${app.id}</td>
+                    <td>${app.full_name}</td>
+                    <td>${app.email}</td>
+                    <td>${app.phone}</td>
+                    <td><span class="status-badge status-${app.status}">${app.status}</span></td>
+                    <td>${new Date(app.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <div class="action-buttons">
+                            ${app.status === 'pending' ? `
+                                <button class="action-btn approve" onclick="approveApplication(${app.id})">Approve</button>
+                                <button class="action-btn delete" onclick="rejectApplication(${app.id})">Reject</button>
+                            ` : `
+                                <button class="action-btn edit" onclick="viewApplication(${app.id})">View</button>
+                            `}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderTicketsTable() {
+            const tbody = document.querySelector('#ticketsTable tbody');
+            tbody.innerHTML = allTickets.map(ticket => `
+                <tr>
+                    <td>#${ticket.id}</td>
+                    <td>${ticket.name}</td>
+                    <td>${ticket.subject}</td>
+                    <td><span class="status-badge status-${ticket.status}">${ticket.status}</span></td>
+                    <td>${new Date(ticket.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <button class="action-btn edit" onclick="replyTicket(${ticket.id})">Reply</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ==================== MODAL OPERATIONS ====================
+        function openUserModal() {
+            document.getElementById('userModal').classList.add('active');
+        }
+
+        function openServiceModal() {
+            document.getElementById('serviceModal').classList.add('active');
+        }
+
+        function openPlatformModal() {
+            document.getElementById('platformModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        async function saveUser(event) {
+            event.preventDefault();
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPassword').value;
+            const balance = parseFloat(document.getElementById('userBalance').value);
+
+            try {
+                const { data, error } = await supabase.auth.signUp({ email, password });
+                if (error) throw error;
+
+                // Create profile
+                await supabase.from('profiles').insert({
+                    user_id: data.user.id,
+                    email: email,
+                    wallet_balance: balance
+                });
+
+                showToast('User created successfully!', 'success');
+                closeModal('userModal');
+                event.target.reset();
+                await loadUsers();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function saveService(event) {
+            event.preventDefault();
+            const name = document.getElementById('serviceName').value;
+            const platformId = document.getElementById('servicePlatform').value;
+            const category = document.getElementById('serviceCategory').value;
+            const price = parseFloat(document.getElementById('servicePrice').value);
+            const per1k = document.getElementById('servicePer1k').checked;
+
+            try {
+                const { data, error } = await supabase.from('services').insert({
+                    name: name,
+                    platform_id: platformId,
+                    category: category,
+                    price: price,
+                    service_per_1k: per1k,
+                    status: 'active'
+                });
+
+                if (error) throw error;
+                showToast('Service created successfully!', 'success');
+                closeModal('serviceModal');
+                event.target.reset();
+                await loadServices();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function savePlatform(event) {
+            event.preventDefault();
+            const name = document.getElementById('platformName').value;
+            const icon = document.getElementById('platformIcon').value;
+
+            try {
+                const { data, error } = await supabase.from('platforms').insert({
+                    name: name,
+                    icon: icon,
+                    status: 'active'
+                });
+
+                if (error) throw error;
+                showToast('Platform created successfully!', 'success');
+                closeModal('platformModal');
+                event.target.reset();
+                await loadPlatforms();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== AFFILIATE OPERATIONS ====================
+        async function approveAffiliate(id) {
+            try {
+                const { error } = await supabase.from('affiliates').update({ status: 'approved' }).eq('id', id);
+                if (error) throw error;
+                showToast('Affiliate approved!', 'success');
+                await loadAffiliates();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function rejectAffiliate(id) {
+            try {
+                const { error } = await supabase.from('affiliates').update({ status: 'rejected' }).eq('id', id);
+                if (error) throw error;
+                showToast('Affiliate rejected!', 'success');
+                await loadAffiliates();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function approveApplication(id) {
+            try {
+                const { error } = await supabase.from('employee_applications').update({ status: 'approved' }).eq('id', id);
+                if (error) throw error;
+                showToast('Application approved!', 'success');
+                await loadApplications();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function rejectApplication(id) {
+            try {
+                const { error } = await supabase.from('employee_applications').update({ status: 'rejected' }).eq('id', id);
+                if (error) throw error;
+                showToast('Application rejected!', 'success');
+                await loadApplications();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== SETTINGS ====================
+        async function saveSiteSettings(event) {
+            event.preventDefault();
+            showToast('Settings saved successfully!', 'success');
+        }
+
+        async function saveAffiliateSettings(event) {
+            event.preventDefault();
+            showToast('Affiliate settings saved!', 'success');
+        }
+
+        function saveMaintenanceMode() {
+            showToast('Maintenance mode updated!', 'success');
+        }
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            closeSidebar();
+        }
+
+        function toggleDropdown() {
+            document.getElementById('dropdownMenu').classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            document.querySelector('.sidebar').classList.remove('open');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function updateServiceSelect() {
+            const select = document.getElementById('servicePlatform');
+            select.innerHTML = '<option value="">Select Platform</option>' +
+                allPlatforms.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+
+        function updatePlatformSelect() {
+            // Placeholder
+        }
+
+        function filterOrders(status) {
+            // Placeholder for filtering
+            showToast('Filter: ' + status, 'info');
+        }
+
+        function filterAffiliates(type) {
+            // Placeholder for filtering
+            showToast('Filter: ' + type, 'info');
+        }
+
+        function filterTickets(status) {
+            // Placeholder for filtering
+            showToast('Filter: ' + status, 'info');
+        }
+
+        function editUser(id) {
+            showToast('Edit user ' + id, 'info');
+        }
+
+        function deleteUser(id) {
+            if (confirm('Delete this user?')) {
+                showToast('User deleted', 'success');
+            }
+        }
+
+        function editOrder(id) {
+            showToast('Edit order ' + id, 'info');
+        }
+
+        function editService(id) {
+            showToast('Edit service ' + id, 'info');
+        }
+
+        function deleteService(id) {
+            if (confirm('Delete this service?')) {
+                showToast('Service deleted', 'success');
+            }
+        }
+
+        function editPlatform(id) {
+            showToast('Edit platform ' + id, 'info');
+        }
+
+        function deletePlatform(id) {
+            if (confirm('Delete this platform?')) {
+                showToast('Platform deleted', 'success');
+            }
+        }
+
+        function editAffiliate(id) {
+            showToast('Edit affiliate ' + id, 'info');
+        }
+
+        function viewApplication(id) {
+            showToast('View application ' + id, 'info');
+        }
+
+        function replyTicket(id) {
+            showToast('Reply to ticket ' + id, 'info');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('dropdownMenu');
+            if (dropdown && !e.target.closest('.dropdown-menu')) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Close modals when clicking outside
+        window.onclick = (event) => {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        };
+    </script>
 </body>
 </html>
